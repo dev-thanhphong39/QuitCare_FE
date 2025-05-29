@@ -1,8 +1,8 @@
 import React from 'react'
-
+import AuthenTemplate from '../components/authen-template'
 function Register() {
   return (
-    <div>Register</div>
+    < AuthenTemplate isLogin={false} ></AuthenTemplate>
   )
 }
 
