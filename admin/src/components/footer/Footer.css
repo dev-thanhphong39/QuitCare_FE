@@ -1,0 +1,114 @@
+* {
+    list-style: none;
+    padding   : 0;
+    margin    : 0;
+    box-sizing: border-box;
+}
+
+.footer {
+    background-color: #1e1e1e;
+    color           : #fff;
+    padding         : 40px 20px 20px;
+    font-family     : 'Segoe UI', sans-serif;
+}
+
+.footer-container {
+    display        : flex;
+    flex-wrap      : wrap;
+    justify-content: space-between;
+    gap            : 40px;
+}
+
+.footer-info,
+.footer-links,
+.footer-social {
+    flex: 1 1 200px;
+}
+
+.footer-info h2,
+.footer-links h2,
+.footer-social h2 {
+    margin-bottom: 15px;
+    font-size    : 20px;
+    color        : #ffffff;
+}
+
+.footer-info a {
+    color: white;
+}
+
+
+
+.footer-info p,
+.footer-links ul li,
+.footer-social ul li {
+    margin-bottom: 10px;
+    font-size    : 15px;
+    color        : #cccccc;
+}
+
+.footer-links ul,
+.footer-social ul {
+    list-style: none;
+    padding   : 0;
+    margin    : 0;
+}
+
+/* Link style */
+.footer-links ul li a,
+.footer-social ul li a {
+    color          : #cccccc;
+    text-decoration: none;
+    transition     : color 0.3s ease, transform 0.3s ease;
+}
+
+.footer-links ul li a:hover,
+.footer-social ul li a:hover {
+    color    : #ffffff;
+    transform: translateX(4px);
+}
+
+/* --- Footer Social Section  --- */
+.footer-social ul {
+    display       : flex;
+    flex-direction: column;
+    gap           : 4px;
+}
+
+.footer-social ul li {
+    display    : flex;
+    align-items: center;
+    gap        : 10px;
+    font-size  : 15px;
+    line-height: 1.5;
+}
+
+.footer-social ul li a {
+    display    : flex;
+    align-items: center;
+    gap        : 10px;
+}
+
+/* Icon style */
+.footer-social i {
+    font-size : 18px;
+    color     : #ffffff;
+    width     : 24px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.footer-social i:hover {
+    transform: scale(1.2);
+    color    : #cccccc;
+}
+
+/* Bottom section */
+.footer-bottom {
+    margin-top : 40px;
+    text-align : center;
+    font-size  : 14px;
+    border-top : 1px solid #444;
+    padding-top: 15px;
+    color      : #999;
+}
