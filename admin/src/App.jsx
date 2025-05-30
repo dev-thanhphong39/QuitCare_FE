@@ -1,9 +1,10 @@
-import React from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import HomePage from './pages/home';
-import LoginPage from './pages/login';
-import RegisterPage from './pages/register';
-import Footer from './components/footer/Footer';
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import HomePage from "./pages/Home";
+import LoginPage from "./pages/login";
+import RegisterPage from "./pages/register";
+import Blog from "./pages/Blog";
+import Footer from "./components/footer/Footer";
 
 function App() {
   const router = createBrowserRouter([
@@ -19,15 +20,17 @@ function App() {
       path: "/register",
       element: <RegisterPage />,
     },
+    {
+      path: "/blog",
+      element: <Blog />,
+    },
   ]);
   return (
     <div>
       <RouterProvider router={router} />
-      <Footer/>
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default App
-
-
+export default App;
