@@ -1,0 +1,84 @@
+.navbar {
+    background-color: #0C1C2C;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 30px;
+    font-family: Arial, sans-serif;
+
+}
+
+
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    margin-left: 90px;
+}
+
+.logo {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.brand-text {
+    font-weight: bolder;
+    line-height: 1.1;
+}
+
+.navbar-menu {
+    list-style: none;
+    display: flex;
+    gap: 35px;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-menu li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar-menu li a:hover {
+    color: #ddd;
+}
+
+.navbar-buttons {
+    display: flex;
+    gap: 10px;
+    margin-right: 50px;
+}
+
+.btn-register {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 7px 15px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-register:hover {
+    background-color: #0056b3;
+}
+
+.btn-login {
+    background-color: #ffc107;
+    color: black;
+    border: none;
+    padding: 7px 15px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-login:hover {
+    background-color: #e0a800;
+}

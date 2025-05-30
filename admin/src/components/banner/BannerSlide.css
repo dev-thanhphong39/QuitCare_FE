@@ -1,0 +1,49 @@
+.banner-slider {
+    position: relative;
+    width: 100vw;
+    height: 90vh;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 0;
+}
+
+.slide {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0;
+    transition: opacity 1s;
+    object-fit: cover;
+    top: 0;
+    left: 0;
+}
+
+.slide.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+.dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0.5;
+    cursor: pointer;
+    border: 1px solid #333;
+}
+
+.dot.active {
+    opacity: 1;
+    background: #007bff;
+}
