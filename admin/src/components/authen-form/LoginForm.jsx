@@ -1,56 +1,64 @@
-import React from 'react'
-import { Button, Checkbox, Form, Input } from 'antd';
-import './login.css'
-
+import React from "react";
+import { Button, Checkbox, Form, Input, Card } from "antd";
+import "./login.css";
 
 function LoginForm() {
-    const onFinish = values => {
-        console.log('Success:', values);
-    };
-    const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
-    };
-    return (
-        <div className='login-form'>
-            <h1>Login</h1>
-            <Form
-                name="basic"
-                layout='vertical'
-                labelCol={{ span: 24 }}
-                // wrapperCol={{ span: 16 }}
-                initialValues={{ remeber: true }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
+  const onFinish = (values) => {
+    console.log("Success:", values);
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+  return (
+    <div className="login-container">
+      <Card className="login-card" title="Đăng nhập" variant="outlined">
+        <Form
+          name="login"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          layout="vertical"
+          className="login-form"
+        >
+          <Form.Item
+            label="Tài khoản"
+            name="username"
+            rules={[{ required: true, message: "Vui lòng nhập tài khoản!" }]}
+            className="form-item"
+          >
+            <Input placeholder="Tên đăng nhập" className="login-input" />
+          </Form.Item>
+
+          <Form.Item
+            label="Mật khẩu"
+            name="password"
+            rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+            className="form-item"
+          >
+            <Input.Password placeholder="Mật khẩu" className="login-input" />
+          </Form.Item>
+
+          <Form.Item
+            name="remember"
+            valuePropName="checked"
+            className="form-item-remember"
+          >
+            <Checkbox className="remember-checkbox">Ghi nhớ đăng nhập</Checkbox>
+          </Form.Item>
+
+          <Form.Item className="form-item">
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              className="login-button"
             >
-                <Form.Item
-                    label="Username"
-                    name="username"
-                    rules={[{ required: true, message: 'Please input your username!' }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
-                >
-                    <Input.Password />
-                </Form.Item>
-
-                <Form.Item name="remember" valuePropName="checked" label={null}>
-                    <Checkbox>Remember me</Checkbox>
-                </Form.Item>
-
-                <Form.Item label={null}>
-                    <Button type="primary" htmlType="submit">
-                        Login
-                    </Button>
-                </Form.Item>
-            </Form>
-        </div>
-    )
+              Đăng nhập
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
+    </div>
+  );
 }
 
-export default LoginForm
+export default LoginForm;
