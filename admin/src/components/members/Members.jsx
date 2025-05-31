@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import Navbar from "../navbar/Navbar";
 
 function Members() {
   return (
-    <div>Members Page</div>
-  )
+    <div>
+      <Navbar />
+      Members Page
+    </div>
+  );
 }
 
-export default Members
+export default Members;

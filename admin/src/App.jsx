@@ -7,9 +7,8 @@ import RegisterPage from "./pages/Register";
 import BlogPage from "./components/blog/Blog";
 import RankingPage from "./components/ranking/Ranking";
 import MembersPage from "./components/members/Members";
-import Footer from "./components/footer/Footer"; 
-
-
+import Footer from "./components/footer/Footer";
+import Navbar from "./components/navbar/Navbar";
 
 function App() {
   const router = createBrowserRouter([

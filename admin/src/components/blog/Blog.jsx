@@ -1,5 +1,6 @@
 import React from "react";
 import "./Blog.css";
+import Navbar from "../navbar/Navbar";
 
 const healthyPosts = [
   {
@@ -200,12 +201,14 @@ function BlogSection({ title, posts }) {
 
 function Blog() {
   return (
-
-    <div className="blog-page">
-      <h1 className="blog-main-title">📰 Blog Bỏ Thuốc Lá</h1>
-      <BlogSection title="📚 Kiến Thức Cai Thuốc" posts={knowledgePosts} />
-      <BlogSection title="💪 Tập luyện & sức khỏe" posts={healthyPosts} />
-      <BlogSection title="💡 Câu Chuyện Thành Công" posts={successPosts} />
+    <div>
+      <Navbar />
+      <div className="blog-page">
+        <h1 className="blog-main-title">📰 Blog Bỏ Thuốc Lá</h1>
+        <BlogSection title="📚 Kiến Thức Cai Thuốc" posts={knowledgePosts} />
+        <BlogSection title="💪 Tập luyện & sức khỏe" posts={healthyPosts} />
+        <BlogSection title="💡 Câu Chuyện Thành Công" posts={successPosts} />
+      </div>
     </div>
   );
 }
