@@ -3,10 +3,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
-
 import BlogPage from "./components/blog/Blog";
 import RankingPage from "./components/ranking/Ranking";
-import MembersPage from "./components/members/Members";
+import BookingPage from "./components/bookings/Booking";
 import Footer from "./components/footer/Footer";
 import Navbar from "./components/navbar/Navbar";
 
@@ -33,14 +32,13 @@ function App() {
       element: <RankingPage />,
     },
     {
-      path: "/members",
-      element: <MembersPage />,
+      path: "/booking",
+      element: <BookingPage />,
     },
   ]);
   return (
     <div>
       <RouterProvider router={router} />
-      <Footer />
     </div>
   );
 }

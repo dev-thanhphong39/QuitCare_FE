@@ -1,5 +1,6 @@
 // admin/src/components/Footer.jsx
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
 function Footer() {
@@ -18,43 +19,39 @@ function Footer() {
         <div className="footer-links">
           <h2>Dịch vụ</h2>
           <ul>
-            <li><a href="/">Giới thiệu</a></li>
-            <li><a href="/">Hội viên</a></li>
-            <li><a href="/">Bảng xếp hạng</a></li>
-            <li><a href="/">Liên hệ</a></li>
+            <li><Link to="/">Giới thiệu</Link></li>
+            <li><Link to="/booking">Đặt lịch</Link></li>
+            <li><Link to="/ranking">Bảng xếp hạng</Link></li>
           </ul>
         </div>
         <div className="footer-links">
           <h2>Tin tức</h2>
           <ul>
-            <li><a href="/">Kiến thức cai thuốc</a></li>
-            <li><a href="/">Tập luyện & Sức khỏe</a></li>
-            <li><a href="/">Câu chuyện thành công</a></li>
+            <li><Link to="/blog">Kiến thức cai thuốc</Link></li>
+            <li><Link to="/blog">Tập luyện & Sức khỏe</Link></li>
+            <li><Link to="/blog">Câu chuyện thành công</Link></li>
           </ul>
         </div>
-
 
         <div className="footer-social">
           <h2>Kết nối với chúng tôi</h2>
           <ul>
-      <li>
-    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
-      <i className="fab fa-facebook-f"></i> Facebook
-    </a>
-  </li>
-  <li>
-    <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
-      <i className="fab fa-youtube"></i> YouTube
-    </a>
-  </li>
-  <li>
-    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
-      <i className="fab fa-instagram"></i> Instagram
-    </a>
-  </li>
-</ul>
-
-
+            <li>
+              <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-facebook-f"></i> Facebook
+              </a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-youtube"></i> YouTube
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-instagram"></i> Instagram
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
 

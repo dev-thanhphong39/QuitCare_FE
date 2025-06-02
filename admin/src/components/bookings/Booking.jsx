@@ -1,13 +1,13 @@
 import React from "react";
 import Navbar from "../navbar/Navbar";
 
-function Members() {
+function BookingPage() {
   return (
     <div>
       <Navbar />
-      Members Page
+      Booking Page
     </div>
   );
 }
 
-export default Members;
+export default BookingPage;
