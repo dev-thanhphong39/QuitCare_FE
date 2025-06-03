@@ -1,6 +1,7 @@
 import React from "react";
 import "./Blog.css";
 import Navbar from "../navbar/Navbar";
+import Footer from "../footer/Footer";
 
 const healthyPosts = [
   {
@@ -209,6 +210,7 @@ function Blog() {
         <BlogSection title="💪 Tập luyện & sức khỏe" posts={healthyPosts} />
         <BlogSection title="💡 Câu Chuyện Thành Công" posts={successPosts} />
       </div>
+      <Footer />
     </div>
   );
 }

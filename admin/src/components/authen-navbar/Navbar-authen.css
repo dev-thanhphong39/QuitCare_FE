@@ -1,4 +1,9 @@
-.navbar {
+.auth-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
     width: 100vw;
     background: #0C1C2C;
     color: #fff;
@@ -10,13 +15,13 @@
     font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-.navbar-left {
+.auth-navbar-left {
     display: flex;
     align-items: center;
     height: 100%;
 }
 
-.logo-link {
+.auth-logo-link {
     display: flex;
     align-items: center;
     gap: 16px;
@@ -27,24 +32,22 @@
     transition: background 0.2s, box-shadow 0.2s;
 }
 
-.logo-link:hover {
-    /* background: rgba(255, 255, 255, 0.08); */
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10); */
+.auth-logo-link:hover {
     text-decoration: none;
 }
 
-.logo {
+.auth-logo {
     height: 60px;
     width: 60px;
     object-fit: contain;
     transition: transform 0.2s;
 }
 
-.logo-link:hover .logo {
+.auth-logo-link:hover .auth-logo {
     transform: scale(1.07) rotate(-10deg);
 }
 
-.brand-text {
+.auth-brand-text {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -56,7 +59,7 @@
     line-height: 1.1;
 }
 
-.logo-link:hover .brand-text {
+.auth-logo-link:hover .auth-brand-text {
     color: #FFD700;
     text-shadow: 0 4px 16px rgba(255, 215, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15);
     transform: scale(1.05);
@@ -64,17 +67,17 @@
 }
 
 @media (max-width: 600px) {
-    .navbar {
+    .auth-navbar {
         padding: 0 10px;
         height: 56px;
     }
 
-    .logo {
+    .auth-logo {
         height: 38px;
         width: 38px;
     }
 
-    .brand-text {
+    .auth-brand-text {
         font-size: 1.1rem;
     }
 }

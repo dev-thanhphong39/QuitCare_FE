@@ -9,7 +9,7 @@ function Home() {
         <div>
             <Navbar />
             <BannerSlider />
-            <Footer/>
+            <Footer />
         </div>
     );
 }

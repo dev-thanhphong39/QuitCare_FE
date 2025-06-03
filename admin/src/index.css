@@ -1,12 +1,15 @@
 * {
-  margin    : 0;
-  padding   : 0;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box
 }
 
 /* Ngăn trang cuộn ngang */
 body {
-  margin    : 0;
-  padding   : 0;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
+  /* Ngăn cuộn ngang */
+  overflow-y: auto;
+  /* Cho phép cuộn dọc */
 }
