@@ -1,20 +1,22 @@
 import React from "react";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, Card } from "antd";
+import { Link } from "react-router-dom";
 import "./register.css";
 
 function RegisterForm() {
   const onFinish = (values) => {
     console.log("Success:", values);
   };
+
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
   return (
     <div className="register-container">
-      <div className="register-box">
-        <h1 className="register-title">Đăng ký</h1>
+      <Card className="register-card" title="Đăng ký" style={{ backgroundColor: "transparent", boxShadow: "none" }}>
         <Form
-          name="basic"
+          name="register"
           layout="vertical"
           initialValues={{ remember: true }}
           onFinish={onFinish}
@@ -26,9 +28,8 @@ function RegisterForm() {
             label="Họ và tên"
             name="fullname"
             rules={[{ required: true, message: "Vui lòng nhập họ tên!" }]}
-            className="form-item"
           >
-            <Input className="register-input" />
+            <Input placeholder="Họ và tên" />
           </Form.Item>
 
           <Form.Item
@@ -38,20 +39,16 @@ function RegisterForm() {
               { required: true, message: "Vui lòng nhập email!" },
               { type: "email", message: "Email không hợp lệ!" },
             ]}
-            className="form-item"
           >
-            <Input className="register-input" />
+            <Input placeholder="Email" />
           </Form.Item>
 
           <Form.Item
             label="Tên đăng nhập"
             name="username"
-            rules={[
-              { required: true, message: "Vui lòng nhập tên đăng nhập!" },
-            ]}
-            className="form-item"
+            rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập!" }]}
           >
-            <Input className="register-input" />
+            <Input placeholder="Tên đăng nhập" />
           </Form.Item>
 
           <Form.Item
@@ -62,9 +59,8 @@ function RegisterForm() {
               { min: 6, message: "Mật khẩu ít nhất 6 ký tự" },
             ]}
             hasFeedback
-            className="form-item"
           >
-            <Input.Password className="register-input" />
+            <Input.Password placeholder="Mật khẩu" />
           </Form.Item>
 
           <Form.Item
@@ -83,30 +79,28 @@ function RegisterForm() {
                 },
               }),
             ]}
-            className="form-item"
           >
-            <Input.Password className="register-input" />
+            <Input.Password placeholder="Nhập lại mật khẩu" />
           </Form.Item>
 
-          <Form.Item
-            name="remember"
-            valuePropName="checked"
-            className="form-item-remember"
-          >
-            <Checkbox className="remember-checkbox">Ghi nhớ tôi</Checkbox>
+          <Form.Item name="remember" valuePropName="checked">
+            <Checkbox>Ghi nhớ tôi</Checkbox>
           </Form.Item>
 
-          <Form.Item className="form-item">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="register-button"
-            >
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block className="register-button">
               Đăng ký
             </Button>
           </Form.Item>
+
+          <div className="login-register-link">
+            Đã có tài khoản?{" "}
+            <Link to="/login" className="login-link">
+              Đăng nhập
+            </Link>
+          </div>
         </Form>
-      </div>
+      </Card>
     </div>
   );
 }

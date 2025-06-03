@@ -1,48 +1,149 @@
+/* Nền và bố cục */
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(to right, #dfe9f3, #ffffff);
+    border-radius: 20px;
+    box-sizing: border-box;
 }
 
+/* Thẻ card chính */
 .login-card {
     width: 400px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    height: auto;
+    background-color: #fff;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    border: none;
 }
 
+/* Tiêu đề card */
 .login-card .ant-card-head-title {
-    text-align: center;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
+    color: #1f2937;
+    text-align: center;
 }
 
+/* Form đăng nhập */
 .login-form {
-    padding-top: 10px;
+    width: 100%;
 }
 
-.form-item {
+/* Các item trong form */
+.login-form-item {
+    margin-bottom: 10px;
+}
+
+/* Checkbox */
+.login-form-item-remember {
     margin-bottom: 16px;
 }
 
+/* Ô input */
 .login-input {
     border-radius: 8px;
     padding: 10px;
+    font-size: 14px;
+    width: 100%;
 }
 
-.remember-checkbox {
-    color: #555;
+/* Checkbox ghi nhớ */
+.login-checkbox {
+    color: #4b5563;
 }
 
+/* Nút đăng nhập */
 .login-button {
+    background-color: #3b82f6;
+    border: none;
     border-radius: 8px;
-    height: 40px;
     font-weight: 600;
-    background-color: #1890ff;
-    border-color: #1890ff;
+    height: 40px;
+    transition: background-color 0.3s ease;
 }
 
 .login-button:hover {
-    background-color: #7fb2d8;
+    background-color: #2563eb;
+}
+
+/* Dòng phân cách */
+.login-divider {
+    text-align: center;
+    margin: 16px 0;
+    color: #9ca3af;
+    font-size: 13px;
+    position: relative;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background: #e5e7eb;
+}
+
+.login-divider::before {
+    left: 0;
+}
+
+.login-divider::after {
+    right: 0;
+}
+
+/* Nút Google */
+.login-google-button {
+    border: 1px solid #d1d5db;
+    background-color: #fff;
+    border-radius: 8px;
+    height: 40px;
+    color: #111827;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-google-button:hover {
+    background-color: #f3f4f6 !important;
+    border-color: #9ca3af !important;
+    color: #111827 !important;
+}
+
+.login-google-button .anticon {
+    margin-right: 8px !important;
+    font-size: 18px !important;
+}
+
+/* Thông báo lỗi */
+.login-error {
+    color: #ef4444;
+    background-color: #fee2e2;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.login-register-link {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.register-link {
+    color: #106cff;
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 4px;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+    color: #759aeb;
 }

@@ -1,43 +1,64 @@
-.authen-template {
-    width         : 100vw;
-    height        : 100vh;
-    display       : flex;
-    flex-direction: row;
+html,
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
-.authen-template__form {
-    width           : 30%;
-    height          : 100%;
-    background-color: #fff;
-    display         : flex;
-    justify-content : center;
-    align-items     : center;
-    z-index         : 1;
-    box-shadow      : 2px 0 10px rgba(0, 0, 0, 0.1);
+.authen-template {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
 }
 
 .authen-template__image {
-    width              : 70%;
-    height             : 100%;
-    background-image   : url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80');
-    background-repeat  : no-repeat;
-    background-size    : cover;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80');
+    background-repeat: no-repeat;
+    background-size: cover;
     background-position: center;
+}
+
+.authen-template__form {
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    max-width: 95vw;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    opacity: 0;
+    animation: fadeInScale 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes fadeInScale {
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
 }
 
 /* RESPONSIVE CHO MÀN NHỎ */
 @media (max-width: 768px) {
-    .authen-template {
-        flex-direction: column;
-    }
-
     .authen-template__form {
-        width  : 100%;
-        height : auto;
-        padding: 40px 20px;
-    }
-
-    .authen-template__image {
-        display: none;
+        width: 95vw;
+        padding: 32px 10px;
     }
 }
