@@ -26,7 +26,7 @@ const Navbar = () => {
           <Link to="/ranking">XẾP HẠNG</Link>
         </li>
         <li>
-          <Link to="/members">HỘI VIÊN</Link>
+          <Link to="/booking">ĐẶT LỊCH</Link>
         </li>
       </ul>
 

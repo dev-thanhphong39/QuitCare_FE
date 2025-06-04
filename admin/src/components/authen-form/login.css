@@ -147,3 +147,11 @@
     text-decoration: underline;
     color: #759aeb;
 }
+
+.google-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 12px;
+}
