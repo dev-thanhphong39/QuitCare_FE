@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Blog.css";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
+import BackToTopButton from "../back-to-top/BackToTopButton";
 
 const healthyPosts = [
   {
@@ -168,9 +169,9 @@ const successPosts = [
   },
 ];
 
-function BlogSection({ title, posts }) {
+function BlogSection({ id, title, posts }) {
   return (
-    <>
+    <div id={id}>
       <h2 className="section-title">{title}</h2>
       <div className="blog-grid">
         {posts.map((post, index) => (
@@ -196,21 +197,82 @@ function BlogSection({ title, posts }) {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
 function Blog() {
+  const [activeSection, setActiveSection] = useState("");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const section = ["knowledge", "healthy", "success"];
+      for (let id of section) {
+        const element = document.getElementById(id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            setActiveSection(id);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div>
       <Navbar />
       <div className="blog-page">
         <h1 className="blog-main-title">📰 Blog Bỏ Thuốc Lá</h1>
-        <BlogSection title="📚 Kiến Thức Cai Thuốc" posts={knowledgePosts} />
-        <BlogSection title="💪 Tập luyện & sức khỏe" posts={healthyPosts} />
-        <BlogSection title="💡 Câu Chuyện Thành Công" posts={successPosts} />
+
+        <div className="blog-nav">
+          <a
+            href="#knowledge"
+            className={`blog-nav-link ${
+              activeSection === "knowledge" ? "active" : ""
+            }`}
+          >
+            📚 Kiến Thức Cai Thuốc
+          </a>
+          <a
+            href="#healthy"
+            className={`blog-nav-link ${
+              activeSection === "healthy" ? "active" : ""
+            }`}
+          >
+            💪 Tập luyện & sức khỏe
+          </a>
+          <a
+            href="#success"
+            className={`blog-nav-link ${
+              activeSection === "success" ? "active" : ""
+            }`}
+          >
+            💡 Câu Chuyện Thành Công
+          </a>
+        </div>
+
+        <BlogSection
+          id="knowledge"
+          title="📚 Kiến Thức Cai Thuốc"
+          posts={knowledgePosts}
+        />
+        <BlogSection
+          id="healthy"
+          title="💪 Tập luyện & sức khỏe"
+          posts={healthyPosts}
+        />
+        <BlogSection
+          id="success"
+          title="💡 Câu Chuyện Thành Công"
+          posts={successPosts}
+        />
       </div>
       <Footer />
+      <BackToTopButton />
     </div>
   );
 }

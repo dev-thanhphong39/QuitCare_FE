@@ -12,6 +12,37 @@
     margin-bottom: 40px;
 }
 
+.blog-nav {
+    display        : flex;
+    justify-content: center;
+    gap            : 20px;
+    margin-bottom  : 30px;
+    flex-wrap      : wrap;
+}
+
+.blog-nav-link {
+    background     : #0C1C2C;
+    color          : #fff;
+    padding        : 10px 20px;
+    border-radius  : 20px;
+    text-decoration: none;
+    font-size      : 16px;
+    transition     : background-color 0.3s ease, transform 0.3s ease;
+}
+
+.blog-nav-link:hover {
+    background-color: #1f2e3d;
+    transform       : scale(1.05);
+}
+
+.blog-nav-link.active {
+    background-color: #ffffff;
+    color           : #0C1C2C;
+    font-weight     : bold;
+    border          : 1px solid #0C1C2C;
+}
+
+
 .section-title {
     font-size    : 24px;
     margin-top   : 50px;
