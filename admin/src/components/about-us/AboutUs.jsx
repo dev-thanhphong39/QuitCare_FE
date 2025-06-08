@@ -1,0 +1,94 @@
+import React from "react";
+import "./AboutUs.css";
+import quitImage1 from "../../assets/images/Home1.png";
+import quitImage2 from "../../assets/images/Home2.png";
+function AboutUs() {
+    return (
+        <div className="aboutus-container">
+            <div className="aboutus-content">
+                <div className="aboutus-text">
+                    <h1 className="aboutus-title">QUITCARE</h1>
+                    <h2 className="aboutus-subtitle">
+                        KHƠI NGUỒN SỨC KHỎE - VỮNG BƯỚC TƯƠNG LAI
+                    </h2>
+
+                    <div className="aboutus-highlight">
+                        <p>
+                            <strong>
+                                <em>
+                                    Tạm biệt thuốc lá
+                                    <br />
+                                    chào đón
+                                    <br />
+                                    cuộc sống mới
+                                </em>
+                            </strong>
+                        </p>
+                    </div>
+
+                    <p>
+                        Tại QUITCARE, bạn sẽ được trải nghiệm không gian hiện đại và đầy
+                        cảm hứng, nơi mỗi buổi tập không chỉ nâng cao thể lực mà còn cải
+                        thiện tinh thần.
+                    </p>
+
+                    <p>
+                        Dù bạn là người mới bắt đầu hay đã có chút kinh nghiệm, sự thay
+                        đổi mà bạn khao khát chỉ chờ đợi sự quyết tâm và nỗ lực từ bạn.
+                    </p>
+
+                    <p>
+                        <span role="img" aria-label="star">
+                            ⭐
+                        </span>{" "}
+                        Hãy bắt đầu hành trình chinh phục vóc dáng ngay hôm nay!
+                    </p>
+
+                    <button className="aboutus-button">Tìm hiểu thêm</button>
+                </div>
+
+                <div className="aboutus-image">
+                    <img src={quitImage1} alt="Quit Smoking" />
+                </div>
+
+                <div className="aboutus-section">
+                    <div className="aboutus-text">
+                        <div className="aboutus-highlight">
+                            <p>
+                                Hành trình cá nhân hoá
+                                <br />
+                                Mỗi người một lộ trình riêng
+                            </p>
+                        </div>
+                        <p>
+                            Tại Quitcare, chúng tôi hiểu rằng mỗi người đều có câu chuyện,
+                            thói quen và thử thách riêng khi đối mặt với việc cai thuốc.
+                        </p>
+                        <p>
+                            Vì vậy, bạn sẽ được xây dựng một lộ trình cá nhân hoá, phù
+                            hợp với tình trạng sức khoẻ, lịch trình sinh hoạt và động lực cá
+                            nhân.
+                        </p>
+                        <p>
+                            Từ các buổi tư vấn trực tiếp, các bài tập rèn luyện tinh thần
+                            đến các thông báo nhắc nhở, mọi trải nghiệm tại Quitcare đều
+                            được thiết kế riêng cho bạn.
+                        </p>
+                        <p>
+                            <span role="img" aria-label="target">
+                                👉
+                            </span>{" "}
+                            Cùng khám phá hành trình dành riêng cho bạn hôm nay!
+                        </p>
+                        <button className="aboutus-button">Tìm hiểu thêm</button>
+                    </div>
+                    <div className="aboutus-image">
+                        <img src={quitImage2} alt="Quit Smoking" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default AboutUs;

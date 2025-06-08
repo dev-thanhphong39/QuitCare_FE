@@ -8,6 +8,7 @@ import RankingPage from "./components/ranking/Ranking";
 import BookingPage from "./components/bookings/Booking";
 import Footer from "./components/footer/Footer";
 import Navbar from "./components/navbar/Navbar";
+import PlanPage from "./components/planing/Planning";
 
 function App() {
   const router = createBrowserRouter([
@@ -30,6 +31,10 @@ function App() {
     {
       path: "/ranking",
       element: <RankingPage />,
+    },
+    {
+      path: "/planning",
+      element: <PlanPage />,
     },
     {
       path: "/booking",

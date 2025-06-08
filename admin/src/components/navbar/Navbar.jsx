@@ -26,6 +26,9 @@ const Navbar = () => {
           <Link to="/ranking">XẾP HẠNG</Link>
         </li>
         <li>
+          <Link to="/planning">KẾ HOẠCH</Link>
+        </li>
+        <li>
           <Link to="/booking">ĐẶT LỊCH</Link>
         </li>
       </ul>
