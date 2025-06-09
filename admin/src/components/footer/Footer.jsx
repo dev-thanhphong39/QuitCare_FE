@@ -34,6 +34,9 @@ function Footer() {
             <li>
               <Link to="/ranking">Bảng xếp hạng</Link>
             </li>
+            <li>
+              <Link to="/planning">Lập kế hoạch</Link>
+            </li>
           </ul>
         </div>
         <div className="footer-links">

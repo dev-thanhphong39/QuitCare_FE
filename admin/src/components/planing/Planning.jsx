@@ -1,8 +1,16 @@
 import React from 'react'
+import Footer from '../footer/Footer'
+import Navbar from '../navbar/Navbar'
+import './Planning.css'
 
 function PlanPage() {
   return (
-    <div>Planning</div>
+    <>
+      <Navbar />
+      <div>Planning</div>
+      <Footer />
+
+    </>
   )
 }
 

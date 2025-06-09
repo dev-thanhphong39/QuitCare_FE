@@ -1,5 +1,4 @@
 .navbar {
-
     background-color: #0C1C2C;
     color: white;
     display: flex;
@@ -7,6 +6,7 @@
     justify-content: space-between;
     padding: 10px 30px;
     font-family: Arial, sans-serif;
+    
 }
 
 .navbar-left {
