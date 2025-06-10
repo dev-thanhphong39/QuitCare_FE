@@ -12,22 +12,18 @@ function BackToTopButton() {
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
-  // Cuộn lên đầu trang từ từ (tự custom)
+  // Cuộn mượt về đầu trang
   const scrollToTop = () => {
-    const scrollStep = () => {
-      const currentScroll = window.scrollY;
-      if (currentScroll > 0) {
-        window.scrollTo(0, currentScroll - 40); // tốc độ cuộn, giảm giá trị để cuộn chậm hơn
-        window.requestAnimationFrame(scrollStep);
-      }
-    };
-    window.requestAnimationFrame(scrollStep);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // mượt mà tự động
+    });
   };
 
   return (
     visible && (
       <button className="back-to-top" onClick={scrollToTop}>
-        <i class="fa-solid fa-angle-up"></i>
+        <i className="fa-solid fa-angle-up"></i>
       </button>
     )
   );

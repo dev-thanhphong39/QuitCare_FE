@@ -1,16 +1,20 @@
+.blog-container {
+    min-height: 100dvh;
+    background: linear-gradient(145deg, #f3f9ff, #ffffff);
+    background-image:
+        radial-gradient(circle at top left, #d3d3d3 0%, transparent 30%),
+        radial-gradient(circle at top right, #d3d3d3 0%, transparent 30%),
+        radial-gradient(circle at bottom left, #d3d3d3 0%, transparent 40%),
+        radial-gradient(circle at bottom right, #d3d3d3 0%, transparent 40%);
+}
+
 .blog-page {
     max-width  : 1200px;
-    margin     : 40px auto;
+    margin     : 0 auto;
     padding    : 20px;
     font-family: 'Segoe UI', sans-serif;
 }
 
-.blog-main-title {
-    text-align   : center;
-    font-size    : 36px;
-    color        : #2a6fb4;
-    margin-bottom: 40px;
-}
 
 .blog-nav {
     display        : flex;
@@ -59,12 +63,13 @@
 }
 
 .blog-card {
-    background   : #fff;
-    border-radius: 12px;
-    overflow     : hidden;
-    box-shadow   : 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition   : transform 0.3s ease-in-out;
-
+    background    : #fff;
+    border-radius : 12px;
+    overflow      : hidden;
+    box-shadow    : 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition    : transform 0.3s ease-in-out;
+    display       : flex;
+    flex-direction: column;
 }
 
 .blog-card:hover {
@@ -96,7 +101,11 @@
 }
 
 .blog-content {
-    padding: 16px;
+    padding       : 16px;
+    display       : flex;
+    flex-direction: column;
+    flex-grow     : 1;
+    align-items   : flex-start;
 }
 
 .blog-title {
@@ -110,6 +119,7 @@
     font-size    : 14px;
     color        : #555;
     margin-bottom: 12px;
+    flex-grow    : 1;
 }
 
 .blog-readmore {
@@ -117,6 +127,8 @@
     font-weight    : 600;
     text-decoration: none;
     font-size      : 14px;
+    margin-top     : auto;
+    align-items    : flex-start;
 }
 
 .blog-readmore:hover {
