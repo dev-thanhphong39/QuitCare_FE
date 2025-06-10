@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import "./Ranking.css";
+import Confetti from "react-confetti";
 
 const users = [
   { rank: 1, name: "Nguyễn Văn A", score: 2240, avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=A" },
@@ -15,10 +16,23 @@ const users = [
   { rank: 9, name: "Phan Văn I", score: 1102, avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=I" },
   { rank: 10, name: "Đỗ Thị K", score: 1102, avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=K" },
 ];
+
 function Ranking() {
+  const [showConfetti, setShowConfetti] = useState(false);
   const top3 = [users[1], users[0], users[2]];
+
+  useEffect(() => {
+    const confettiTimeout = setTimeout(() => {
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 5000); // Hide confetti after 5 seconds
+    }, 3000); // Show confetti after 1 second
+
+    return () => clearTimeout(confettiTimeout);
+  })
+
   return (
     <div className="ranking-container">
+      {showConfetti && <Confetti width={window.innerWidth} height={window.innerHeight} />}
       <Navbar />
       <div className="ranking-content">
         <h2 className="ranking-title">Bảng Xếp Hạng</h2>
