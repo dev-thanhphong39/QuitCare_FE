@@ -1,6 +1,7 @@
 import React from "react";
 import "./Navbar.css";
 import logo from "../../assets/images/logo.png";
+import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -17,19 +18,29 @@ const Navbar = () => {
 
       <ul className="navbar-menu">
         <li>
-          <Link to="/">TRANG CHỦ</Link>
+        <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+  TRANG CHỦ
+</NavLink>
         </li>
         <li>
-          <Link to="/blog">BLOG</Link>
+        <NavLink to="/blog" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+  BLOG
+</NavLink>
         </li>
         <li>
-          <Link to="/ranking">XẾP HẠNG</Link>
+        <NavLink to="/ranking" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+  XẾP HẠNG
+</NavLink>
         </li>
         <li>
-          <Link to="/planning">KẾ HOẠCH</Link>
+        <NavLink to="/planning" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+  KẾ HOẠCH
+</NavLink>
         </li>
         <li>
-          <Link to="/booking">ĐẶT LỊCH</Link>
+        <NavLink to="/booking" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+  ĐẶT LỊCH
+</NavLink>
         </li>
       </ul>
 
