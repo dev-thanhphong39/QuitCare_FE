@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 .back-to-top {
     position: fixed;
     bottom: 30px;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import "./BlogDetail.css";
 import Footer from "../footer/Footer";
@@ -306,7 +306,7 @@ Giáo sư Elizabeth Krall và các cộng sự trong tổ chức chăm sóc sứ
 
  
 
-Tuy nhiên, nếu cai được thuốc, bạn có thể thấy được lợi ích của nó một cách rõ ràng và gần như tức thời:
+Tuy nhiên, nếu cai được thuốc, bạn có thể thấy được lợi ích của nó một cách rõ ràng và gần như tức thì:
 
  
 
@@ -503,7 +503,7 @@ Thói quen, nề nếp sinh hoạt của ông cũng thay đổi. Trước đây,
 Sau này, khi thuốc lá có dạng đóng gói, ông ước chừng hút khoảng hơn một bao mỗi ngày. Theo năm tháng, tần suất ông hút tăng lên, khoảng 2 bao một ngày. Ước tính, mỗi tháng ông Ngư chi 600.000 đồng cho việc mua thuốc lá, số tiền không nhỏ với những người "bán mặt cho đất, bán lưng cho trời". 
 Ông từng bỏ thuốc lá nhiều lần nhưng tái nghiện vì tiếp xúc với khói thuốc từ xung quanh, căng thằng, rảnh rỗi lại lôi ra sử dụng. 
 
-Việc nghiện thuốc lá gây nhiều trở ngại trong cuộc sống của ông. Có lúc đang đi làm, thậm chí trong bữa ăn, khi thèm thuốc lá, ông Ngư lại dừng mọi việc lại. Về sức khỏe, nhiều lần đi khám, bác sĩ cảnh báo, tình trạng cuống phổi ông đậm hơn, tiềm ẩn nguy cơ bệnh lý ở bộ phận này.
+Việc nghiện thuốc lá gây nhiều trở ngại trong cuộc sống của ông. Có lúc đang đi làm, thậm chí trong bữa ăn, khi thèm thuốc lá, ông Ngư lại dừng mọi việc lại. Về sức khỏe, nhiều lần đi khám, bác sĩ cảnh báo, tình trạng cuống phổi ông đậm hơn, tiềm ẩn nguy cơ bệnh lý ở bộ phận này
 Tuy nhiên, lý do lớn thôi thúc ông cai thuốc là các cháu bên nội, ngoại. Nhiều lần, khi thấy ông Ngư hút, lũ trẻ nhăn mặt chạy đi kèm theo lời khuyên "ông bỏ thuốc lá đi, cô giáo con bảo hại sức khỏe lắm, ảnh hưởng đến những người xung quanh nữa", ông nhớ lại.  
 
 Bản thân biết thuốc lá có hại, nghĩ đến việc bỏ nhưng quyết tâm chưa cao, dường như, người lớn trong gia đình đã chấp nhận thói quen xấu của ông dù không yêu thích gì. 
@@ -532,6 +532,39 @@ function BlogDetail() {
   const { id } = useParams();
   const blog = blogPosts.find((b) => b.id === parseInt(id));
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [id]);
+
+  // Thêm state cho bình luận
+  const [comments, setComments] = useState([]);
+  const [commentInput, setCommentInput] = useState("");
+
+  const handleCommentChange = (e) => {
+    setCommentInput(e.target.value);
+  };
+
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    if (commentInput.trim() === "") return;
+    setComments([
+      ...comments,
+      {
+        text: commentInput,
+        date: new Date().toLocaleString(),
+      },
+    ]);
+    setCommentInput("");
+  };
+
+  // Random bài viết liên quan chỉ khi id thay đổi
+  const relatedBlogs = useMemo(() => {
+    return blogPosts
+      .filter((b) => b.id !== blog.id)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+  }, [id]);
+
   if (!blog) {
     return <div className="blog-detail-notfound">Blog not found</div>;
   }
@@ -540,7 +573,7 @@ function BlogDetail() {
       <Navbar />
       <div className="blog-detail-page">
         <Link to="/blog" className="back-to-blog">
-          <i class="fa-solid fa-circle-chevron-left"></i> Quay lại
+          <i className="fa-solid fa-circle-chevron-left"></i> Quay lại
         </Link>
         <div className="blog-detail-wrapper">
           <div className="blog-detail-header">
@@ -564,8 +597,55 @@ function BlogDetail() {
               </p>
             ))}
           </div>
+
+          {/* Phần bình luận */}
+          <div className="blog-comments-section">
+            <h2>Bình luận</h2>
+            <form onSubmit={handleCommentSubmit} className="blog-comment-form">
+              <textarea
+                value={commentInput}
+                onChange={handleCommentChange}
+                placeholder="Nhập bình luận của bạn..."
+                rows={3}
+                className="blog-comment-input"
+              />
+              <button type="submit" className="blog-comment-submit">
+                Gửi bình luận
+              </button>
+            </form>
+            <div className="blog-comments-list">
+              {comments.length === 0 && (
+                <p className="blog-no-comments">Chưa có bình luận nào.</p>
+              )}
+              {comments.map((c, idx) => (
+                <div key={idx} className="blog-comment-item">
+                  <div className="blog-comment-text">{c.text}</div>
+                  <div className="blog-comment-date">{c.date}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Kết thúc phần bình luận */}
+
+          {/* Bài viết liên quan */}
+          <div className="related-blogs-section">
+            <h2>Bài viết liên quan</h2>
+            <div className="related-blogs-list">
+              {relatedBlogs.map((item) => (
+                <div key={item.id} className="related-blog-card">
+                  <Link to={`/blog/${item.id}`}>
+                    <img src={item.image} alt={item.title} className="related-blog-img" />
+                    <div className="related-blog-title">{item.title}</div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Kết thúc bài viết liên quan */}
+
         </div>
       </div>
+
       <Footer />
     </>
   );

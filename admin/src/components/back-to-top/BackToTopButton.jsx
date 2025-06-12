@@ -14,10 +14,7 @@ function BackToTopButton() {
 
   // Cuộn mượt về đầu trang
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth", // mượt mà tự động
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
