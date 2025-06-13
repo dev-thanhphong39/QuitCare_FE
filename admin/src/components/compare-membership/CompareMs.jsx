@@ -5,7 +5,7 @@ function MemberComparison() {
   return (
     <div className="compare-container">
       <div className="compare-content">
-        <h1 className="compare-title">So sánh gói thành viên QuitCare</h1>
+        <h1 className="compare-title">So sánh quyền lợi hội viên</h1>
         <p style={{ textAlign: "center", fontSize: "18px", marginBottom: "2rem" }}>
           Chọn gói thành viên phù hợp với bạn để bắt đầu hành trình cai thuốc hiệu quả và cá nhân hoá.
         </p>
