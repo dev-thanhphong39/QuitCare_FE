@@ -9,7 +9,7 @@ import Package from "../components/package-user/package";
 function Home() {
     return (
         <div>
-            <Navbar />
+            <Navbar />           
             <BannerSlider />
             <AboutUs />
             <Package/>

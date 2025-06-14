@@ -5,9 +5,7 @@ import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import BlogPage from "./components/blog/Blog";
 import RankingPage from "./components/ranking/Ranking";
-import BookingPage from "./components/bookings/Booking";
-import Footer from "./components/footer/Footer";
-import Navbar from "./components/navbar/Navbar";
+import BookingPage from "./pages/Booking";
 import PlanPage from "./components/planing/Planning";
 import BackToTopButton from "./components/back-to-top/BackToTopButton";
 import BlogDetail from "./components/blog/BlogDetail";
@@ -41,7 +39,8 @@ function App() {
     {
       path: "/booking",
       element: <BookingPage />,
-    }, {
+    }, 
+    {
       path: "/blog/:id",
       element: <BlogDetail />
     }

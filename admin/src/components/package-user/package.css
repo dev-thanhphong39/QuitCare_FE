@@ -2,7 +2,7 @@
 .package-section {
     background-color: #0e2a52;
     padding: 40px 80px 80px;
-    color: white;
+    color: #ffffff;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -63,17 +63,23 @@
 
 .package-name.free {
     color: #00e0ff;
+    text-align: center;
 }
 
 .package-name.premium {
     color: #ffd700;
+    text-align: center;
 }
 
 .price {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 12px;
+    color: #ffffff;
+    text-align: center;
 }
+
+
 
 .benefit {
     font-size: 15px;

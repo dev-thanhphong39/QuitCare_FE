@@ -6,6 +6,14 @@
   background     : linear-gradient(120deg, #232526 0%, #00bfff 100%);
   padding        : 3rem 1rem;
   font-family    : "Segoe UI", "Roboto", Arial, sans-serif;
+  background-image: url('../../assets/images/package3.png');
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+.compare-container p {
+  color: #fff;
 }
 
 .compare-content {

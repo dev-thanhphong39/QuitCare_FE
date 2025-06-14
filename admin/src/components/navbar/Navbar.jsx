@@ -18,29 +18,29 @@ const Navbar = () => {
 
       <ul className="navbar-menu">
         <li>
-        <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-  TRANG CHỦ
-</NavLink>
+          <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            TRANG CHỦ
+          </NavLink>
         </li>
         <li>
-        <NavLink to="/blog" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-  BLOG
-</NavLink>
+          <NavLink to="/blog" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            BLOG
+          </NavLink>
         </li>
         <li>
-        <NavLink to="/ranking" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-  XẾP HẠNG
-</NavLink>
+          <NavLink to="/ranking" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            XẾP HẠNG
+          </NavLink>
         </li>
         <li>
-        <NavLink to="/planning" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-  KẾ HOẠCH
-</NavLink>
+          <NavLink to="/planning" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            KẾ HOẠCH
+          </NavLink>
         </li>
         <li>
-        <NavLink to="/booking" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-  ĐẶT LỊCH
-</NavLink>
+          <NavLink to="/booking" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            ĐẶT LỊCH
+          </NavLink>
         </li>
       </ul>
 

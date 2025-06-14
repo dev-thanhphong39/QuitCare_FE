@@ -5,12 +5,14 @@
     margin: 0;
     overflow: hidden;
     border-radius: 0;
+    height: calc(100vh - 64px);
+    margin-top: 64px;
 }
 
 .slide {
     position: absolute;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     opacity: 0;
     transition: opacity 1s;
     object-fit: cover;

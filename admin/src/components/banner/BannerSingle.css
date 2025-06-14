@@ -1,0 +1,16 @@
+.banner-single {
+    width: 100vw;
+    height: calc(100vh - 64px);
+    margin-top: 64px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0e2a52;
+}
+
+.banner-single-img {
+    width: 100vw;
+    height: 100%;
+    object-fit: cover;
+    display: block; }
