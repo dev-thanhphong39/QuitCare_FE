@@ -2,10 +2,23 @@ import React from "react";
 import { Button, Checkbox, Form, Input, Card } from "antd";
 import { Link } from "react-router-dom";
 import "./register.css";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import api from "../../configs/axios"; // Adjust the import path as necessary
 
 function RegisterForm() {
-  const onFinish = (values) => {
+  const navigate = useNavigate();
+
+  const onFinish = async (values) => {
     console.log("Success:", values);
+    try {
+      await api.post("/api/auth/register", values);
+      toast.success("Đăng ký thành công!");
+      navigate("/login");
+    } catch (error) {
+      console.error("Registration error:", error.message);
+      toast.error("Đăng ký không thành công, vui lòng thử lại sau!");
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -14,7 +27,11 @@ function RegisterForm() {
 
   return (
     <div className="register-container">
-      <Card className="register-card" title="Đăng ký" style={{ backgroundColor: "transparent", boxShadow: "none" }}>
+      <Card
+        className="register-card"
+        title="Đăng ký"
+        style={{ backgroundColor: "transparent", boxShadow: "none" }}
+      >
         <Form
           name="register"
           layout="vertical"
@@ -46,7 +63,9 @@ function RegisterForm() {
           <Form.Item
             label="Tên đăng nhập"
             name="username"
-            rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập!" }]}
+            rules={[
+              { required: true, message: "Vui lòng nhập tên đăng nhập!" },
+            ]}
           >
             <Input placeholder="Tên đăng nhập" />
           </Form.Item>
@@ -65,7 +84,7 @@ function RegisterForm() {
 
           <Form.Item
             label="Xác nhận mật khẩu"
-            name="confirm"
+            name="confirmPassword"
             dependencies={["password"]}
             hasFeedback
             rules={[
@@ -83,12 +102,13 @@ function RegisterForm() {
             <Input.Password placeholder="Nhập lại mật khẩu" />
           </Form.Item>
 
-          <Form.Item name="remember" valuePropName="checked">
-            <Checkbox>Ghi nhớ tôi</Checkbox>
-          </Form.Item>
-
           <Form.Item>
-            <Button type="primary" htmlType="submit" block className="register-button">
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              className="register-button"
+            >
               Đăng ký
             </Button>
           </Form.Item>

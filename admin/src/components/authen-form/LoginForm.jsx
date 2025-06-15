@@ -2,16 +2,22 @@ import React from "react";
 import { Button, Checkbox, Form, Input, Card } from "antd";
 import { FcGoogle } from "react-icons/fc";
 import "./login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 
 const LoginForm = ({ onLogin, errorMessage }) => {
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     console.log("Login data:", values);
+    try {
+      const response = await fetch("/api/auth/login", values);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      toast.error("Đăng nhập không thành công, vui lòng thử lại sau!");
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -20,8 +26,6 @@ const LoginForm = ({ onLogin, errorMessage }) => {
 
   // Login Google Login
   const navigate = useNavigate();
-
-
 
   return (
     <div className="login-container">
@@ -85,7 +89,6 @@ const LoginForm = ({ onLogin, errorMessage }) => {
           </Button>
           ; */}
 
-
           <div className="google-login">
             <GoogleLogin
               onSuccess={(credentialResponse) => {
@@ -97,7 +100,6 @@ const LoginForm = ({ onLogin, errorMessage }) => {
               onError={() => console.log("Login failed")}
             />
           </div>
-
 
           <div className="login-register-link">
             Chưa có tài khoản?{" "}

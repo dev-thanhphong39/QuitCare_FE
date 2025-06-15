@@ -9,6 +9,7 @@ import BookingPage from "./pages/Booking";
 import PlanPage from "./components/planing/Planning";
 import BackToTopButton from "./components/back-to-top/BackToTopButton";
 import BlogDetail from "./components/blog/BlogDetail";
+import Dashboard from "./components/dashboard/dashboard";
 
 function App() {
   const router = createBrowserRouter([
@@ -39,15 +40,20 @@ function App() {
     {
       path: "/booking",
       element: <BookingPage />,
-    }, 
+    },
     {
       path: "/blog/:id",
-      element: <BlogDetail />
-    }
+      element: <BlogDetail />,
+    },
+    {
+      path: "/dashboard",
+      element: <Dashboard />,
+    },
   ]);
   return (
     <div>
-      <RouterProvider router={router} /><BackToTopButton />
+      <RouterProvider router={router} />
+      <BackToTopButton />
     </div>
   );
 }
