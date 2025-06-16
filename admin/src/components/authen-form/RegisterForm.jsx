@@ -3,8 +3,8 @@ import { Button, Checkbox, Form, Input, Card } from "antd";
 import { Link } from "react-router-dom";
 import "./register.css";
 import { useNavigate } from "react-router-dom";
+import api from "../../configs/axios";
 import { toast } from "react-toastify";
-import api from "../../configs/axios"; // Adjust the import path as necessary
 
 function RegisterForm() {
   const navigate = useNavigate();

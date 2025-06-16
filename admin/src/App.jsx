@@ -11,6 +11,11 @@ import BackToTopButton from "./components/back-to-top/BackToTopButton";
 import BlogDetail from "./components/blog/BlogDetail";
 import Dashboard from "./components/dashboard/dashboard";
 
+import { Provider } from "react-redux";
+import { persistor, store } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
+
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -51,10 +56,14 @@ function App() {
     },
   ]);
   return (
-    <div>
-      <RouterProvider router={router} />
-      <BackToTopButton />
-    </div>
+    <>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router} />
+        </PersistGate>
+        <BackToTopButton />
+      </Provider>
+    </>
   );
 }
 

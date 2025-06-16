@@ -18,9 +18,9 @@ function getItem(label, key, icon, children) {
   };
 }
 const items = [
-  getItem("Overview", "overview", <PieChartOutlined />),
-  getItem("Product", "product", <DesktopOutlined />),
-  getItem("User", "user", <UserOutlined />),
+  getItem("Quản lý người dùng", "user", <UserOutlined />),
+  getItem("Quản lý comment", "comment", <PieChartOutlined />),
+  getItem("Quản lý feedback", "product", <DesktopOutlined />),
   //   getItem("Tom", "3"),
   //   getItem("Bill", "4"),
   //   getItem("Alex", "5"),

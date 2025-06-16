@@ -1,19 +1,37 @@
-import React from "react";
+import React, { use } from "react";
 import { Button, Checkbox, Form, Input, Card } from "antd";
-import { FcGoogle } from "react-icons/fc";
 import "./login.css";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/features/userSlice";
+import { toast } from "react-toastify";
+import api from "../../configs/axios";
+
 
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { toast } from "react-toastify";
 
 const LoginForm = ({ onLogin, errorMessage }) => {
+
   const onFinish = async (values) => {
     console.log("Login data:", values);
     try {
-      const response = await fetch("/api/auth/login", values);
-      navigate("/");
+      const response = await api.post("/api/auth/login", values);
+
+
+
+
+      dispatch(login(response.data));
+      localStorage.setItem("token", response.data.token);
+
+      const user = response.data;
+
+      if (user.role === "ADMIN") {
+        navigate("/dashboard");
+      } else if (user.role === "GUEST") {
+        navigate("/");
+      }
+
     } catch (error) {
       console.log(error);
       toast.error("Đăng nhập không thành công, vui lòng thử lại sau!");
@@ -26,6 +44,7 @@ const LoginForm = ({ onLogin, errorMessage }) => {
 
   // Login Google Login
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <div className="login-container">
