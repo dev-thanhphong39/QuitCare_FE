@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./BookingCoach.css";
 
 const clinics = [
@@ -25,7 +25,18 @@ const timeSlots = [
   "15:00 - 17:00",
 ];
 
+
+
 const Booking = () => {
+    const [selectedDates, setSelectedDates] = useState(
+      clinics.map(() => "2025-06-16")
+    );
+  
+    const handleDateChange = (idx, value) => {
+      const newDates = [...selectedDates];
+      newDates[idx] = value;
+      setSelectedDates(newDates);
+    };
   return (
     <div className="booking-bg">
       <h1 className="booking-title">ĐẶT LỊCH TƯ VẤN</h1>
@@ -49,10 +60,13 @@ const Booking = () => {
 
           <div className="booking-right">
             <div className="booking-date">
-              Chọn ngày : <span>16/06/2025</span>{" "}
-              <span role="img" aria-label="calendar">
-                📅
-              </span>
+              Chọn ngày :{" "}
+              <input
+                type="date"
+                value={selectedDates[idx]}
+                onChange={(e) => handleDateChange(idx, e.target.value)}
+                className="booking-date-input"               
+              />
             </div>
             <div className="booking-times">
               {timeSlots.map((slot, i) => (

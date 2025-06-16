@@ -84,7 +84,9 @@ function AboutUs() {
                   </span>{" "}
                   Cùng khám phá hành trình dành riêng cho bạn hôm nay!
                 </p>
-                <button className="aboutus-button">Tìm hiểu thêm</button>
+                <Link to="/blog">
+                  <button className="aboutus-button">Tìm hiểu thêm</button>
+                </Link>
               </div>
               <div className="aboutus-image">
                 <img src={quitImage2} alt="Quit Smoking" />
