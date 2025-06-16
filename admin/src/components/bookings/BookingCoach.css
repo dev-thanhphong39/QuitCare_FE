@@ -135,3 +135,12 @@
     background: linear-gradient(to right, #fcb045, #fd1d1d);
     color: white;
 }
+
+
+.booking-date-input {
+    margin: 0 8px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px; 
+}
