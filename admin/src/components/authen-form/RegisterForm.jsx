@@ -12,7 +12,7 @@ function RegisterForm() {
   const onFinish = async (values) => {
     console.log("Success:", values);
     try {
-      await api.post("/api/auth/register", values);
+      await api.post("auth/register", values);
       toast.success("Đăng ký thành công!");
       navigate("/login");
     } catch (error) {

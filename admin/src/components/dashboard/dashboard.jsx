@@ -18,9 +18,11 @@ function getItem(label, key, icon, children) {
   };
 }
 const items = [
-  getItem("Quản lý người dùng", "user", <UserOutlined />),
-  getItem("Quản lý comment", "comment", <PieChartOutlined />),
-  getItem("Quản lý feedback", "product", <DesktopOutlined />),
+  getItem("Quản lý người dùng", "users", <UserOutlined />),
+  getItem("Quản lý comment", "comments", <PieChartOutlined />),
+  getItem("Quản lý doanh thu", "revenue", <DesktopOutlined />),
+  getItem("Quản lý feedback", "feedback", <DesktopOutlined />),
+  getItem("Quản lý gói", "packages", <DesktopOutlined />),
   //   getItem("Tom", "3"),
   //   getItem("Bill", "4"),
   //   getItem("Alex", "5"),
@@ -56,7 +58,7 @@ const Dashboard = () => {
         <Content style={{ margin: "0 16px" }}>
           <Breadcrumb
             style={{ margin: "16px 0" }}
-            items={[{ title: "User" }, { title: "Bill" }]}
+            // items={[{ title: "User" }, { title: "Bill" }]}
           />
           <div
             style={{
@@ -70,9 +72,9 @@ const Dashboard = () => {
             {/* đây la body */}
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
+        {/* <Footer style={{ textAlign: "center" }}>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
+        </Footer> */}
       </Layout>
     </Layout>
   );

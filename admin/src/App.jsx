@@ -9,12 +9,17 @@ import BookingPage from "./pages/Booking";
 import PlanPage from "./components/planing/Planning";
 import BackToTopButton from "./components/back-to-top/BackToTopButton";
 import BlogDetail from "./components/blog/BlogDetail";
+import EditProfile from "./components/edit-profile/edit-profile";
 import Dashboard from "./components/dashboard/dashboard";
 
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
-
+import UserManagement from "./pages/dashboard-admin/user";
+import CommentManagement from "./pages/dashboard-admin/comment";
+import RevenueManagement from "./pages/dashboard-admin/revenue";
+import PackagesManagement from "./pages/dashboard-admin/packages";
+import FeedbackManagement from "./pages/dashboard-admin/feedback";
 
 function App() {
   const router = createBrowserRouter([
@@ -51,8 +56,34 @@ function App() {
       element: <BlogDetail />,
     },
     {
+      path: "/edit-profile",
+      element: <EditProfile />,
+    },
+    {
       path: "/dashboard",
       element: <Dashboard />,
+      children: [
+        {
+          path: "users",
+          element: <UserManagement />,
+        },
+        {
+          path: "comments",
+          element: <CommentManagement />,
+        },
+        {
+          path: "revenue",
+          element: <RevenueManagement />,
+        },
+        {
+          path: "feedback",
+          element: <FeedbackManagement />,
+        },
+        {
+          path: "packages",
+          element: <PackagesManagement />,
+        },
+      ],
     },
   ]);
   return (

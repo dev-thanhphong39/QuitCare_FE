@@ -7,31 +7,28 @@ import { login } from "../../redux/features/userSlice";
 import { toast } from "react-toastify";
 import api from "../../configs/axios";
 
-
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 
 const LoginForm = ({ onLogin, errorMessage }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onFinish = async (values) => {
     console.log("Login data:", values);
     try {
-      const response = await api.post("/api/auth/login", values);
-
-
-
-
-      dispatch(login(response.data));
-      localStorage.setItem("token", response.data.token);
+      const response = await api.post("/auth/login", values);
 
       const user = response.data;
+      dispatch(login(user));
+
+      localStorage.setItem("token", user.token);
 
       if (user.role === "ADMIN") {
         navigate("/dashboard");
-      } else if (user.role === "GUEST") {
+      } else if (user.role === "GUEST" || user.role === "CUSTOMER") {
         navigate("/");
       }
-
     } catch (error) {
       console.log(error);
       toast.error("Đăng nhập không thành công, vui lòng thử lại sau!");
@@ -43,8 +40,6 @@ const LoginForm = ({ onLogin, errorMessage }) => {
   };
 
   // Login Google Login
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   return (
     <div className="login-container">
@@ -113,7 +108,8 @@ const LoginForm = ({ onLogin, errorMessage }) => {
               onSuccess={(credentialResponse) => {
                 const userData = jwtDecode(credentialResponse.credential);
                 console.log("Google User:", userData);
-                onLogin?.(userData);
+                // onLogin?.(userData);
+                dispatch(login(userData));
                 navigate("/");
               }}
               onError={() => console.log("Login failed")}
