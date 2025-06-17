@@ -20,6 +20,7 @@ import CommentManagement from "./pages/dashboard-admin/comment";
 import RevenueManagement from "./pages/dashboard-admin/revenue";
 import PackagesManagement from "./pages/dashboard-admin/packages";
 import FeedbackManagement from "./pages/dashboard-admin/feedback";
+import PostsManagement from "./pages/dashboard-admin/posts";
 
 function App() {
   const router = createBrowserRouter([
@@ -84,6 +85,10 @@ function App() {
           path: "packages",
           element: <PackagesManagement />,
         },
+        {
+          path: "posts",
+          element: <PostsManagement />,
+        }
       ],
     },
   ]);

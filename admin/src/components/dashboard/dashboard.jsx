@@ -19,10 +19,11 @@ function getItem(label, key, icon, children) {
 }
 const items = [
   getItem("Quản lý người dùng", "users", <UserOutlined />),
-  getItem("Quản lý comment", "comments", <PieChartOutlined />),
+  getItem("Quản lý bình luận", "comments", <PieChartOutlined />),
   getItem("Quản lý doanh thu", "revenue", <DesktopOutlined />),
-  getItem("Quản lý feedback", "feedback", <DesktopOutlined />),
+  getItem("Quản lý phản hồi", "feedback", <DesktopOutlined />),
   getItem("Quản lý gói", "packages", <DesktopOutlined />),
+  getItem("Quản lý bài viết", "posts", <DesktopOutlined />),
   //   getItem("Tom", "3"),
   //   getItem("Bill", "4"),
   //   getItem("Alex", "5"),
@@ -58,7 +59,7 @@ const Dashboard = () => {
         <Content style={{ margin: "0 16px" }}>
           <Breadcrumb
             style={{ margin: "16px 0" }}
-            // items={[{ title: "User" }, { title: "Bill" }]}
+          // items={[{ title: "User" }, { title: "Bill" }]}
           />
           <div
             style={{
