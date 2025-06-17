@@ -46,6 +46,7 @@ function App() {
     {
       path: "/planning",
       element: <PlanPage />,
+   
     },
     {
       path: "/booking",
