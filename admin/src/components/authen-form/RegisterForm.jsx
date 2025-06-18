@@ -26,9 +26,9 @@ function RegisterForm() {
   };
 
   return (
-    <div className="register-container">
+    <div className="auth-register-container">
       <Card
-        className="register-card"
+        className="auth-register-card"
         title="Đăng ký"
         style={{ backgroundColor: "transparent", boxShadow: "none" }}
       >
@@ -39,7 +39,7 @@ function RegisterForm() {
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
-          className="register-form"
+          className="auth-register-form"
         >
           <Form.Item
             label="Họ và tên"
@@ -107,15 +107,15 @@ function RegisterForm() {
               type="primary"
               htmlType="submit"
               block
-              className="register-button"
+              className="auth-register-button"
             >
               Đăng ký
             </Button>
           </Form.Item>
 
-          <div className="login-register-link">
+          <div className="auth-register-login-link">
             Đã có tài khoản?{" "}
-            <Link to="/login" className="login-link">
+            <Link to="/login" className="auth-register-login-link-a">
               Đăng nhập
             </Link>
           </div>

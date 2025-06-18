@@ -42,13 +42,13 @@ const LoginForm = ({ onLogin, errorMessage }) => {
   // Login Google Login
 
   return (
-    <div className="login-container">
+    <div className="auth-login-container">
       <Card
-        className="login-card"
+        className="auth-login-card"
         title="Đăng nhập"
         style={{ backgroundColor: "transparent", boxShadow: "none" }}
       >
-        {errorMessage && <div className="login-error">{errorMessage}</div>}
+        {errorMessage && <div className="auth-login-error">{errorMessage}</div>}
 
         <Form
           name="login-form"
@@ -56,59 +56,58 @@ const LoginForm = ({ onLogin, errorMessage }) => {
           initialValues={{ remember: true }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
-          className="login-form"
+          className="auth-login-form"
         >
           <Form.Item
             label="Tài khoản"
             name="email"
-            className="login-form-item"
+            className="auth-login-form-item"
             rules={[
               { required: true, message: "Vui lòng nhập tài khoản!" },
               { type: "email", message: "Email không hợp lệ!" },
             ]}
           >
-            <Input placeholder="Email" className="login-input" />
+            <Input placeholder="Email" className="auth-login-input" />
           </Form.Item>
           <Form.Item
             label="Mật khẩu"
             name="password"
-            className="login-form-item"
+            className="auth-login-form-item"
             rules={[
               { required: true, message: "Vui lòng nhập mật khẩu!" },
               { min: 6, message: "Mật khẩu phải ít nhất 6 ký tự!" },
             ]}
           >
-            <Input.Password placeholder="Mật khẩu" className="login-input" />
+            <Input.Password
+              placeholder="Mật khẩu"
+              className="auth-login-input"
+            />
           </Form.Item>
           <Form.Item
             name="remember"
             valuePropName="checked"
-            className="login-form-item-remember"
+            className="auth-login-form-item-remember"
           >
-            <Checkbox className="login-checkbox">Ghi nhớ đăng nhập</Checkbox>
+            <Checkbox className="auth-login-checkbox">
+              Ghi nhớ đăng nhập
+            </Checkbox>
           </Form.Item>
-          <Form.Item className="login-form-item">
+          <Form.Item className="auth-login-form-item">
             <Button
               type="primary"
               htmlType="submit"
               block
-              className="login-button"
+              className="auth-login-button"
             >
               Đăng nhập
             </Button>
           </Form.Item>
-          <div className="login-divider">hoặc</div>
-          {/* <Button className="login-google-button" block icon={<FcGoogle />}>
-            Đăng nhập với Google 🚀{" "}
-          </Button>
-          ; */}
-
-          <div className="google-login">
+          <div className="auth-login-divider">hoặc</div>
+          <div className="auth-login-google-login">
             <GoogleLogin
               onSuccess={(credentialResponse) => {
                 const userData = jwtDecode(credentialResponse.credential);
                 console.log("Google User:", userData);
-                // onLogin?.(userData);
                 dispatch(login(userData));
                 navigate("/");
               }}
@@ -116,9 +115,9 @@ const LoginForm = ({ onLogin, errorMessage }) => {
             />
           </div>
 
-          <div className="login-register-link">
+          <div className="auth-login-register-link">
             Chưa có tài khoản?{" "}
-            <Link to="/register" className="register-link">
+            <Link to="/register" className="auth-login-register-link-a">
               Đăng ký
             </Link>
           </div>

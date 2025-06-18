@@ -107,6 +107,16 @@
     transition: background 0.3s ease;
 }
 
+/* Hiệu ứng hover cho nút chọn khung giờ */
+.booking-slot:hover,
+.booking-slot.active:hover {
+    background-color: #0056b3;
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px 0 rgba(0,123,255,0.15);
+    transition: all 0.2s;
+}
+
 .booking-slot.active {
     background-color: #007bff;
     color: white;
@@ -131,9 +141,26 @@
     color: white;
 }
 
+/* Hiệu ứng hover cho nút Đặt Lịch */
+.booking-btn-primary:hover {
+    background-color: #0056b3;
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px 0 rgba(0,74,173,0.15);
+    transition: all 0.2s;
+}
+
 .booking-btn-secondary {
     background: linear-gradient(to right, #fcb045, #fd1d1d);
     color: white;
+}
+
+/* Hiệu ứng hover cho nút Phòng Khám */
+.booking-btn-secondary:hover {
+    filter: brightness(1.1) saturate(1.2);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px 0 rgba(252,176,69,0.15);
+    transition: all 0.2s;
 }
 
 

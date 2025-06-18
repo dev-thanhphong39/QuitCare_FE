@@ -1,265 +1,240 @@
-/* .planning-container {
-  margin-top: 64px;
-  background: linear-gradient(135deg, #eaf6fb 0%, #f7fafd 100%);
-  min-height: 100vh;
-  padding: 48px 0 60px 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-
+/* Reset */
+.planpage-container,
+.planpage-form,
+.planpage-input,
+.planpage-options label,
+.planpage-choice-box {
+  font-family: 'San Francisco', 'Segoe UI', Arial, sans-serif;
+  box-sizing: border-box;
 }
 
-.planning-title {
+.planpage-container {
+  max-width: 1200px;
+  margin: 40px auto 0 auto;
+  background: transparent;
+  padding: 60px 0 48px 0; /* Đẩy toàn bộ trang xuống */
+}
+
+.planpage-title {
   text-align: center;
-  font-size: 42px;
-  font-weight: 900;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #007aff;
   margin-bottom: 36px;
-  color: #0e2a52;
-  letter-spacing: 1.5px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  letter-spacing: 0.5px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px 0 rgba(60, 60, 60, 0.06);
+  padding: 24px 0 18px 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  border-bottom: 3px solid #007aff;
 }
 
-.planning-form {
+.planpage-form-wrapper {
   max-width: 1100px;
   margin: 0 auto;
-  background: #fff;
-  border-radius: 20px;
-  padding: 44px 40px 36px 40px;
-  box-shadow: 0 8px 32px 0 rgba(14, 42, 82, 0.10);
-  border: 1.5px solid #e0e8f0;
+  background: #f8f9fb;
+  border-radius: 32px;
+  box-shadow: 0 8px 32px 0 rgba(60,60,60,0.13);
+  padding: 48px 40px 56px 40px;
 }
 
-.planning-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px 56px;
+.planpage-form {
+  width: 100%;
 }
 
-.planning-question {
-  font-size: 18px;
-  font-weight: 700;
-  margin: 22px 0 10px 0;
-  color: #0e2a52;
-  letter-spacing: 0.2px;
-}
-
-.planning-options {
+.planpage-grid {
   display: flex;
+  gap: 60px;
   flex-wrap: wrap;
-  gap: 16px 32px;
-  margin-bottom: 8px;
 }
 
-.planning-options label {
-  font-size: 16px;
+.planpage-grid > div {
+  flex: 1 1 420px;
+  min-width: 340px;
+}
+
+.planpage-question {
+  font-size: 1.13rem;
   font-weight: 500;
-  color: #1a3353;
+  margin: 22px 0 10px 0;
+  color: #222;
+}
+
+.planpage-input {
+  width: 100%;
+  padding: 16px 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 14px;
+  background: #fff;
+  font-size: 1.08rem;
+  margin-bottom: 10px;
+  transition: border 0.2s;
+  outline: none;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03);
+}
+
+.planpage-input:focus {
+  border: 1.5px solid #007aff;
+  background: #f4f8ff;
+}
+
+.planpage-options {
+  display: flex;
+  gap: 22px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.planpage-options-col {
+  flex-direction: column;
+  gap: 12px;
+}
+
+.planpage-options label {
   display: flex;
   align-items: center;
-  gap: 6px;
+  font-size: 1.08rem;
   cursor: pointer;
-  transition: color 0.2s;
+  gap: 10px;
+  padding: 7px 0;
+  user-select: none;
 }
 
-.planning-options label input[type="radio"],
-.planning-options label input[type="checkbox"] {
-  accent-color: #0070f3;
-  width: 18px;
-  height: 18px;
-  margin-right: 4px;
+.planpage-options input[type="radio"],
+.planpage-options input[type="checkbox"] {
+  accent-color: #007aff;
+  width: 20px;
+  height: 20px;
 }
 
-.planning-options-col {
-  flex-direction: column;
-  gap: 12px 0;
-}
-
-.planning-input {
-  width: 260px;
-  padding: 9px 14px;
-  border-radius: 8px;
-  border: 1.5px solid #b5c9e2;
-  font-size: 16px;
-  margin-bottom: 10px;
-  margin-top: 2px;
-  background: #f7fafd;
-  color: #0e2a52;
-  transition: border 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 8px 0 rgba(14, 42, 82, 0.03);
-}
-
-.planning-input:focus {
-  border: 1.5px solid #0070f3;
-  outline: none;
-  background: #eaf6fb;
-  box-shadow: 0 0 0 2px #b3e0ff;
-}
-
-.planning-submit {
-  margin: 38px auto 0 auto;
+/* Nút gửi: màu chủ đạo, không gradient, không màu mè */
+.planpage-submit {
   display: block;
-  background: linear-gradient(90deg, #0070f3 0%, #4da6ff 100%);
+  margin: 40px auto 0 auto;
+  padding: 18px 64px;
+  background: #007aff;
   color: #fff;
-  font-size: 22px;
+  font-size: 1.22rem;
   font-weight: 700;
   border: none;
-  border-radius: 10px;
-  padding: 14px 60px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px 0 rgba(0,122,255,0.10);
   cursor: pointer;
-  box-shadow: 0 4px 16px 0 rgba(0, 112, 243, 0.10);
-  transition: background 0.2s, transform 0.15s;
-  letter-spacing: 0.5px;
+  transition: background 0.2s, box-shadow 0.2s;
 }
 
-.planning-submit:hover {
-  background: linear-gradient(90deg, #005bb5 0%, #0070f3 100%);
-  transform: translateY(-2px) scale(1.03);
+.planpage-submit:hover {
+  background: #005ecb;
+  box-shadow: 0 6px 24px 0 rgba(0,122,255,0.13);
+}
+
+.planpage-error {
+  color: #ff3b30;
+  background: #fff0f0;
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin: 22px auto 0 auto;
+  max-width: 420px;
+  text-align: center;
+  font-size: 1.08rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px 0 rgba(255,59,48,0.07);
+}
+
+.planpage-choice-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.planpage-choice-box {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px 0 rgba(60,60,60,0.13);
+  padding: 40px 36px 32px 36px;
+  min-width: 340px;
+  max-width: 95vw;
+  text-align: center;
+  animation: fadeIn 0.3s;
+}
+
+.planpage-choice-box h3 {
+  font-size: 1.28rem;
+  font-weight: 700;
+  margin-bottom: 28px;
+  color: #222;
+}
+
+.planpage-choice-btns {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+}
+
+/* Nút đề xuất */
+.planpage-choice-btn.recommend {
+  background: #007aff;
+  color: #fff;
+  border: none;
+  transition: background 0.2s;
+}
+.planpage-choice-btn.recommend:hover {
+  background: #005ecb;
+}
+
+/* Nút tự lập */
+.planpage-choice-btn.self {
+  background: #ffbe2e;
+  color: #222;
+  border: none;
+  transition: background 0.2s;
+}
+.planpage-choice-btn.self:hover {
+  background: #e6a800;
+  color: #fff;
+}
+
+/* Xóa border xanh của nút tự lập cũ nếu có */
+.planpage-choice-btn {
+  padding: 14px 38px;
+  border-radius: 14px;
+  font-size: 1.13rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
 }
 
 @media (max-width: 900px) {
-  .planning-form {
-    padding: 28px 10px 24px 10px;
+  .planpage-container {
+    padding: 40px 0 32px 0;
   }
-
-  .planning-grid {
-    grid-template-columns: 1fr;
-    gap: 32px 0;
+  .planpage-title {
+    font-size: 2rem;
+    padding: 24px 0 18px 0;
+    border-radius: 16px;
   }
-
-  .planning-input {
-    width: 100%;
-    min-width: 0;
+  .planpage-form-wrapper {
+    padding: 24px 8px 32px 8px;
+    border-radius: 16px;
   }
-}
-
-// Modal lựa chọn kế hoạch 
-.plan-choice-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(14, 42, 82, 0.18);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.plan-choice-box {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 8px 32px 0 rgba(14, 42, 82, 0.18);
-  padding: 38px 36px 32px 36px;
-  min-width: 320px;
-  text-align: center;
-  animation: fadeInScale 0.25s;
-}
-
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
+  .planpage-grid {
+    flex-direction: column;
+    gap: 0;
   }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
+  .planpage-choice-box {
+    min-width: 90vw;
+    padding: 24px 8px 18px 8px;
   }
 }
 
-.plan-choice-box h3 {
-  font-size: 22px;
-  font-weight: 800;
-  color: #0e2a52;
-  margin-bottom: 28px;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(24px);}
+  to { opacity: 1; transform: translateY(0);}
 }
-
-.plan-choice-btns {
-  display: flex;
-  gap: 28px;
-  justify-content: center;
-}
-
-.plan-choice-btn {
-  font-size: 18px;
-  font-weight: 700;
-  padding: 12px 36px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: background 0.18s, color 0.18s, transform 0.12s;
-  box-shadow: 0 2px 8px 0 rgba(14, 42, 82, 0.06);
-}
-
-.plan-choice-btn.recommend {
-  background: linear-gradient(90deg, #0070f3 0%, #4da6ff 100%);
-  color: #fff;
-}
-
-.plan-choice-btn.recommend:hover {
-  background: linear-gradient(90deg, #005bb5 0%, #0070f3 100%);
-  transform: translateY(-2px) scale(1.04);
-}
-
-.plan-choice-btn.self {
-  background: linear-gradient(90deg, #ffd700 0%, #ffb347 100%);
-  color: #0e2a52;
-}
-
-.plan-choice-btn.self:hover {
-  background: linear-gradient(90deg, #ffb347 0%, #ffd700 100%);
-  color: #0e2a52;
-  transform: translateY(-2px) scale(1.04);
-}
-
-
-.planning-error {
-  color: #d8000c;
-  background: #fff4f4;
-  border: 1.5px solid #ffbaba;
-  border-radius: 8px;
-  padding: 12px 18px;
-  margin-bottom: 18px;
-  font-size: 16px;
-  text-align: center;
-  font-weight: 600;
-  letter-spacing: 0.2px;
-  margin-top: 16px;
-}
-
-
-.plan-result-box {
-  max-width: 700px;
-  margin: 40px auto 0 auto;
-  padding: 36px 32px 32px 32px;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px 0 rgba(14, 42, 82, 0.10);
-  background: #fff;
-  text-align: center;
-  animation: fadeInScale 0.3s;
-}
-
-.plan-result-heading {
-  font-size: 26px;
-  font-weight: 800;
-  margin-bottom: 18px;
-  color: #0e2a52;
-  letter-spacing: 0.5px;
-}
-
-.plan-result-recommend {
-  border: 2.5px solid #0070f3;
-  background: linear-gradient(90deg, #eaf6fb 0%, #f7fafd 100%);
-}
-
-.plan-result-self {
-  border: 2.5px solid #ffd700;
-  background: linear-gradient(90deg, #fffbe6 0%, #fffde4 100%);
-}
-
-.plan-result-box p {
-  font-size: 18px;
-  color: #1a3353;
-  margin-top: 8px;
-  line-height: 1.7;
-} 
-*/

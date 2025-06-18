@@ -45,7 +45,7 @@ function PlanPage() {
     } else {
       setForm({ ...form, [name]: value });
     }
-    setError(""); 
+    setError("");
   };
 
   const isFilled = () => {
@@ -65,13 +65,12 @@ function PlanPage() {
       form.quit_reasons.length > 0
     );
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isFilled()) {
-      setError("Vui lòng nhập đầy đủ tất cả các trường thông tin!");
+      setError("Vui lòng nhập đầy đủ tất cả các thông tin!");
       return;
-
     }
     console.log(form);
     setShowChoice(true);
@@ -80,12 +79,12 @@ function PlanPage() {
   return (
     <>
       <Navbar />
-      <div className="planning-container">
-        <h2 className="planning-title">Thông tin khảo sát</h2>
-        <form className="planning-form">
-          <div className="planning-grid">
+      <div className="planpage-container">
+        <h2 className="planpage-title">Thông tin khảo sát</h2>
+        <form className="planpage-form">
+          <div className="planpage-grid">
             <div>
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[1]</b> Bạn bắt đầu hút thuốc từ năm bao nhiêu tuổi?
               </div>
               <input
@@ -95,11 +94,10 @@ function PlanPage() {
                 max="100"
                 value={form.started_smoking_age}
                 onChange={handleChange}
-                className="planning-input"
+                className="planpage-input"
                 placeholder="Nhập tuổi"
               />
-
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[2]</b> Hiện tại hút bao nhiêu điếu/ngày?
               </div>
               <input
@@ -109,11 +107,10 @@ function PlanPage() {
                 max="100"
                 value={form.cigarettes_per_day}
                 onChange={handleChange}
-                className="planning-input"
+                className="planpage-input"
                 placeholder="Số điếu/ngày"
               />
-
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[3]</b> Một bao có bao nhiêu điếu?
               </div>
               <input
@@ -123,14 +120,13 @@ function PlanPage() {
                 max="50"
                 value={form.cigarettes_per_pack}
                 onChange={handleChange}
-                className="planning-input"
+                className="planpage-input"
                 placeholder="Số điếu/bao"
               />
-
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[4]</b> Sau khi thức dậy bao lâu bạn hút điếu đầu?
               </div>
-              <div className="planning-options">
+              <div className="planpage-options">
                 <label>
                   <input
                     type="radio"
@@ -172,8 +168,7 @@ function PlanPage() {
                   &gt;60 phút
                 </label>
               </div>
-
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[5]</b> Bạn đã từng cố gắng cai thuốc chưa? (Số lần)
               </div>
               <input
@@ -183,11 +178,10 @@ function PlanPage() {
                 max="100"
                 value={form.quit_attempts}
                 onChange={handleChange}
-                className="planning-input"
+                className="planpage-input"
                 placeholder="Số lần"
               />
-
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[6]</b> Thời gian dài nhất từng không hút thuốc?
               </div>
               <input
@@ -195,14 +189,13 @@ function PlanPage() {
                 name="longest_quit_duration"
                 value={form.longest_quit_duration}
                 onChange={handleChange}
-                className="planning-input"
+                className="planpage-input"
                 placeholder="Ví dụ: 1 tuần, 1 tháng..."
               />
-
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[7]</b> Có người thân/bạn bè ủng hộ việc cai thuốc?
               </div>
-              <div className="planning-options">
+              <div className="planpage-options">
                 <label>
                   <input
                     type="radio"
@@ -224,8 +217,7 @@ function PlanPage() {
                   Không
                 </label>
               </div>
-
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[8]</b> Bạn có cảm thấy khó chịu nếu không hút?
               </div>
               <input
@@ -233,11 +225,10 @@ function PlanPage() {
                 name="craving_without_smoking"
                 value={form.craving_without_smoking}
                 onChange={handleChange}
-                className="planning-input"
+                className="planpage-input"
                 placeholder="Mô tả cảm giác"
               />
-
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[9]</b> Bạn hút nhiều hơn khi nào? (Tình huống kích hoạt)
               </div>
               <input
@@ -245,16 +236,15 @@ function PlanPage() {
                 name="trigger_situation"
                 value={form.trigger_situation}
                 onChange={handleChange}
-                className="planning-input"
+                className="planpage-input"
                 placeholder="Ví dụ: khi căng thẳng, sau bữa ăn..."
               />
             </div>
-
             <div>
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[10]</b> Ý định cai thuốc trong bao lâu tới?
               </div>
-              <div className="planning-options">
+              <div className="planpage-options">
                 <label>
                   <input
                     type="radio"
@@ -306,11 +296,10 @@ function PlanPage() {
                   Chưa chắc
                 </label>
               </div>
-
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[11]</b> Mức độ sẵn sàng cai thuốc
               </div>
-              <div className="planning-options">
+              <div className="planpage-options">
                 <label>
                   <input
                     type="radio"
@@ -342,11 +331,10 @@ function PlanPage() {
                   Rất sẵn sàng
                 </label>
               </div>
-
-              <div className="planning-question">
+              <div className="planpage-question">
                 <b>[12]</b> Lý do chính muốn cai thuốc (chọn tối đa 2)?
               </div>
-              <div className="planning-options planning-options-col">
+              <div className="planpage-options planpage-options-col">
                 {reasonsList.map((reason) => (
                   <label key={reason}>
                     <input
@@ -368,26 +356,28 @@ function PlanPage() {
           </div>
           <button
             onClick={handleSubmit}
-            className="planning-submit"
+            className="planpage-submit"
             type="submit"
           >
             Gửi thông tin
           </button>
-        {error && <div className="planning-error">{error}</div>}
+          {error && <div className="planpage-error">{error}</div>}
         </form>
         {showChoice && (
           <div
-            className="plan-choice-modal"
+            className="planpage-choice-modal"
             onClick={() => setShowChoice(false)}
           >
             <div
-              className="plan-choice-box"
+              className="planpage-choice-box"
               onClick={(e) => e.stopPropagation()}
             >
               <h3>Bạn muốn chọn phương án nào?</h3>
-              <div className="plan-choice-btns">
-                <button className="plan-choice-btn recommend">Đề xuất</button>
-                <button className="plan-choice-btn self">Tự lập</button>
+              <div className="planpage-choice-btns">
+                <button className="planpage-choice-btn recommend">
+                  Đề xuất
+                </button>
+                <button className="planpage-choice-btn self">Tự lập</button>
               </div>
             </div>
           </div>

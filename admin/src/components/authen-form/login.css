@@ -1,16 +1,16 @@
 /* Nền và bố cục */
-.login-container {
+.auth-login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 20px;
     box-sizing: border-box;
     overflow: hidden;
-    
+
 }
 
 /* Thẻ card chính */
-.login-card {
+.auth-login-card {
     width: 400px;
     height: auto;
     background-color: #fff;
@@ -20,7 +20,7 @@
 }
 
 /* Tiêu đề card */
-.login-card .ant-card-head-title {
+.auth-login-card .ant-card-head-title {
     font-size: 24px;
     font-weight: bold;
     color: #1f2937;
@@ -28,22 +28,22 @@
 }
 
 /* Form đăng nhập */
-.login-form {
+.auth-login-form {
     width: 100%;
 }
 
 /* Các item trong form */
-.login-form-item {
+.auth-login-form-item {
     margin-bottom: 10px;
 }
 
 /* Checkbox */
-.login-form-item-remember {
+.auth-login-form-item-remember {
     margin-bottom: 16px;
 }
 
 /* Ô input */
-.login-input {
+.auth-login-input {
     border-radius: 8px;
     padding: 10px;
     font-size: 14px;
@@ -51,12 +51,12 @@
 }
 
 /* Checkbox ghi nhớ */
-.login-checkbox {
+.auth-login-checkbox {
     color: #4b5563;
 }
 
 /* Nút đăng nhập */
-.login-button {
+.auth-login-button {
     background-color: #3b82f6;
     border: none;
     border-radius: 8px;
@@ -65,12 +65,12 @@
     transition: background-color 0.3s ease;
 }
 
-.login-button:hover {
+.auth-login-button:hover {
     background-color: #2563eb;
 }
 
 /* Dòng phân cách */
-.login-divider {
+.auth-login-divider {
     text-align: center;
     margin: 16px 0;
     color: #9ca3af;
@@ -78,8 +78,8 @@
     position: relative;
 }
 
-.login-divider::before,
-.login-divider::after {
+.auth-login-divider::before,
+.auth-login-divider::after {
     content: "";
     position: absolute;
     top: 50%;
@@ -88,16 +88,16 @@
     background: #e5e7eb;
 }
 
-.login-divider::before {
+.auth-login-divider::before {
     left: 0;
 }
 
-.login-divider::after {
+.auth-login-divider::after {
     right: 0;
 }
 
 /* Nút Google */
-.login-google-button {
+.auth-login-google-button {
     border: 1px solid #d1d5db;
     background-color: #fff;
     border-radius: 8px;
@@ -109,19 +109,19 @@
     justify-content: center;
 }
 
-.login-google-button:hover {
+.auth-login-google-button:hover {
     background-color: #f3f4f6 !important;
     border-color: #9ca3af !important;
     color: #111827 !important;
 }
 
-.login-google-button .anticon {
+.auth-login-google-button .anticon {
     margin-right: 8px !important;
     font-size: 18px !important;
 }
 
 /* Thông báo lỗi */
-.login-error {
+.auth-login-error {
     color: #ef4444;
     background-color: #fee2e2;
     padding: 12px;
@@ -131,26 +131,26 @@
     font-weight: 500;
 }
 
-.login-register-link {
+.auth-login-register-link {
     margin-top: 16px;
     text-align: center;
     font-size: 14px;
     color: #4b5563;
 }
 
-.register-link {
+.auth-login-register-link .auth-login-register-link-a {
     color: #106cff;
     font-weight: 500;
     text-decoration: none;
     margin-left: 4px;
 }
 
-.register-link:hover {
+.auth-login-register-link .auth-login-register-link-a:hover {
     text-decoration: underline;
     color: #759aeb;
 }
 
-.google-login {
+.auth-login-google-login {
     display: flex;
     justify-content: center;
     align-items: center;

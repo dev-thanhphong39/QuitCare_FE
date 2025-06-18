@@ -1,4 +1,4 @@
-.register-container {
+.auth-register-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,7 +6,7 @@
     box-sizing: border-box;
 }
 
-.register-card {
+.auth-register-card {
     width: 400px;
     height: auto;
     background-color: #fff;
@@ -15,38 +15,38 @@
     border: none;
 }
 
-.register-form {
+.auth-register-form {
     width: 100%;
 }
 
-.register-card .ant-card-head-title {
+.auth-register-card .ant-card-head-title {
     font-size: 24px;
     font-weight: bold;
     color: #1f2937;
     text-align: center;
 }
 
-.register-form .ant-form-item {
+.auth-register-form .ant-form-item {
     margin-bottom: 10px;
 }
 
-.register-form input {
+.auth-register-form input {
     padding: 10px;
     border-radius: 8px;
     width: 100%;
     font-size: 14px;
 }
 
-.register-form .ant-checkbox-wrapper {
+.auth-register-form .ant-checkbox-wrapper {
     font-size: 14px;
 }
 
-.register-form .ant-btn-primary {
+.auth-register-form .ant-btn-primary {
     border-radius: 8px;
     height: 40px;
 }
 
-.register-button {
+.auth-register-button {
     background-color: #3b82f6;
     border: none;
     border-radius: 8px;
@@ -55,21 +55,21 @@
     transition: background-color 0.3s ease;
 }
 
-.login-register-link {
+.auth-register-login-link {
     text-align: center;
     margin-top: 12px;
     font-size: 14px;
     color: #4b5563;
 }
 
-.login-link {
+.auth-register-login-link-a {
     color: #106cff;
     font-weight: 500;
     text-decoration: none;
     margin-left: 4px;
 }
 
-.login-link:hover {
+.auth-register-login-link-a:hover {
     text-decoration: underline;
     color: #2563eb;
 }
