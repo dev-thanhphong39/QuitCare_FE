@@ -22,20 +22,21 @@ function EditProfile() {
   };
 
   const handleSubmit = async () => {
+    console.log("Token:", localStorage.getItem("token"));
+    console.log(">>> Đã click Lưu thay đổi");
+  
     if (!user?.id) {
       message.error("Không tìm thấy ID người dùng!");
       return;
     }
-
+  
     try {
       const response = await api.put(`user/${user.id}`, {
         fullname: form.fullname,
         username: form.username,
         gender: form.gender,
       });
-
       console.log("Updated user:", response.data);
-
       dispatch(
         login({
           ...response.data,
@@ -44,13 +45,31 @@ function EditProfile() {
           )}&background=ececec&color=555&size=64&rounded=true`,
         })
       );
-
+      
       message.success("Cập nhật thành công!");
     } catch (error) {
       console.error("Lỗi khi cập nhật:", error);
       message.error("Cập nhật thất bại!");
+      console.error(" Lỗi khi gọi API:", error);
+  
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Dữ liệu lỗi:", error.response.data);
+        message.error(
+          `Lỗi ${error.response.status}: ${
+            error.response.data.message || "Không rõ lỗi"
+          }`
+        );
+      } else if (error.request) {
+        console.error("Không nhận được phản hồi từ server:", error.request);
+        message.error("Không thể kết nối đến máy chủ.");
+      } else {
+        console.error("Lỗi khác:", error.message);
+        message.error("Đã xảy ra lỗi không xác định.");
+      }
     }
   };
+  
 
   return (
     <div className="ep-edit-profile-page">
