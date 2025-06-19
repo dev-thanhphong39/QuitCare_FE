@@ -164,3 +164,14 @@
     width     : 100%;
     cursor    : pointer;
 }
+.qc-navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .qc-navbar-user span {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+  }
