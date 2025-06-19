@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Popconfirm, message, Tag } from "antd";
+import { Table, Button, Popconfirm, Tag } from "antd";
 import { DeleteOutlined, ReloadOutlined } from "@ant-design/icons";
 import api from "../../../configs/axios";
 import { toast } from "react-toastify";
@@ -8,12 +8,28 @@ function CommentManagement() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchComments = async () => {
+  const fetchAllComments = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/comments");
-      setComments(res.data);
-    } catch (err) {
+      // 1. Lấy danh sách tất cả các community post
+      const postRes = await api.get("/community-posts");
+      const posts = postRes.data;
+
+      // 2. Với mỗi bài post, lấy tất cả các comment tương ứng
+      const commentPromises = posts.map((post) =>
+        api.get(`/comments/community-posts/${post.id}/comments`)
+      );
+
+      const commentResponses = await Promise.all(commentPromises);
+
+      // 3. Gộp tất cả các comment lại thành một mảng
+      const allComments = commentResponses
+        .flatMap((res) => res.data)
+        .sort((a, b) => a.id - b.id); // <-- sắp xếp theo ID tăng dần
+
+
+      setComments(allComments);
+    } catch (error) {
       toast.error("Không thể tải danh sách bình luận!");
     } finally {
       setLoading(false);
@@ -22,7 +38,7 @@ function CommentManagement() {
 
   const deleteComment = async (id) => {
     try {
-      await api.delete(`/comments/${id}`);
+      await api.delete(`/comments/comments/${id}`);
       setComments((prev) => prev.filter((c) => c.id !== id));
       toast.success("Xóa bình luận thành công!");
     } catch (err) {
@@ -31,7 +47,7 @@ function CommentManagement() {
   };
 
   useEffect(() => {
-    fetchComments();
+    fetchAllComments();
   }, []);
 
   const columns = [
@@ -50,14 +66,24 @@ function CommentManagement() {
       dataIndex: "commentStatus",
       key: "commentStatus",
       render: (status) => {
-        let color =
+        const color =
           status === "PENDING"
             ? "orange"
             : status === "APPROVED"
-            ? "green"
-            : "red";
+              ? "green"
+              : "red";
         return <Tag color={color}>{status}</Tag>;
       },
+    },
+    {
+      title: "Post ID",
+      dataIndex: "communityPostId",
+      key: "communityPostId",
+    },
+    {
+      title: "Tài khoản",
+      dataIndex: "accountId",
+      key: "accountId",
     },
     {
       title: "Thời gian tạo",
@@ -95,7 +121,7 @@ function CommentManagement() {
         <h2>Quản lý bình luận</h2>
         <Button
           icon={<ReloadOutlined />}
-          onClick={fetchComments}
+          onClick={fetchAllComments}
           loading={loading}
         >
           Tải lại

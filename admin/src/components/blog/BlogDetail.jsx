@@ -4,25 +4,30 @@ import "./BlogDetail.css";
 import Footer from "../footer/Footer";
 import Navbar from "../navbar/Navbar";
 import api from "../../configs/axios";
+import { toast } from "react-toastify";
 
 function BlogDetail() {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
 
+  // Giả sử bạn lưu accountId người dùng vào localStorage khi đăng nhập
+  const accountId = Number(localStorage.getItem("accountId"));
+
+
+  const fetchPost = async () => {
+    try {
+      const res = await api.get(`/community-posts/${id}`);
+      setBlog(res.data);
+    } catch (err) {
+      console.error("Lỗi khi tải bài viết:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const res = await api.get(`/community-posts/${id}`);
-        setBlog(res.data);
-      } catch (err) {
-        console.error("Lỗi khi tải bài viết:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchPost();
   }, [id]);
 
@@ -30,25 +35,39 @@ function BlogDetail() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [id]);
 
-  const handleCommentChange = (e) => {
-    setCommentInput(e.target.value);
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    const trimmed = commentInput.trim();
+    if (!trimmed) return;
+
+    const accountId = Number(localStorage.getItem("accountId"));
+    // if (!accountId || isNaN(accountId)) {
+    //   toast.error("Không xác định được người dùng. Vui lòng đăng nhập lại!");
+    //   return;
+    // }
+
+    try {
+      await api.post(
+        `/comments/community-posts/${id}/comments/by-account/${accountId}`,
+        {
+          content: trimmed,
+          commentStatus: "PENDING",
+          createAt: new Date().toISOString(),
+          communityPostId: Number(id),
+          accountId: accountId,
+        }
+      );
+      toast.success("Gửi bình luận thành công, chờ xét duyệt!");
+      setCommentInput("");
+      fetchPost(); // reload lại bài viết để cập nhật bình luận mới
+    } catch (error) {
+      toast.error("Gửi bình luận thất bại!");
+    }
   };
 
-  const handleCommentSubmit = (e) => {
-    e.preventDefault();
-    if (commentInput.trim() === "") return;
-    setComments([
-      ...comments,
-      {
-        text: commentInput,
-        date: new Date().toLocaleString(),
-      },
-    ]);
-    setCommentInput("");
-  };
 
   const relatedBlogs = useMemo(() => {
-    return []; // sẽ cải tiến sau khi bạn muốn load thêm từ API
+    return [];
   }, [id]);
 
   if (loading)
@@ -91,10 +110,12 @@ function BlogDetail() {
           {/* Phần bình luận */}
           <div className="blog-comments-section">
             <h2>Bình luận</h2>
+
+            {/* Form gửi bình luận */}
             <form onSubmit={handleCommentSubmit} className="blog-comment-form">
               <textarea
                 value={commentInput}
-                onChange={handleCommentChange}
+                onChange={(e) => setCommentInput(e.target.value)}
                 placeholder="Nhập bình luận của bạn..."
                 rows={3}
                 className="blog-comment-input"
@@ -103,20 +124,23 @@ function BlogDetail() {
                 Gửi bình luận
               </button>
             </form>
+
             <div className="blog-comments-list">
-              {comments.length === 0 && (
+              {(!blog.comments || blog.comments.length === 0) && (
                 <p className="blog-no-comments">Chưa có bình luận nào.</p>
               )}
-              {comments.map((c, idx) => (
-                <div key={idx} className="blog-comment-item">
-                  <div className="blog-comment-text">{c.text}</div>
-                  <div className="blog-comment-date">{c.date}</div>
-                </div>
-              ))}
+              {blog.comments
+                .sort((a, b) => a.id - b.id)
+                .map((c, idx) => (
+                  <div key={c.id || idx} className="blog-comment-item">
+                    <div className="blog-comment-text">{c.content}</div>
+                    <div className="blog-comment-date">
+                      {new Date(c.createAt).toLocaleString()}
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
-
-          {/* Bài viết liên quan - bạn có thể thêm gọi API liên quan theo category sau */}
         </div>
       </div>
       <Footer />

@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./package.css";
 import freeCard from "../../assets/images/pack2.png";
 import premiumCard from "../../assets/images/pack1.png";
+import api from "../../configs/axios"; // nếu bạn có file cấu hình axios sẵn
 
 const Package = () => {
+  const [packages, setPackages] = useState([]);
+
+  useEffect(() => {
+    // Giả sử có 2 gói: ID 1 là FREE, ID 2 là PREMIUM
+    const fetchPackages = async () => {
+      try {
+        const freeRes = await api.get(`/membership-plans/1`);
+        const premiumRes = await api.get(`/membership-plans/2`);
+        setPackages([
+          { ...freeRes.data, image: freeCard },
+          { ...premiumRes.data, image: premiumCard },
+        ]);
+      } catch (error) {
+        console.error("Lỗi khi lấy gói hội viên:", error);
+      }
+    };
+
+    fetchPackages();
+  }, []);
+
   return (
     <div className="package-section">
       <h2 className="title">
@@ -20,33 +41,28 @@ const Package = () => {
       </p>
 
       <div className="card-wrapper">
-        <div className="card">
-          <img src={freeCard} alt="Free Membership Card" className="card-img" />
-          <div className="info">
-            <h3 className="package-name free">GÓI FREE</h3>
-            <p className="price">0 VND</p>
-            <p className="benefit">
-              Trải nghiệm các tính năng hỗ trợ bỏ thuốc cơ bản
-            </p>
-            <button className="btn btn-free">Dùng ngay</button>
+        {packages.map((pkg) => (
+          <div className="card" key={pkg.id}>
+            <img src={pkg.image} alt={pkg.name} className="card-img" />
+            <div className="info">
+              <h3
+                className={`package-name ${pkg.price === 0 ? "free" : "premium"
+                  }`}
+              >
+                {pkg.name.toUpperCase()}
+              </h3>
+              <p className="price">
+                {pkg.price === 0 ? "0 VND" : `${pkg.price.toLocaleString()} VND`}
+              </p>
+              <p className="benefit">{pkg.description}</p>
+              <button
+                className={`btn ${pkg.price === 0 ? "btn-free" : "btn-premium"}`}
+              >
+                {pkg.price === 0 ? "Dùng ngay" : "Mua gói"}
+              </button>
+            </div>
           </div>
-        </div>
-
-        <div className="card">
-          <img
-            src={premiumCard}
-            alt="Premium Membership Card"
-            className="card-img"
-          />
-          <div className="info">
-            <h3 className="package-name premium">GÓI PREMIUM</h3>
-            <p className="price">499,000 VND</p>
-            <p className="benefit">
-              Hưởng trọn bộ đặc quyền nâng cao với chuyên gia
-            </p>
-            <button className="btn btn-premium">Mua gói </button>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
