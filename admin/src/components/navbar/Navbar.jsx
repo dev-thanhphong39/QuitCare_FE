@@ -103,7 +103,7 @@ const Navbar = () => {
               }}
             />
           </button>
-          <span className="qc-navbar-fullname">{user.fullname?.trim() || "User"}</span>
+          <span className="qc-navbar-fullname">{user.fullName?.trim() || "Guest"}</span>
           {showDropdown && (
             <div className="qc-navbar-dropdown">
               <Link
