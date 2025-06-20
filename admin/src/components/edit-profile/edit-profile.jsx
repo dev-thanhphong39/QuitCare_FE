@@ -24,12 +24,12 @@ function EditProfile() {
   const handleSubmit = async () => {
     console.log("Token:", localStorage.getItem("token"));
     console.log(">>> Đã click Lưu thay đổi");
-  
+
     if (!user?.id) {
       message.error("Không tìm thấy ID người dùng!");
       return;
     }
-  
+
     try {
       const response = await api.put(`user/${user.id}`, {
         fullname: form.fullname,
@@ -45,13 +45,13 @@ function EditProfile() {
           )}&background=ececec&color=555&size=64&rounded=true`,
         })
       );
-      
+
       message.success("Cập nhật thành công!");
     } catch (error) {
       console.error("Lỗi khi cập nhật:", error);
       message.error("Cập nhật thất bại!");
       console.error(" Lỗi khi gọi API:", error);
-  
+
       if (error.response) {
         console.error("Status:", error.response.status);
         console.error("Dữ liệu lỗi:", error.response.data);
@@ -69,7 +69,6 @@ function EditProfile() {
       }
     }
   };
-  
 
   return (
     <div className="ep-edit-profile-page">
@@ -100,8 +99,8 @@ function EditProfile() {
               <Input
                 id="username"
                 value={form.username}
-                disabled
-                placeholder="Tên đăng nhập không đổi"
+                onChange={(e) => handleChange("username", e.target.value)}
+                placeholder="Nhập tên đăng nhập"
               />
 
               <label>Giới tính</label>
