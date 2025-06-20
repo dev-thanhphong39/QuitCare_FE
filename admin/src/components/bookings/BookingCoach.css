@@ -87,6 +87,7 @@
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 20px;
+    color: black;
 }
 
 .booking-times {
@@ -97,7 +98,7 @@
 }
 
 .booking-slot {
-    background-color: #ccc;
+    background-color: #3e3a3a;
     border: none;
     padding: 12px 0;
     border-radius: 6px;
