@@ -23,6 +23,7 @@ const LoginForm = ({ onLogin, errorMessage }) => {
       dispatch(login(user));
 
       localStorage.setItem("token", user.token);
+      localStorage.setItem("accountId", user.id);
 
       if (user.role === "ADMIN") {
         navigate("/dashboard");

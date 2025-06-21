@@ -11,6 +11,7 @@ import BackToTopButton from "./components/back-to-top/BackToTopButton";
 import BlogDetail from "./components/blog/BlogDetail";
 import EditProfile from "./components/edit-profile/edit-profile";
 import Dashboard from "./components/dashboard/dashboard";
+import SuggestPlaning from "./components/planing/SuggestPlaning";
 
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
@@ -47,7 +48,6 @@ function App() {
     {
       path: "/planning",
       element: <PlanPage />,
-   
     },
     {
       path: "/booking",
@@ -88,8 +88,12 @@ function App() {
         {
           path: "posts",
           element: <PostsManagement />,
-        }
+        },
       ],
+    },
+    {
+      path: "/suggest-planing",
+      element: <SuggestPlaning />,
     },
   ]);
   return (

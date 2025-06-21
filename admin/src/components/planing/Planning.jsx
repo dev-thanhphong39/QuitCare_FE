@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import api from "../../configs/axios";
+import { useNavigate } from "react-router-dom";
 import Footer from "../footer/Footer";
 import Navbar from "../navbar/Navbar";
 import "./Planning.css";
@@ -7,15 +9,14 @@ const initialState = {
   started_smoking_age: "",
   cigarettes_per_day: "",
   cigarettes_per_pack: "",
-  time_to_first_cigarettes: "",
-  quit_attempts: "",
-  longest_quit_duration: "",
-  has_suport_network: "",
-  craving_without_smoking: "",
-  trigger_situation: "",
-  quit_intention_timeline: "",
-  readiness_level: "",
-  quit_reasons: [],
+  timeToFirstCigarette: "",
+  quitAttempts: "",
+  longestQuitDuration: "",
+  cravingWithoutSmoking: "",
+  triggerSituation: "",
+  quitIntentionTimeline: "",
+  readinessLevel: "",
+  quitReasons: [],
 };
 
 const reasonsList = [
@@ -27,21 +28,131 @@ const reasonsList = [
   "Bị cấm hút tại nơi làm việc / gia đình",
 ];
 
+const mapTime = (value) => {
+  switch (value) {
+    case "≤5 phút":
+      return "LESS_THAN_5_MIN";
+    case "6–30 phút":
+      return "BETWEEN_6_AND_30_MIN";
+    case "31–60 phút":
+      return "BETWEEN_31_AND_60_MIN";
+    case ">60 phút":
+      return "MORE_THAN_60_MIN";
+    default:
+      return "";
+  }
+};
+
+const mapQuitAttempts = (value) => {
+  const num = parseInt(value);
+  if (num === 0) return "NONE";
+  if (num <= 2) return "ONE_TO_TWO";
+  return "MORE_THAN_THREE";
+};
+
+const mapDuration = (value) => {
+  switch (value) {
+    case "LESS_THAN_1_DAY":
+      return "LESS_THAN_1_DAY";
+    case "BETWEEN_1_AND_3_DAYS":
+      return "BETWEEN_1_AND_3_DAYS";
+    case "ONE_WEEK":
+      return "ONE_WEEK";
+    case "MORE_THAN_ONE_WEEK":
+      return "MORE_THAN_ONE_WEEK";
+    default:
+      return "";
+  }
+};
+
+const mapTimeline = (value) => {
+  switch (value) {
+    case "7 ngày":
+      return "ONEWEEK";
+    case "1 tháng":
+      return "ONEMONTH";
+    case "3 tháng":
+      return "THREEMONTH";
+    case "5 tháng":
+      return "FIVEMONTH";
+    case "Chưa chắc":
+      return "UNKNOWN";
+    default:
+      return "";
+  }
+};
+
+const mapReadiness = (value) => {
+  switch (value) {
+    case "Chưa sẵn sàng":
+      return "NOTREADY";
+    case "Đang cân nhắc":
+      return "UNDERCONSIDERATION";
+    case "Rất sẵn sàng":
+      return "ALREADY";
+    default:
+      return "";
+  }
+};
+
+const mapReasons = (list) => {
+  return list.map((item) => {
+    switch (item) {
+      case "Cải thiện sức khỏe":
+        return "Improving_health";
+      case "Gia đình / người thân":
+        return "Family_loved_ones";
+      case "Áp lực tài chính":
+        return "Financial_pressure";
+      case "Cảm thấy mệt mỏi vì nghiện":
+        return "Feeling_tired_of_addiction";
+      case "Muốn làm gương cho con cái":
+        return "Wanting_to_set_an_example_for_children";
+      case "Bị cấm hút tại nơi làm việc / gia đình":
+        return "Being_banned_from_smoking_at_work_home";
+      default:
+        return "";
+    }
+  });
+};
+
 function PlanPage() {
   const [form, setForm] = useState(initialState);
   const [showChoice, setShowChoice] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const accountId = localStorage.getItem("accountId");
+
+  useEffect(() => {
+    if (!accountId) {
+      navigate("/login");
+      return;
+    }
+    async function checkPlan() {
+      try {
+        const res = await api.get(`/v1/customers/${accountId}/quit-plans`);
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          navigate("/suggest-planing");
+          return;
+        }
+      } catch (err) {}
+      setLoading(false);
+    }
+    checkPlan();
+  }, [accountId, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
-      let newReasons = [...form.quit_reasons];
+      let newReasons = [...form.quitReasons];
       if (checked) {
         if (newReasons.length < 2) newReasons.push(value);
       } else {
         newReasons = newReasons.filter((r) => r !== value);
       }
-      setForm({ ...form, quit_reasons: newReasons });
+      setForm({ ...form, quitReasons: newReasons });
     } else {
       setForm({ ...form, [name]: value });
     }
@@ -49,20 +160,18 @@ function PlanPage() {
   };
 
   const isFilled = () => {
-    // Kiểm tra các trường bắt buộc
     return (
       form.started_smoking_age &&
       form.cigarettes_per_day &&
       form.cigarettes_per_pack &&
-      form.time_to_first_cigarettes &&
-      form.quit_attempts !== "" &&
-      form.longest_quit_duration &&
-      form.has_suport_network &&
-      form.craving_without_smoking &&
-      form.trigger_situation &&
-      form.quit_intention_timeline &&
-      form.readiness_level &&
-      form.quit_reasons.length > 0
+      form.timeToFirstCigarette &&
+      form.quitAttempts !== "" &&
+      form.longestQuitDuration &&
+      form.cravingWithoutSmoking !== "" &&
+      form.triggerSituation &&
+      form.quitIntentionTimeline &&
+      form.readinessLevel &&
+      form.quitReasons.length > 0
     );
   };
 
@@ -72,9 +181,58 @@ function PlanPage() {
       setError("Vui lòng nhập đầy đủ tất cả các thông tin!");
       return;
     }
-    console.log(form);
     setShowChoice(true);
   };
+
+  const handlePlanChoice = async (type) => {
+    try {
+      setError("");
+      setShowChoice(false);
+      setLoading(true);
+
+      const payload = {
+        started_smoking_age: parseInt(form.started_smoking_age),
+        cigarettes_per_day: parseInt(form.cigarettes_per_day),
+        cigarettes_per_pack: parseInt(form.cigarettes_per_pack),
+        timeToFirstCigarette: mapTime(form.timeToFirstCigarette),
+        quitAttempts: mapQuitAttempts(form.quitAttempts),
+        longestQuitDuration: mapDuration(form.longestQuitDuration),
+        cravingWithoutSmoking: form.cravingWithoutSmoking === "true",
+        triggerSituation: form.triggerSituation.trim(),
+        quitIntentionTimeline: mapTimeline(form.quitIntentionTimeline),
+        readinessLevel: mapReadiness(form.readinessLevel),
+        quitReasons: mapReasons(form.quitReasons),
+      };
+
+      console.log("accountId:", accountId);
+      console.log("Payload gửi lên:", payload);
+
+      await api.post(`/smoking-status/account/${accountId}`, payload);
+
+      await api.post(`/v1/customers/${accountId}/quit-plans`, {
+        systemPlan: type === "recommend",
+      });
+
+      navigate("/suggest-planing");
+    } catch (err) {
+      console.error(err);
+      setError("Có lỗi xảy ra khi lưu kế hoạch. Vui lòng thử lại!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <div className="planpage-container">
+          <div style={{ textAlign: "center", padding: 40 }}>Đang tải...</div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -130,9 +288,9 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="time_to_first_cigarettes"
+                    name="timeToFirstCigarette"
                     value="≤5 phút"
-                    checked={form.time_to_first_cigarettes === "≤5 phút"}
+                    checked={form.timeToFirstCigarette === "≤5 phút"}
                     onChange={handleChange}
                   />
                   ≤5 phút
@@ -140,9 +298,9 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="time_to_first_cigarettes"
+                    name="timeToFirstCigarette"
                     value="6–30 phút"
-                    checked={form.time_to_first_cigarettes === "6–30 phút"}
+                    checked={form.timeToFirstCigarette === "6–30 phút"}
                     onChange={handleChange}
                   />
                   6–30 phút
@@ -150,9 +308,9 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="time_to_first_cigarettes"
+                    name="timeToFirstCigarette"
                     value="31–60 phút"
-                    checked={form.time_to_first_cigarettes === "31–60 phút"}
+                    checked={form.timeToFirstCigarette === "31–60 phút"}
                     onChange={handleChange}
                   />
                   31–60 phút
@@ -160,9 +318,9 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="time_to_first_cigarettes"
+                    name="timeToFirstCigarette"
                     value=">60 phút"
-                    checked={form.time_to_first_cigarettes === ">60 phút"}
+                    checked={form.timeToFirstCigarette === ">60 phút"}
                     onChange={handleChange}
                   />
                   &gt;60 phút
@@ -173,10 +331,10 @@ function PlanPage() {
               </div>
               <input
                 type="number"
-                name="quit_attempts"
+                name="quitAttempts"
                 min="0"
                 max="100"
-                value={form.quit_attempts}
+                value={form.quitAttempts}
                 onChange={handleChange}
                 className="planpage-input"
                 placeholder="Số lần"
@@ -184,24 +342,60 @@ function PlanPage() {
               <div className="planpage-question">
                 <b>[6]</b> Thời gian dài nhất từng không hút thuốc?
               </div>
-              <input
-                type="text"
-                name="longest_quit_duration"
-                value={form.longest_quit_duration}
-                onChange={handleChange}
-                className="planpage-input"
-                placeholder="Ví dụ: 1 tuần, 1 tháng..."
-              />
+              <div className="planpage-options">
+                <label>
+                  <input
+                    type="radio"
+                    name="longestQuitDuration"
+                    value="LESS_THAN_1_DAY"
+                    checked={form.longestQuitDuration === "LESS_THAN_1_DAY"}
+                    onChange={handleChange}
+                  />
+                  Ít hơn 1 ngày
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="longestQuitDuration"
+                    value="BETWEEN_1_AND_3_DAYS"
+                    checked={
+                      form.longestQuitDuration === "BETWEEN_1_AND_3_DAYS"
+                    }
+                    onChange={handleChange}
+                  />
+                  Giữa 1 và 3 ngày
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="longestQuitDuration"
+                    value="ONE_WEEK"
+                    checked={form.longestQuitDuration === "ONE_WEEK"}
+                    onChange={handleChange}
+                  />
+                  1 tuần
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="longestQuitDuration"
+                    value="MORE_THAN_ONE_WEEK"
+                    checked={form.longestQuitDuration === "MORE_THAN_ONE_WEEK"}
+                    onChange={handleChange}
+                  />
+                  Hơn 1 tuần
+                </label>
+              </div>
               <div className="planpage-question">
-                <b>[7]</b> Có người thân/bạn bè ủng hộ việc cai thuốc?
+                <b>[7]</b> Bạn có cảm thấy khó chịu nếu không hút?
               </div>
               <div className="planpage-options">
                 <label>
                   <input
                     type="radio"
-                    name="has_suport_network"
-                    value="Có"
-                    checked={form.has_suport_network === "Có"}
+                    name="cravingWithoutSmoking"
+                    value="true"
+                    checked={form.cravingWithoutSmoking === "true"}
                     onChange={handleChange}
                   />
                   Có
@@ -209,32 +403,21 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="has_suport_network"
-                    value="Không"
-                    checked={form.has_suport_network === "Không"}
+                    name="cravingWithoutSmoking"
+                    value="false"
+                    checked={form.cravingWithoutSmoking === "false"}
                     onChange={handleChange}
                   />
                   Không
                 </label>
               </div>
               <div className="planpage-question">
-                <b>[8]</b> Bạn có cảm thấy khó chịu nếu không hút?
+                <b>[8]</b> Bạn hút nhiều hơn khi nào? (Tình huống kích hoạt)
               </div>
               <input
                 type="text"
-                name="craving_without_smoking"
-                value={form.craving_without_smoking}
-                onChange={handleChange}
-                className="planpage-input"
-                placeholder="Mô tả cảm giác"
-              />
-              <div className="planpage-question">
-                <b>[9]</b> Bạn hút nhiều hơn khi nào? (Tình huống kích hoạt)
-              </div>
-              <input
-                type="text"
-                name="trigger_situation"
-                value={form.trigger_situation}
+                name="triggerSituation"
+                value={form.triggerSituation}
                 onChange={handleChange}
                 className="planpage-input"
                 placeholder="Ví dụ: khi căng thẳng, sau bữa ăn..."
@@ -242,15 +425,15 @@ function PlanPage() {
             </div>
             <div>
               <div className="planpage-question">
-                <b>[10]</b> Ý định cai thuốc trong bao lâu tới?
+                <b>[9]</b> Ý định cai thuốc trong bao lâu tới?
               </div>
               <div className="planpage-options">
                 <label>
                   <input
                     type="radio"
-                    name="quit_intention_timeline"
+                    name="quitIntentionTimeline"
                     value="7 ngày"
-                    checked={form.quit_intention_timeline === "7 ngày"}
+                    checked={form.quitIntentionTimeline === "7 ngày"}
                     onChange={handleChange}
                   />
                   7 ngày
@@ -258,9 +441,9 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="quit_intention_timeline"
+                    name="quitIntentionTimeline"
                     value="1 tháng"
-                    checked={form.quit_intention_timeline === "1 tháng"}
+                    checked={form.quitIntentionTimeline === "1 tháng"}
                     onChange={handleChange}
                   />
                   1 tháng
@@ -268,9 +451,9 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="quit_intention_timeline"
+                    name="quitIntentionTimeline"
                     value="3 tháng"
-                    checked={form.quit_intention_timeline === "3 tháng"}
+                    checked={form.quitIntentionTimeline === "3 tháng"}
                     onChange={handleChange}
                   />
                   3 tháng
@@ -278,9 +461,9 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="quit_intention_timeline"
+                    name="quitIntentionTimeline"
                     value="5 tháng"
-                    checked={form.quit_intention_timeline === "5 tháng"}
+                    checked={form.quitIntentionTimeline === "5 tháng"}
                     onChange={handleChange}
                   />
                   5 tháng
@@ -288,24 +471,24 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="quit_intention_timeline"
+                    name="quitIntentionTimeline"
                     value="Chưa chắc"
-                    checked={form.quit_intention_timeline === "Chưa chắc"}
+                    checked={form.quitIntentionTimeline === "Chưa chắc"}
                     onChange={handleChange}
                   />
                   Chưa chắc
                 </label>
               </div>
               <div className="planpage-question">
-                <b>[11]</b> Mức độ sẵn sàng cai thuốc
+                <b>[10]</b> Mức độ sẵn sàng cai thuốc
               </div>
               <div className="planpage-options">
                 <label>
                   <input
                     type="radio"
-                    name="readiness_level"
+                    name="readinessLevel"
                     value="Chưa sẵn sàng"
-                    checked={form.readiness_level === "Chưa sẵn sàng"}
+                    checked={form.readinessLevel === "Chưa sẵn sàng"}
                     onChange={handleChange}
                   />
                   Chưa sẵn sàng
@@ -313,9 +496,9 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="readiness_level"
+                    name="readinessLevel"
                     value="Đang cân nhắc"
-                    checked={form.readiness_level === "Đang cân nhắc"}
+                    checked={form.readinessLevel === "Đang cân nhắc"}
                     onChange={handleChange}
                   />
                   Đang cân nhắc
@@ -323,29 +506,29 @@ function PlanPage() {
                 <label>
                   <input
                     type="radio"
-                    name="readiness_level"
+                    name="readinessLevel"
                     value="Rất sẵn sàng"
-                    checked={form.readiness_level === "Rất sẵn sàng"}
+                    checked={form.readinessLevel === "Rất sẵn sàng"}
                     onChange={handleChange}
                   />
                   Rất sẵn sàng
                 </label>
               </div>
               <div className="planpage-question">
-                <b>[12]</b> Lý do chính muốn cai thuốc (chọn tối đa 2)?
+                <b>[11]</b> Lý do chính muốn cai thuốc (chọn tối đa 2)?
               </div>
               <div className="planpage-options planpage-options-col">
                 {reasonsList.map((reason) => (
                   <label key={reason}>
                     <input
                       type="checkbox"
-                      name="quit_reasons"
+                      name="quitReasons"
                       value={reason}
-                      checked={form.quit_reasons.includes(reason)}
+                      checked={form.quitReasons.includes(reason)}
                       onChange={handleChange}
                       disabled={
-                        !form.quit_reasons.includes(reason) &&
-                        form.quit_reasons.length >= 2
+                        !form.quitReasons.includes(reason) &&
+                        form.quitReasons.length >= 2
                       }
                     />
                     {reason}
@@ -374,10 +557,20 @@ function PlanPage() {
             >
               <h3>Bạn muốn chọn phương án nào?</h3>
               <div className="planpage-choice-btns">
-                <button className="planpage-choice-btn recommend">
+                <button
+                  className="planpage-choice-btn recommend"
+                  type="button"
+                  onClick={() => handlePlanChoice("recommend")}
+                >
                   Đề xuất
                 </button>
-                <button className="planpage-choice-btn self">Tự lập</button>
+                <button
+                  className="planpage-choice-btn self"
+                  type="button"
+                  onClick={() => handlePlanChoice("self")}
+                >
+                  Tự lập
+                </button>
               </div>
             </div>
           </div>
