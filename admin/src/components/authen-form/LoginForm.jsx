@@ -60,7 +60,7 @@ const LoginForm = ({ onLogin, errorMessage }) => {
           className="auth-login-form"
         >
           <Form.Item
-            label="Tài khoản"
+            label="Tài khoản email"
             name="email"
             className="auth-login-form-item"
             rules={[
