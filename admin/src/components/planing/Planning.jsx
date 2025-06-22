@@ -3,6 +3,7 @@ import api from "../../configs/axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../footer/Footer";
 import Navbar from "../navbar/Navbar";
+import { Input, Radio } from "antd";
 import "./Planning.css";
 
 const initialState = {
@@ -16,7 +17,7 @@ const initialState = {
   triggerSituation: "",
   quitIntentionTimeline: "",
   readinessLevel: "",
-  quitReasons: [],
+  quitReasons: "",
 };
 
 const reasonsList = [
@@ -171,7 +172,7 @@ function PlanPage() {
       form.triggerSituation &&
       form.quitIntentionTimeline &&
       form.readinessLevel &&
-      form.quitReasons.length > 0
+      form.quitReasons !== ""
     );
   };
 
@@ -195,13 +196,14 @@ function PlanPage() {
         cigarettes_per_day: parseInt(form.cigarettes_per_day),
         cigarettes_per_pack: parseInt(form.cigarettes_per_pack),
         timeToFirstCigarette: mapTime(form.timeToFirstCigarette),
+        status: "ACTIVE",
         quitAttempts: mapQuitAttempts(form.quitAttempts),
         longestQuitDuration: mapDuration(form.longestQuitDuration),
         cravingWithoutSmoking: form.cravingWithoutSmoking === "true",
         triggerSituation: form.triggerSituation.trim(),
         quitIntentionTimeline: mapTimeline(form.quitIntentionTimeline),
         readinessLevel: mapReadiness(form.readinessLevel),
-        quitReasons: mapReasons(form.quitReasons),
+        quitReasons: form.quitReasons,
       };
 
       console.log("accountId:", accountId);
@@ -216,7 +218,7 @@ function PlanPage() {
       navigate("/suggest-planing");
     } catch (err) {
       console.error(err);
-      setError("Có lỗi xảy ra khi lưu kế hoạch. Vui lòng thử lại!");
+      setError("Rất tiếc. Kế hoạch của bạn đã được lập!");
     } finally {
       setLoading(false);
     }
@@ -515,28 +517,35 @@ function PlanPage() {
                 </label>
               </div>
               <div className="planpage-question">
-                <b>[11]</b> Lý do chính muốn cai thuốc (chọn tối đa 2)?
+                <b>[11]</b> Lý do chính muốn cai thuốc ?
               </div>
-              <div className="planpage-options planpage-options-col">
-                {reasonsList.map((reason) => (
-                  <label key={reason}>
-                    <input
-                      type="checkbox"
-                      name="quitReasons"
-                      value={reason}
-                      checked={form.quitReasons.includes(reason)}
-                      onChange={handleChange}
-                      disabled={
-                        !form.quitReasons.includes(reason) &&
-                        form.quitReasons.length >= 2
-                      }
-                    />
-                    {reason}
-                  </label>
-                ))}
-              </div>
+              <Radio.Group
+                name="quitReasons"
+                onChange={handleChange}
+                options={[
+                  { value: "Improving_health", label: "Cải thiện sức khỏe" },
+                  {
+                    value: "Family_loved_ones",
+                    label: "Vì gia đình và người thân",
+                  },
+                  { value: "Financial_pressure", label: "Áp lực tài chính" },
+                  {
+                    value: "Feeling_tired_of_addiction",
+                    label: "Cảm thấy mệt mỏi với việc nghiện thuốc",
+                  },
+                  {
+                    value: "Wanting_to_set_an_example_for_children",
+                    label: "Muốn làm gương cho con cái",
+                  },
+                  {
+                    value: "Being_banned_from_smoking_at_work_home",
+                    label: "Bị cấm hút thuốc ở nơi làm việc/nhà",
+                  },
+                ]}
+              />
             </div>
           </div>
+
           <button
             onClick={handleSubmit}
             className="planpage-submit"

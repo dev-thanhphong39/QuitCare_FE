@@ -22,7 +22,10 @@ function SuggestPlaning() {
       setError("");
       try {
         const res = await api.get(`/v1/customers/${accountId}/quit-plans`);
-        if (Array.isArray(res.data) && res.data.length > 0) {
+        console.log("API trả về:", res.data); // Thêm dòng này để kiểm tra dữ liệu
+        if (res.data && !Array.isArray(res.data)) {
+          setPlan(res.data);
+        } else if (Array.isArray(res.data) && res.data.length > 0) {
           setPlan(res.data[res.data.length - 1]);
         } else {
           setError("Không tìm thấy kế hoạch.");

@@ -11,7 +11,7 @@ const clinics = [
     hotline: "1900 1559",
     phone: "0786 777 999",
     desc: "Giám đốc Bệnh viện Phổi Trung ương. Điều hành nhiều chiến dịch quốc gia phòng chống tác hại của thuốc lá. Chuyên sâu về bệnh phổi, phòng ngừa và điều trị các bệnh liên quan đến hút thuốc. Tư vấn chính sách, tổ chức các chương trình hỗ trợ cai nghiện tại cộng đồng.",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTp0rGrzvTwf7OMrmJmvInY4c_2pD2Ut2kgAw&s",
+    image: "",
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const clinics = [
     hotline: "1900 1888",
     phone: "0988 666 888",
     desc: "Viện trưởng Viện Nghiên cứu Sức khỏe Cộng đồng (RICHS). Chuyên sâu về bệnh phổi, phòng ngừa và điều trị các bệnh liên quan đến hút thuốc. Rất nhiều trung tâm y tế dự phòng địa phương (TP.HCM, Hà Nội, Đà Nẵng, Cần Thơ...) có chuyên viên tư vấn cai thuốc lá miễn phí.",
-    image: "https://i.pinimg.com/474x/ed/a1/f1/eda1f1e121475530c2f5adac056a66d7.jpg",
+    image: "",
   },
 ];
 

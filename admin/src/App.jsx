@@ -22,6 +22,7 @@ import RevenueManagement from "./pages/dashboard-admin/revenue";
 import PackagesManagement from "./pages/dashboard-admin/packages";
 import FeedbackManagement from "./pages/dashboard-admin/feedback";
 import PostsManagement from "./pages/dashboard-admin/posts";
+import Tracking from "./pages/Tracking";
 
 function App() {
   const router = createBrowserRouter([
@@ -52,6 +53,10 @@ function App() {
     {
       path: "/booking",
       element: <BookingPage />,
+    },
+    {
+      path: "/tracking",
+      element: <Tracking />, 
     },
     {
       path: "/blog/:id",

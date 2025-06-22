@@ -20,6 +20,10 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  // Kiểm tra role để hiển thị mục "Theo dõi"
+  const showTracking =
+    user && (user.role === "CUSTOMER");
+
   return (
     <nav className="qc-navbar">
       <div className="qc-navbar-left">
@@ -81,6 +85,18 @@ const Navbar = () => {
             ĐẶT LỊCH
           </NavLink>
         </li>
+        {showTracking && (
+          <li>
+            <NavLink
+              to="/tracking"
+              className={({ isActive }) =>
+                isActive ? "qc-nav-link active" : "qc-nav-link"
+              }
+            >
+              THEO DÕI
+            </NavLink>
+          </li>
+        )}
       </ul>
 
       {user ? (
@@ -103,7 +119,9 @@ const Navbar = () => {
               }}
             />
           </button>
-          <span className="qc-navbar-fullname">{user.fullName?.trim() || "Guest"}</span>
+          <span className="qc-navbar-fullname">
+            {user.fullName?.trim() || "Guest"}
+          </span>
           {showDropdown && (
             <div className="qc-navbar-dropdown">
               <Link

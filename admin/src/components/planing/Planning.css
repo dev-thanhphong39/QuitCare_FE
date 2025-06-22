@@ -211,6 +211,23 @@
   box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
 }
 
+
+.ant-radio-group {
+  display: flex !important;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.ant-radio-wrapper {
+  font-size: 1.08rem;
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  white-space: normal;
+  word-break: break-word;
+}
+
 @media (max-width: 900px) {
   .planpage-container {
     padding: 40px 0 32px 0;
