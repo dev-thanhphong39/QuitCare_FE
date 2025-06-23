@@ -22,7 +22,7 @@ const Navbar = () => {
 
   // Kiểm tra role để hiển thị mục "Theo dõi"
   const showTracking =
-    user && (user.role === "CUSTOMER");
+    user && ( user.role === "CUSTOMER");
 
   return (
     <nav className="qc-navbar">

@@ -20,15 +20,6 @@ const initialState = {
   quitReasons: "",
 };
 
-const reasonsList = [
-  "Cải thiện sức khỏe",
-  "Gia đình / người thân",
-  "Áp lực tài chính",
-  "Cảm thấy mệt mỏi vì nghiện",
-  "Muốn làm gương cho con cái",
-  "Bị cấm hút tại nơi làm việc / gia đình",
-];
-
 const mapTime = (value) => {
   switch (value) {
     case "≤5 phút":
@@ -94,27 +85,6 @@ const mapReadiness = (value) => {
     default:
       return "";
   }
-};
-
-const mapReasons = (list) => {
-  return list.map((item) => {
-    switch (item) {
-      case "Cải thiện sức khỏe":
-        return "Improving_health";
-      case "Gia đình / người thân":
-        return "Family_loved_ones";
-      case "Áp lực tài chính":
-        return "Financial_pressure";
-      case "Cảm thấy mệt mỏi vì nghiện":
-        return "Feeling_tired_of_addiction";
-      case "Muốn làm gương cho con cái":
-        return "Wanting_to_set_an_example_for_children";
-      case "Bị cấm hút tại nơi làm việc / gia đình":
-        return "Being_banned_from_smoking_at_work_home";
-      default:
-        return "";
-    }
-  });
 };
 
 function PlanPage() {
@@ -206,16 +176,17 @@ function PlanPage() {
         quitReasons: form.quitReasons,
       };
 
-      console.log("accountId:", accountId);
-      console.log("Payload gửi lên:", payload);
-
-      await api.post(`/smoking-status/account/${accountId}`, payload);
-
-      await api.post(`/v1/customers/${accountId}/quit-plans`, {
-        systemPlan: type === "recommend",
-      });
-
-      navigate("/suggest-planing");
+      if (type === "recommend") {
+        await api.post(`/smoking-status/account/${accountId}`, payload);
+        await api.post(`/v1/customers/${accountId}/quit-plans`, {
+          systemPlan: true,
+        });
+        navigate("/suggest-planing");
+      } else {
+        // Lưu thông tin khảo sát nếu cần
+        localStorage.setItem("planSurvey", JSON.stringify(payload));
+        navigate("/create-planning");
+      }
     } catch (err) {
       console.error(err);
       setError("Rất tiếc. Kế hoạch của bạn đã được lập!");

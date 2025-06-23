@@ -22,7 +22,7 @@ function SuggestPlaning() {
       setError("");
       try {
         const res = await api.get(`/v1/customers/${accountId}/quit-plans`);
-        console.log("API trả về:", res.data); // Thêm dòng này để kiểm tra dữ liệu
+        console.log("API trả về:", res.data);
         if (res.data && !Array.isArray(res.data)) {
           setPlan(res.data);
         } else if (Array.isArray(res.data) && res.data.length > 0) {

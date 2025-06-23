@@ -12,6 +12,7 @@ import BlogDetail from "./components/blog/BlogDetail";
 import EditProfile from "./components/edit-profile/edit-profile";
 import Dashboard from "./components/dashboard/dashboard";
 import SuggestPlaning from "./components/planing/SuggestPlaning";
+import CreatePlanning from "./components/planing/CreatePlanning";
 
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
@@ -56,7 +57,7 @@ function App() {
     },
     {
       path: "/tracking",
-      element: <Tracking />, 
+      element: <Tracking />,
     },
     {
       path: "/blog/:id",
@@ -99,6 +100,10 @@ function App() {
     {
       path: "/suggest-planing",
       element: <SuggestPlaning />,
+    },
+    {
+      path: "/create-planning",
+      element: <CreatePlanning />,
     },
   ]);
   return (
