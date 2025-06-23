@@ -31,15 +31,11 @@ const Navbar = () => {
   };
 
   const showTracking =
-<<<<<<< Updated upstream
+
     user && ( user.role === "CUSTOMER");
-=======
-<<<<<<< HEAD
-    user && (user.role === "GUEST" || user.role === "CUSTOMER");
-=======
+
     user && ( user.role === "CUSTOMER");
->>>>>>> b88ec7dc0b1ad2b60fa2b90288af4466ca1c19c1
->>>>>>> Stashed changes
+
 
   return (
     <nav className="qc-navbar">
