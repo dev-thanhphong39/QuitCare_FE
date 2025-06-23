@@ -24,6 +24,7 @@ import PackagesManagement from "./pages/dashboard-admin/packages";
 import FeedbackManagement from "./pages/dashboard-admin/feedback";
 import PostsManagement from "./pages/dashboard-admin/posts";
 import Tracking from "./pages/Tracking";
+import NotificationPage from "./components/notificate/NotificationPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -58,6 +59,16 @@ function App() {
     {
       path: "/tracking",
       element: <Tracking />,
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+    },
+    {
+      path: "/noti",
+      element: <NotificationPage />,
+=======
+>>>>>>> b88ec7dc0b1ad2b60fa2b90288af4466ca1c19c1
+>>>>>>> Stashed changes
     },
     {
       path: "/blog/:id",
