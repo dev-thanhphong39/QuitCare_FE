@@ -25,6 +25,9 @@ import FeedbackManagement from "./pages/dashboard-admin/feedback";
 import PostsManagement from "./pages/dashboard-admin/posts";
 import Tracking from "./pages/Tracking";
 import NotificationPage from "./components/notificate/NotificationPage";
+import ForgotPasswordForm from "./components/forgot-password/forgot-pasword";
+import PaymentPage from "./components/payment/submitOrder";
+import PaymentResult from "./components/payment/PaymentResult";
 
 function App() {
   const router = createBrowserRouter([
@@ -59,16 +62,12 @@ function App() {
     {
       path: "/tracking",
       element: <Tracking />,
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
+
     },
     {
       path: "/noti",
       element: <NotificationPage />,
-=======
->>>>>>> b88ec7dc0b1ad2b60fa2b90288af4466ca1c19c1
->>>>>>> Stashed changes
+
     },
     {
       path: "/blog/:id",
@@ -115,6 +114,17 @@ function App() {
     {
       path: "/create-planning",
       element: <CreatePlanning />,
+    },
+    {
+      path: "/forgot-password",
+      element: <ForgotPasswordForm />,
+    },
+    {
+      path: "/payment",
+      element: <PaymentPage />,
+    },{
+      path: "/payment-result",
+      element: <PaymentResult />,
     },
   ]);
   return (
