@@ -50,9 +50,17 @@
     width: 100%;
 }
 
+.auth-login-haha {
+display: flex;
+}
+.auth-login-forgot-link {
+    flex: 1;
+    
+}
 /* Checkbox ghi nhớ */
 .auth-login-checkbox {
     color: #4b5563;
+    flex: 1;
 }
 
 /* Nút đăng nhập */
