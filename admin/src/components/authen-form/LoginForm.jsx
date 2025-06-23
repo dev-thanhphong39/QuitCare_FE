@@ -89,9 +89,22 @@ const LoginForm = ({ onLogin, errorMessage }) => {
             valuePropName="checked"
             className="auth-login-form-item-remember"
           >
-            <Checkbox className="auth-login-checkbox">
+            <div className="auth-login-haha">
+              <div>
+              <Checkbox className="auth-login-checkbox">
               Ghi nhớ đăng nhập
             </Checkbox>
+              </div>
+           
+            <div className="auth-login-forgot-link">
+            
+            <Link to="/forgot-password" className="auth-login-forgot-link-a">
+            Quên mật khẩu?
+            </Link>
+          </div>
+
+            </div>
+           
           </Form.Item>
           <Form.Item className="auth-login-form-item">
             <Button
