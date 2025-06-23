@@ -3,10 +3,11 @@ import "./package.css";
 import freeCard from "../../assets/images/pack2.png";
 import premiumCard from "../../assets/images/pack1.png";
 import api from "../../configs/axios"; // nếu bạn có file cấu hình axios sẵn
+import { useNavigate } from "react-router-dom";
 
 const Package = () => {
   const [packages, setPackages] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Giả sử có 2 gói: ID 1 là FREE, ID 2 là PREMIUM
     const fetchPackages = async () => {
@@ -56,10 +57,19 @@ const Package = () => {
               </p>
               <p className="benefit">{pkg.description}</p>
               <button
-                className={`btn ${pkg.price === 0 ? "btn-free" : "btn-premium"}`}
-              >
-                {pkg.price === 0 ? "Dùng ngay" : "Mua gói"}
-              </button>
+  className={`btn ${pkg.price === 0 ? "btn-free" : "btn-premium"}`}
+  onClick={() => {
+    if (pkg.price === 0) {
+      // Với gói FREE, xử lý như hiện tại (có thể thêm logic nếu cần)
+      console.log("Dùng ngay");
+    } else {
+      // Với gói PREMIUM → chuyển đến trang payment kèm theo thông tin gói
+      navigate("/payment", { state: { packageId: pkg.id, price: pkg.price, name: pkg.name } });
+    }
+  }}
+>
+  {pkg.price === 0 ? "Dùng ngay" : "Mua gói"}
+</button>
             </div>
           </div>
         ))}
