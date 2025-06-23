@@ -115,18 +115,8 @@ function PlanPage() {
   }, [accountId, navigate]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      let newReasons = [...form.quitReasons];
-      if (checked) {
-        if (newReasons.length < 2) newReasons.push(value);
-      } else {
-        newReasons = newReasons.filter((r) => r !== value);
-      }
-      setForm({ ...form, quitReasons: newReasons });
-    } else {
-      setForm({ ...form, [name]: value });
-    }
+    const { name, value, type } = e.target;
+    setForm({ ...form, [name]: value });
     setError("");
   };
 
@@ -183,7 +173,11 @@ function PlanPage() {
         });
         navigate("/suggest-planing");
       } else {
-        // Lưu thông tin khảo sát nếu cần
+        // Gọi API tạo kế hoạch tự lập
+        const res = await api.post(`/v1/customers/${accountId}/quit-plans`, {
+          systemPlan: false,
+        });
+        localStorage.setItem("quitPlanId", res.data.id); // Lưu quitPlanId vào localStorage
         localStorage.setItem("planSurvey", JSON.stringify(payload));
         navigate("/create-planning");
       }

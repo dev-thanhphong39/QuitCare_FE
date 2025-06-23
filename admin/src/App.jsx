@@ -62,12 +62,10 @@ function App() {
     {
       path: "/tracking",
       element: <Tracking />,
-
     },
     {
       path: "/noti",
       element: <NotificationPage />,
-
     },
     {
       path: "/blog/:id",

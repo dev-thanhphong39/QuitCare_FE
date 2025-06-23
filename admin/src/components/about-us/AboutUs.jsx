@@ -2,9 +2,10 @@ import React from "react";
 import "./AboutUs.css";
 import quitImage1 from "../../assets/images/Home1.png";
 import quitImage2 from "../../assets/images/Home2.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function AboutUs() {
+  const navigate = useNavigate();
     return (
       <>
         <div className="aboutus-container">
@@ -130,7 +131,7 @@ function AboutUs() {
                 placeholder="Tình trạng hiện tại của bạn"
                 className="form-input"
               />
-              <button className="form-button">ĐẶT LỊCH NGAY</button>
+              <button onClick={() => navigate("/booking")} className="form-button" >ĐẶT LỊCH NGAY</button>
             </div>
           </div>
         </div>

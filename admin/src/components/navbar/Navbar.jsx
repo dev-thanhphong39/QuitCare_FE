@@ -32,9 +32,8 @@ const Navbar = () => {
 
   const showTracking =
 
-    user && ( user.role === "CUSTOMER");
+    user && (user.role === "GUEST" && user.role === "CUSTOMER");
 
-    user && ( user.role === "CUSTOMER");
 
 
   return (

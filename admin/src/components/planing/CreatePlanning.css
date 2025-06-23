@@ -1,0 +1,98 @@
+/* Tùy chỉnh vùng chính */
+div.max-w-4xl {
+    background: linear-gradient(to bottom right, #f0f4f8, #ffffff);
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    margin-top: 70px;
+}
+
+/* Tiêu đề chính */
+h2.text-3xl {
+    color: #1e3a8a;
+    /* blue-900 */
+    letter-spacing: 0.5px;
+}
+
+/* Danh sách hướng dẫn */
+ul.list-disc li {
+    margin-bottom: 6px;
+    font-size: 16px;
+    color: #374151;
+    /* gray-700 */
+}
+
+/* Thẻ từng giai đoạn */
+div.border.rounded-lg {
+    border-color: #dbeafe;
+    /* blue-100 */
+    background-color: #f9fafb;
+    /* gray-50 */
+}
+
+/* Tiêu đề giai đoạn */
+span.text-blue-700 {
+    font-size: 20px;
+}
+
+/* Bảng dữ liệu */
+.ant-table {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    /* gray-200 */
+}
+
+.ant-table-thead>tr>th {
+    background-color: #eff6ff;
+    /* blue-50 */
+    font-weight: 600;
+    font-size: 15px;
+    color: #1e3a8a;
+    /* blue-900 */
+    text-align: center;
+}
+
+/* Input */
+.ant-input {
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* Nút chính */
+button.bg-blue-600,
+button.bg-green-600,
+button.bg-blue-700 {
+    border-radius: 8px;
+    padding: 0 18px;
+    height: 38px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover nút */
+button.bg-blue-600:hover {
+    background-color: #2563eb;
+    /* blue-600 darker */
+}
+
+button.bg-green-600:hover {
+    background-color: #059669;
+    /* green-600 darker */
+}
+
+button.bg-blue-700:hover {
+    background-color: #1d4ed8;
+    /* blue-700 darker */
+}
+
+/* Modal */
+.ant-modal-title {
+    font-weight: bold;
+    font-size: 18px;
+    color: #1e40af;
+    /* blue-800 */
+}
+
+.ant-modal-body p {
+    font-size: 15px;
+    color: #374151;
+    /* gray-700 */
+}
