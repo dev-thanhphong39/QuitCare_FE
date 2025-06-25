@@ -175,15 +175,24 @@ function PlanPage() {
       } else {
         // Gọi API tạo kế hoạch tự lập
         const res = await api.post(`/v1/customers/${accountId}/quit-plans`, {
-          systemPlan: false,
+          systemPlan: false, 
         });
-        localStorage.setItem("quitPlanId", res.data.id); // Lưu quitPlanId vào localStorage
+
+        localStorage.setItem("quitPlanId", res.data.id);
         localStorage.setItem("planSurvey", JSON.stringify(payload));
         navigate("/create-planning");
       }
     } catch (err) {
       console.error(err);
-      setError("Rất tiếc. Kế hoạch của bạn đã được lập!");
+      if (err?.response?.status === 403 || err?.response?.status === 401) {
+        setError(
+          "Bạn không có quyền lập kế hoạch. Vui lòng đăng nhập bằng tài khoản khách hàng."
+        );
+      } else if (err?.response?.status === 409) {
+        setError("Bạn đã có kế hoạch. Không thể tạo thêm.");
+      } else {
+        setError("Có lỗi xảy ra khi lập kế hoạch. Vui lòng thử lại!");
+      }
     } finally {
       setLoading(false);
     }

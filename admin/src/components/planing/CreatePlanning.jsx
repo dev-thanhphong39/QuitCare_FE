@@ -78,13 +78,20 @@ function CreatePlanning() {
       // Gửi từng dòng tuần của từng giai đoạn lên server
       for (let i = 0; i < stages.length; i++) {
         for (let j = 0; j < stages[i].weeks.length; j++) {
+          if (!stages[i].weeks[j].week || !stages[i].weeks[j].cigarettes) {
+            Modal.error({
+              content: "Vui lòng nhập đầy đủ thông tin cho tất cả các dòng!",
+            });
+            setConfirmed(false);
+            return;
+          }
           await api.post(
             `/v1/customers/${accountId}/quit-plans/${quitPlanId}/stages`,
             {
               stageNumber: i + 1, // Số thứ tự giai đoạn
               week_range: stages[i].weeks[j].week, // Chuỗi tuần
-              targetcigarettes: Number(stages[i].weeks[j].cigarettes), // Số điếu/ngày
-              quitPlanId: quitPlanId,
+              targetCigarettes: Number(stages[i].weeks[j].cigarettes), // Số điếu/ngày
+              quitPlanId: Number(quitPlanId),
             }
           );
         }
