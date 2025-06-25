@@ -104,12 +104,17 @@ function PlanPage() {
     async function checkPlan() {
       try {
         const res = await api.get(`/v1/customers/${accountId}/quit-plans`);
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          navigate("/suggest-planing");
+
+        if (res.data && typeof res.data === "object" && res.data.id) {
+          if (res.data.systemPlan === false) {
+            navigate("/create-planning");
+          } else {
+            navigate("/suggest-planing");
+          }
           return;
         }
       } catch (err) {}
-      setLoading(false);
+      setLoading(false); // Chỉ setLoading khi không chuyển hướng
     }
     checkPlan();
   }, [accountId, navigate]);
@@ -174,8 +179,9 @@ function PlanPage() {
         navigate("/suggest-planing");
       } else {
         // Gọi API tạo kế hoạch tự lập
+        await api.post(`/smoking-status/account/${accountId}`, payload);
         const res = await api.post(`/v1/customers/${accountId}/quit-plans`, {
-          systemPlan: false, 
+          systemPlan: false,
         });
 
         localStorage.setItem("quitPlanId", res.data.id);

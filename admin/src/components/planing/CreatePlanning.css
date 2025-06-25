@@ -1,104 +1,199 @@
+
+/* Banner */
 .banner-create1 {
-    margin-top: 64px;
-    width: 100%;
-    display: block;
+    max-height: 300px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-top: 76px;
 }
 
-div.max-w-4xl {
-    background: linear-gradient(to bottom right, #f0f4f8, #ffffff);
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+/* Container */
+.max-w-4xl {
+    max-width: 960px;
+
 }
 
-/* Tiêu đề chính */
-h2.text-3xl {
-    color: #1e3a8a;
-    /* blue-900 */
-    letter-spacing: 0.5px;
-    text-align: center;
-    font-size: 40px;
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* Danh sách hướng dẫn */
-ul.list-disc li {
-    margin-bottom: 6px;
-    font-size: 16px;
-    color: #374151;
-    /* gray-700 */
+.p-6 {
+    padding: 24px;
 }
 
-/* Thẻ từng giai đoạn */
-div.border.rounded-lg {
-    border-color: #dbeafe;
-    /* blue-100 */
-    background-color: #f9fafb;
-    /* gray-50 */
+.mb-4 {
+    margin-bottom: 1rem;
 }
 
-/* Tiêu đề giai đoạn */
-span.text-blue-700 {
-    font-size: 20px;
+.mb-8 {
+    margin-bottom: 2rem;
 }
 
-/* Bảng dữ liệu */
-.ant-table {
-    background-color: white;
+/* Stage Card */
+.border {
     border: 1px solid #e5e7eb;
-    /* gray-200 */
+}
+
+.rounded-lg {
+    border-radius: 12px;
+}
+
+.shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+/* Header Text */
+.text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-blue-700 {
+    color: #1d4ed8;
+}
+
+/* Flex */
+.flex {
+    display: flex;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.gap-2 {
+    gap: 8px;
+}
+
+.gap-4 {
+    gap: 16px;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+/* Antd Table Custom */
+.ant-table {
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .ant-table-thead>tr>th {
-    background-color: #eff6ff;
-    /* blue-50 */
+    background-color: #f3f4f6 !important;
+    color: #374151;
     font-weight: 600;
-    font-size: 15px;
-    color: #1e3a8a;
-    /* blue-900 */
     text-align: center;
+}
+
+.ant-table-tbody>tr>td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.ant-table-bordered .ant-table-cell {
+    border-color: #e5e7eb;
 }
 
 /* Input */
 .ant-input {
     border-radius: 8px;
-    font-size: 14px;
+    padding: 8px 12px;
 }
 
-/* Nút chính */
-button.bg-blue-600,
-button.bg-green-600,
-button.bg-blue-700 {
-    border-radius: 8px;
-    padding: 0 18px;
-    height: 38px;
-    transition: background-color 0.3s ease;
+.ant-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
-/* Hover nút */
-button.bg-blue-600:hover {
-    background-color: #2563eb;
-    /* blue-600 darker */
+/* Button */
+button {
+    border-radius: 8px !important;
 }
 
-button.bg-green-600:hover {
-    background-color: #059669;
-    /* green-600 darker */
+button:hover {
+    opacity: 0.9;
 }
 
-button.bg-blue-700:hover {
-    background-color: #1d4ed8;
-    /* blue-700 darker */
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Primary Button */
+.bg-blue-600,
+.bg-blue-700 {
+    background-color: #2563eb !important;
+    color: white !important;
+}
+
+.bg-blue-600:hover,
+.bg-blue-700:hover {
+    background-color: #1e40af !important;
+}
+
+/* Green Button */
+.bg-green-600 {
+    background-color: #16a34a !important;
+    color: white !important;
+}
+
+.bg-green-600:hover {
+    background-color: #15803d !important;
+}
+
+/* Danger Button */
+.ant-btn-dangerous {
+    background-color: #dc2626 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.ant-btn-dangerous:hover {
+    background-color: #b91c1c !important;
 }
 
 /* Modal */
-.ant-modal-title {
-    font-weight: bold;
-    font-size: 18px;
-    color: #1e40af;
-    /* blue-800 */
+.ant-modal-content {
+    border-radius: 12px;
 }
 
-.ant-modal-body p {
-    font-size: 15px;
-    color: #374151;
-    /* gray-700 */
+.ant-modal-header {
+    border-radius: 12px 12px 0 0;
+    background-color: #eff6ff;
+}
+
+.ant-modal-title {
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
+.ant-modal-footer .ant-btn-primary {
+    background-color: #2563eb !important;
+    border: none;
+}
+
+.ant-modal-footer .ant-btn-primary:hover {
+    background-color: #1e40af !important;
 }
