@@ -1,0 +1,130 @@
+/* RevenueManagement.css */
+
+.revenue-container {
+  padding: 1rem;
+  width: 100%;
+  
+}
+
+.revenue-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.revenue-scroll {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.revenue-cards {
+  display: inline-flex;
+  gap: 1rem;
+  min-width: max-content;
+}
+
+.card {
+  
+ background-image: none;
+  border-radius: 1rem;
+  padding: 1rem;
+  
+  
+}
+
+.card-250 {
+  width: 250px;
+  margin-top: 20px;
+  margin-left: 30px;
+  color:chocolate;
+  margin-bottom: 45px;
+}
+
+.card-400 {
+  width: 400px;
+  margin-top: 30px;
+}
+
+.card-500-1 {
+  width: 300px;
+height: auto;
+  flex: 1;
+  margin-right: 20px;
+  margin-bottom: 30px;
+}
+.card-500-2 {
+  width: 300px;
+  height: auto;
+  flex: 1;
+  margin-bottom: 30px;
+   flex-shrink: 0;
+}
+.card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card-value-green {
+  font-size: 1.75rem;
+  color: green;
+}
+
+.card-value-blue {
+  font-size: 1.75rem;
+  color: #1e80ff;
+}
+.revenue-headercontainer {
+  display: flex;
+  height: 100px;
+  width: auto;
+  background-color: blueviolet;
+}
+.qc-logo {
+  align-items: center;
+  flex: 0.3;
+  padding: auto;
+  margin-top: 10px;
+  width: 60px;
+  height: 70px;
+}
+.box-header1 {
+  flex: 0.3;
+  display: flex;
+}
+.qc-name {
+  flex: 0.7;
+ font-size: 24px;
+ text-align:start;
+  margin: 30px 0px 40px;
+color: azure;
+padding: auto;
+}
+.box-header2 {
+  flex: 0.4;
+  height: 54px;
+  width: 325px;
+  text-align: center;
+  font-size: 34px;
+  white-space: normal;
+  margin-left: 30px;
+  margin-top: 20px;
+
+  color: azure;
+}
+.box-header3 {
+  flex: 0.3;
+  height: 54px;
+  width: 325px;
+  font-size: 24px;
+  text-align: center;
+  margin-left: auto;
+  
+  margin-top: 20px;
+
+  color: azure;
+}
+.chart-container{
+  display: flex;
+}

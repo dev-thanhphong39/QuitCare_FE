@@ -17,17 +17,20 @@ import CreatePlanning from "./components/planing/CreatePlanning";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
-import UserManagement from "./pages/dashboard-admin/user";
-import CommentManagement from "./pages/dashboard-admin/comment";
-import RevenueManagement from "./pages/dashboard-admin/revenue";
-import PackagesManagement from "./pages/dashboard-admin/packages";
-import FeedbackManagement from "./pages/dashboard-admin/feedback";
-import PostsManagement from "./pages/dashboard-admin/posts";
+import UserManagement from "./pages/dashboard-staff/user";
+import CommentManagement from "./pages/dashboard-staff/comment";
+import RevenueManagement from "./pages/dashboard-staff/revenue";
+import PackagesManagement from "./pages/dashboard-staff/packages";
+import FeedbackManagement from "./pages/dashboard-staff/feedback";
+import PostsManagement from "./pages/dashboard-staff/posts";
 import Tracking from "./pages/Tracking";
 import NotificationPage from "./components/notificate/NotificationPage";
 import ForgotPasswordForm from "./components/forgot-password/forgot-pasword";
 import PaymentPage from "./components/payment/submitOrder";
 import PaymentResult from "./components/payment/PaymentResult";
+
+import RevenueStatistics from "./pages/dashboard-admin/revenue";
+import AdminDashboard from "./components/dashboard/admin-dashboard";
 
 function App() {
   const router = createBrowserRouter([
@@ -87,9 +90,10 @@ function App() {
           path: "comments",
           element: <CommentManagement />,
         },
+       
         {
           path: "revenue",
-          element: <RevenueManagement />,
+          element: < RevenueManagement />,
         },
         {
           path: "feedback",
@@ -103,6 +107,22 @@ function App() {
           path: "posts",
           element: <PostsManagement />,
         },
+      ],
+    },
+    {
+      path: "/dashboard-admin",
+      element: <AdminDashboard />,
+      children: [
+        {
+          path: "users",
+          element: <RevenueStatistics/>,
+        },
+        
+        {
+          path: "revenue-report",
+          element: <RevenueStatistics />,
+        },
+        
       ],
     },
     {
