@@ -82,7 +82,7 @@ const healthyPosts = [
     url: "https://thanhnien.vn/tap-the-duc-giup-ich-cho-viec-cai-nghien-thuoc-la-185723413.htm",
   },
   {
-    id: "10",
+    id: "21",
     title: "Điều gì xảy ra sau hai tuần bỏ thuốc lá",
     date: "23/5/2025",
     category: "Tập luyện & Sức khỏe",
@@ -92,7 +92,7 @@ const healthyPosts = [
     url: "https://vnexpress.net/dieu-gi-xay-ra-sau-hai-tuan-bo-thuoc-la-4889585.html",
   },
   {
-    id: "11",
+    id: "22",
     title: "Thanh lọc phổi sau khi cai thuốc lá",
     date: "5/10/2023",
     category: "Tập luyện & Sức khỏe",
@@ -161,7 +161,7 @@ const successPosts = [
   {
     id: "20",
     title: "Gương cai nghiện thuốc lá",
-    date: " 14/11/2017",
+    date: "14/11/2017",
     category: "Câu Chuyện",
     image: "https://cdcbentre.org/uploads/news/2022_05/7anh-thuoc-la.jpg",
     description: "Câu chuyện truyền cảm hứng từ người bỏ thuốc thành công.",
@@ -243,25 +243,22 @@ function Blog() {
           <div className="blog-nav">
             <a
               href="#knowledge"
-              className={`blog-nav-link ${
-                activeSection === "knowledge" ? "active" : ""
-              }`}
+              className={`blog-nav-link ${activeSection === "knowledge" ? "active" : ""
+                }`}
             >
               📚 Kiến Thức Cai Thuốc
             </a>
             <a
               href="#healthy"
-              className={`blog-nav-link ${
-                activeSection === "healthy" ? "active" : ""
-              }`}
+              className={`blog-nav-link ${activeSection === "healthy" ? "active" : ""
+                }`}
             >
               💪 Tập luyện & sức khỏe
             </a>
             <a
               href="#success"
-              className={`blog-nav-link ${
-                activeSection === "success" ? "active" : ""
-              }`}
+              className={`blog-nav-link ${activeSection === "success" ? "active" : ""
+                }`}
             >
               💡 Câu Chuyện Thành Công
             </a>

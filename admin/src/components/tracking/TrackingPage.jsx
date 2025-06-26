@@ -42,8 +42,8 @@ const TrackingPage = () => {
   const [editingDays, setEditingDays] = useState({});
   const [popupContent, setPopupContent] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const BOOKING_LINK = "http://localhost:5173/booking"; // 🔗 Thay đổi link tại đây
-  const isTestMode = true; // ⚠️ Đặt về false khi đưa vào production
+  const BOOKING_LINK = "http://localhost:5173/booking"; 
+  const isTestMode = true; 
 
   useEffect(() => {
     async function fetchPlan() {
@@ -243,9 +243,9 @@ const TrackingPage = () => {
                       );
                       actualDate.setDate(
                         actualDate.getDate() +
-                          stageIdx * 28 +
-                          weekIdx * 7 +
-                          dayIdx
+                        stageIdx * 28 +
+                        weekIdx * 7 +
+                        dayIdx
                       );
 
                       const isTodayEditable = canEdit(dayKey, actualDate);
