@@ -10,6 +10,8 @@ const initialStage = () => ({
   weeks: [{ week: "", cigarettes: "" }],
 });
 
+const LOCAL_KEY = "quitcare_planning_draft";
+
 function CreatePlanning() {
   const [stages, setStages] = useState([initialStage()]);
   const [mode, setMode] = useState("create"); // create | view | edit
@@ -19,17 +21,20 @@ function CreatePlanning() {
   const accountId = localStorage.getItem("accountId");
   const quitPlanId = localStorage.getItem("quitPlanId");
 
-  // Load lại kế hoạch nếu đã có
+  // Load lại kế hoạch nếu đã có, nếu không thì lấy bản nháp localStorage
   useEffect(() => {
     async function fetchPlan() {
-      if (!accountId || !quitPlanId) return;
+      if (!accountId || !quitPlanId) {
+        const draft = localStorage.getItem(LOCAL_KEY);
+        if (draft) setStages(JSON.parse(draft));
+        return;
+      }
       try {
         setLoading(true);
         const res = await api.get(
           `/v1/customers/${accountId}/quit-plans/${quitPlanId}/stages`
         );
         if (res.data && res.data.length > 0) {
-          // Nhóm lại thành các giai đoạn
           const stageMap = {};
           res.data.forEach((item) => {
             if (!stageMap[item.stageNumber]) stageMap[item.stageNumber] = [];
@@ -45,6 +50,10 @@ function CreatePlanning() {
               .map((k) => ({ weeks: stageMap[k] }))
           );
           setMode("view");
+          localStorage.removeItem(LOCAL_KEY);
+        } else {
+          const draft = localStorage.getItem(LOCAL_KEY);
+          if (draft) setStages(JSON.parse(draft));
         }
       } finally {
         setLoading(false);
@@ -52,6 +61,13 @@ function CreatePlanning() {
     }
     fetchPlan();
   }, [accountId, quitPlanId]);
+
+  // Lưu stages vào localStorage mỗi khi thay đổi (chỉ khi đang tạo hoặc sửa)
+  useEffect(() => {
+    if (mode === "create" || mode === "edit") {
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(stages));
+    }
+  }, [stages, mode]);
 
   // Thêm/xóa dòng/giai đoạn
   const handleAddRow = (stageIdx) => {
@@ -96,9 +112,8 @@ function CreatePlanning() {
         `/v1/customers/${accountId}/quit-plans/${quitPlanId}/stages`
       );
       const oldStages = res.data || [];
-      const oldIds = oldStages.map((s) => s.id);
 
-      // 1. Xóa stage cũ không còn trong kế hoạch mới
+      // Xóa stage cũ không còn trong kế hoạch mới
       for (const old of oldStages) {
         let stillExist = false;
         for (const stage of stages) {
@@ -113,7 +128,7 @@ function CreatePlanning() {
         }
       }
 
-      // 2. Cập nhật hoặc tạo mới từng dòng
+      // Cập nhật hoặc tạo mới từng dòng
       for (let i = 0; i < stages.length; i++) {
         for (let j = 0; j < stages[i].weeks.length; j++) {
           const week = stages[i].weeks[j];
@@ -140,7 +155,30 @@ function CreatePlanning() {
           }
         }
       }
-      setMode("view");
+
+      // Sau khi lưu thành công, gọi lại API để lấy dữ liệu mới nhất và đồng bộ localStorage
+      const reload = await api.get(
+        `/v1/customers/${accountId}/quit-plans/${quitPlanId}/stages`
+      );
+      if (reload.data && reload.data.length > 0) {
+        const stageMap = {};
+        reload.data.forEach((item) => {
+          if (!stageMap[item.stageNumber]) stageMap[item.stageNumber] = [];
+          stageMap[item.stageNumber].push({
+            week: item.week_range,
+            cigarettes: item.targetCigarettes.toString(),
+            id: item.id,
+          });
+        });
+        setStages(
+          Object.keys(stageMap)
+            .sort()
+            .map((k) => ({ weeks: stageMap[k] }))
+        );
+        setMode("view");
+        // XÓA bản nháp khi đã có dữ liệu trên server
+        localStorage.removeItem(LOCAL_KEY);
+      }
       Modal.success({ content: "Lưu kế hoạch thành công!" });
     } catch (err) {
       Modal.error({ content: "Có lỗi khi lưu kế hoạch!" });
@@ -329,7 +367,7 @@ function CreatePlanning() {
                 className="bg-blue-700 text-white font-semibold"
                 onClick={handleConfirm}
               >
-                Xem lại & Lưu
+                Lưu kế hoạch
               </Button>
             </>
           )}
