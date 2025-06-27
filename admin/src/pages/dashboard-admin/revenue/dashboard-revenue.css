@@ -1,66 +1,102 @@
-/* RevenueManagement.css */
-
+/* === Base Container === */
 .revenue-container {
   padding: 1rem;
   width: 100%;
-  
+  box-sizing: border-box;
+  overflow-x: hidden;
+  background-color: beige;
 }
 
-.revenue-title {
+/* === Header Section === */
+.revenue-headercontainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: blueviolet;
+  padding: 1rem;
+  border-radius: 8px;
+  color: white;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* === Logo + Brand Name === */
+.box-header1 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.qc-logo-dashboard {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.qc-name {
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 1rem;
 }
 
+/* === Center Title === */
+.box-header2 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* === Date/Time === */
+.box-header3 {
+  font-size: 1.25rem;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* === Card Scroll Area (Optional scroll) === */
 .revenue-scroll {
   width: 100%;
   overflow-x: auto;
-  padding-bottom: 1rem;
+  margin-top: 1rem;
 }
 
+/* === Cards Wrapper === */
 .revenue-cards {
-  display: inline-flex;
+  display: flex;
   gap: 1rem;
-  min-width: max-content;
+  flex-wrap: wrap;
   width: 100%;
+  box-sizing: border-box;
+  
+  justify-content: flex-start;
 }
 
+/* === Card Base === */
 .card {
-  
- background-image: none;
-  border-radius: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
   padding: 1rem;
-  
-  
+  min-width: 220px;
+  flex: 1;
+  max-width: 300px;
 }
 
+/* === Specific Card Sizes (Optional) === */
 .card-250 {
-  width: 250px;
-  margin-top: 20px;
-  margin-left: 30px;
-  color:chocolate;
-  margin-bottom: 45px;
+  max-width: 250px;
+  margin-left: 55px;
 }
 
 .card-400 {
-  width: 400px;
-  margin-top: 30px;
+  max-width: 350px;
 }
 
-.card-500-1 {
-  width: 300px;
-height: auto;
-  flex: 1;
-  margin-right: 20px;
-  margin-bottom: 30px;
-}
+.card-500-1,
 .card-500-2 {
-  width: 300px;
-  height: auto;
-  flex: 1;
-  margin-bottom: 30px;
-   flex-shrink: 0;
+  max-width: 100%;
+  width: 100%;
 }
+
+/* === Card Text === */
 .card-title {
   font-size: 1.125rem;
   font-weight: 600;
@@ -68,68 +104,29 @@ height: auto;
 }
 
 .card-value-green {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   color: green;
 }
 
 .card-value-blue {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   color: #1e80ff;
 }
-.revenue-headercontainer {
+
+/* === Chart Section === */
+.chart-container {
   display: flex;
-  height: 70px;
-  
+  flex-wrap: wrap;
+  gap: 1rem;
   width: 100%;
-  
-  background-color: blueviolet;
+  margin-top: 1.5rem;
+  justify-content: flex-start;
 }
-.qc-logo-dashboard {
-  flex: 0.3;
-  width: 60px;
-  height: 55px;
-  margin-top: 15px;
-  object-fit: contain;
 
-}
-.box-header1 {
-  flex: 0.3;
-  display: flex;
-}
-.qc-name {
-  font-weight: bolder;
-  flex:1.2;
- font-size: 24px;
- text-align:start;
-  margin-top: 20px;
-color: azure;
-padding: auto;
-}
-.box-header2 {
-  flex: 0.4;
-  height: 54px;
-  font-weight: bolder;
-  width: 325px;
-  text-align: start;
-  font-size: 34px;
-  white-space: normal;
-  margin-left: 0px;
-  margin-top: 10px;
-
-  color: azure;
-}
-.box-header3 {
-  flex: 0.3;
-  height: 54px;
-  width: 325px;
-  font-size: 24px;
-  text-align: center;
-  margin-left: auto;
-  
-  margin-top: 20px;
-
-  color: azure;
-}
-.chart-container{
-  display: flex;
+.card-500-1,
+.card-500-2 {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }
