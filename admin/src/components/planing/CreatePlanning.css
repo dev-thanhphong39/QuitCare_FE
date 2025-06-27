@@ -11,6 +11,7 @@ body {
     border-radius: 16px;
     object-fit: cover;
     transition: transform 0.6s ease;
+    margin-top: 70px;
 }
 
 .banner-create1:hover {
