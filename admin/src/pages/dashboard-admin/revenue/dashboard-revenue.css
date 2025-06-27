@@ -22,6 +22,7 @@
   display: inline-flex;
   gap: 1rem;
   min-width: max-content;
+  width: 100%;
 }
 
 .card {
@@ -77,39 +78,43 @@ height: auto;
 }
 .revenue-headercontainer {
   display: flex;
-  height: 100px;
-  width: auto;
+  height: 70px;
+  
+  width: 100%;
+  
   background-color: blueviolet;
 }
-.qc-logo {
-  align-items: center;
+.qc-logo-dashboard {
   flex: 0.3;
-  padding: auto;
-  margin-top: 10px;
   width: 60px;
-  height: 70px;
+  height: 55px;
+  margin-top: 15px;
+  object-fit: contain;
+
 }
 .box-header1 {
   flex: 0.3;
   display: flex;
 }
 .qc-name {
-  flex: 0.7;
+  font-weight: bolder;
+  flex:1.2;
  font-size: 24px;
  text-align:start;
-  margin: 30px 0px 40px;
+  margin-top: 20px;
 color: azure;
 padding: auto;
 }
 .box-header2 {
   flex: 0.4;
   height: 54px;
+  font-weight: bolder;
   width: 325px;
-  text-align: center;
+  text-align: start;
   font-size: 34px;
   white-space: normal;
-  margin-left: 30px;
-  margin-top: 20px;
+  margin-left: 0px;
+  margin-top: 10px;
 
   color: azure;
 }

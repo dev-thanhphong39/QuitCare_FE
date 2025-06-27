@@ -29,7 +29,7 @@ const RevenueStatistics = () => {
     <div className="revenue-container">
        <div className="revenue-headercontainer">
        <div className="box-header1">
-       <img src={logo} alt="Quit Care Logo" className="qc-logo" />
+       <img src={logo} alt="Quit Care Logo" className="qc-logo-dashboard" />
        <div className='qc-name'>Quit Care</div>
        </div>
        <div className="box-header2">Thống kê doanh thu</div>
