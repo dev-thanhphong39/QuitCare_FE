@@ -76,16 +76,19 @@ function CreatePlanning() {
     newStages[stageIdx].weeks.push({ week: "", cigarettes: "" });
     setStages(newStages);
   };
-  // const handleAddStage = () => {
-  //   if (mode === "view") return;
-  //   setStages([...stages, initialStage()]);
-  // };
+
+  const handleAddStage = () => {
+    if (mode === "view") return;
+    setStages([...stages, initialStage()]);
+  };
+
   const handleChange = (stageIdx, rowIdx, field, value) => {
     if (mode === "view") return;
     const newStages = [...stages];
     newStages[stageIdx].weeks[rowIdx][field] = value;
     setStages(newStages);
   };
+
   const handleDeleteRow = (stageIdx, rowIdx) => {
     if (mode === "view") return;
     const newStages = [...stages];
@@ -94,12 +97,13 @@ function CreatePlanning() {
       setStages(newStages);
     }
   };
-  // const handleDeleteStage = (stageIdx) => {
-  //   if (mode === "view" || stages.length === 1) return;
-  //   const newStages = [...stages];
-  //   newStages.splice(stageIdx, 1);
-  //   setStages(newStages);
-  // };
+
+  const handleDeleteStage = (stageIdx) => {
+    if (mode === "view" || stages.length === 1) return;
+    const newStages = [...stages];
+    newStages.splice(stageIdx, 1);
+    setStages(newStages);
+  };
 
   // Xác nhận lưu kế hoạch (tạo mới hoặc cập nhật)
   const handleConfirm = () => setModalOpen(true);
@@ -237,27 +241,58 @@ function CreatePlanning() {
             ? "Kế Hoạch Cai Thuốc Của Bạn"
             : "Bảng Tự Lập Kế Hoạch"}
         </h2>
+
+        {mode !== "view" && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <h3 className="font-semibold text-blue-800 mb-2">
+              💡 Hướng dẫn tạo kế hoạch linh hoạt:
+            </h3>
+            <ul className="text-sm text-blue-700 space-y-1">
+              <li>
+                • Bạn có thể tạo nhiều giai đoạn (ví dụ: Giai đoạn 1, 2, 3...)
+              </li>
+              <li>
+                • Mỗi giai đoạn có thể có nhiều khoảng thời gian khác nhau
+              </li>
+              <li>
+                • Ví dụ khoảng thời gian: "Tuần 1-2", "Tuần 3-5", "Tuần 6"
+              </li>
+              <li>• Mỗi khoảng thời gian có thể có số điếu/ngày khác nhau</li>
+            </ul>
+          </div>
+        )}
         {loading && <div className="text-center py-8">Đang tải...</div>}
         {!loading &&
-          stages.slice(0, 1).map((stage, stageIdx) => (
+          stages.map((stage, stageIdx) => (
             <div
               key={stageIdx}
               className="mb-8 border rounded-lg shadow bg-white p-4"
             >
               <div className="flex justify-between items-center mb-2">
                 <span className="font-bold text-lg text-blue-700">
-                  Giai đoạn
+                  Giai đoạn {stageIdx + 1}
                 </span>
                 <div className="flex gap-2">
                   {mode !== "view" && (
-                    <Button
-                      type="primary"
-                      onClick={() => handleAddRow(stageIdx)}
-                      className="bg-blue-600"
-                      size="small"
-                    >
-                      Thêm giai đoạn
-                    </Button>
+                    <>
+                      <Button
+                        type="primary"
+                        onClick={() => handleAddRow(stageIdx)}
+                        className="bg-blue-600"
+                        size="small"
+                      >
+                        Thêm khoảng thời gian
+                      </Button>
+                      {stages.length > 1 && (
+                        <Button
+                          danger
+                          size="small"
+                          onClick={() => handleDeleteStage(stageIdx)}
+                        >
+                          Xóa giai đoạn
+                        </Button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -271,7 +306,7 @@ function CreatePlanning() {
                       <Input
                         disabled={mode === "view"}
                         value={row.week}
-                        placeholder="Từ tuần ... đến tuần ..."
+                        placeholder="Ví dụ: Tuần 1-2, Tuần 3-5"
                         onChange={(e) =>
                           handleChange(stageIdx, rowIdx, "week", e.target.value)
                         }
@@ -312,13 +347,13 @@ function CreatePlanning() {
                 }))}
                 columns={[
                   {
-                    title: "Thời gian (Từ tuần - đến tuần)",
+                    title: "Khoảng thời gian (Ví dụ: Tuần 1-2)",
                     dataIndex: "week",
                     key: "week",
                     align: "center",
                   },
                   {
-                    title: "Giới hạn số thuốc mỗi ngày",
+                    title: "Số điếu mỗi ngày trong khoảng này",
                     dataIndex: "cigarettes",
                     key: "cigarettes",
                     align: "center",
@@ -344,13 +379,13 @@ function CreatePlanning() {
         <div className="flex gap-4 justify-center mt-4">
           {mode === "create" && (
             <>
-              {/* <Button
+              <Button
                 type="default"
                 className="bg-green-600 text-white font-semibold"
                 onClick={handleAddStage}
               >
                 Thêm giai đoạn
-              </Button> */}
+              </Button>
               <Button
                 type="primary"
                 className="bg-green-600 text-white font-semibold"
@@ -372,6 +407,13 @@ function CreatePlanning() {
           {mode === "edit" && (
             <>
               <Button onClick={handleCancelEdit}>Hủy</Button>
+              <Button
+                type="default"
+                className="bg-green-600 text-white font-semibold"
+                onClick={handleAddStage}
+              >
+                Thêm giai đoạn
+              </Button>
               <Button
                 type="primary"
                 className="bg-green-600"

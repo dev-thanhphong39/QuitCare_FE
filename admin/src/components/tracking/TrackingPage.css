@@ -12,7 +12,7 @@
     /* Deeper, more noticeable shadow for a premium feel */
     transition      : all 0.3s ease-out;
     /* Smooth transition for any changes */
-    margin-top      : 90px;
+    margin-top      : 117px;
 }
 
 /* Heading Styles */
@@ -311,31 +311,225 @@ div[style*="justifyContent: flex-end"] {
     transform : none;
 }
 
-/* Warning Text */
+/* Warning and status message styles */
 .tracking-warning {
-    color      : #EF4444;
-    /* A slightly softer red */
-    font-size  : 15px;
-    font-weight: 500;
-    text-align : right;
-    padding    : 5px 0;
-    flex-grow  : 1;
-    /* Allows it to take up available space */
+    font-size    : 12px;
+    font-weight  : 500;
+    padding      : 6px 12px;
+    border-radius: 6px;
+    text-align   : center;
+    min-width    : 120px;
 }
 
+.tracking-warning-past {
+    background-color: #f5f5f5;
+    color           : #666;
+    border          : 1px solid #ddd;
+}
+
+.tracking-warning-future {
+    background-color: #e3f2fd;
+    color           : #1976d2;
+    border          : 1px solid #bbdefb;
+}
+
+.tracking-warning-late {
+    background-color: #ffebee;
+    color           : #d32f2f;
+    border          : 1px solid #ffcdd2;
+}
+
+.tracking-submitted {
+    font-size       : 12px;
+    font-weight     : 600;
+    color           : #4caf50;
+    background-color: #e8f5e8;
+    padding         : 6px 12px;
+    border-radius   : 6px;
+    text-align      : center;
+    border          : 1px solid #c8e6c9;
+}
+
+/* Period styles for custom plans */
+.tracking-period {
+    margin-bottom: 20px;
+    border       : 1px solid #e8f4fd;
+    border-radius: 12px;
+    padding      : 15px;
+    background   : linear-gradient(135deg, #f8faff 0%, #e8f4fd 100%);
+}
+
+.period-header {
+    margin-bottom: 15px;
+    padding      : 10px 15px;
+    background   : linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color        : white;
+    border-radius: 8px;
+    font-size    : 16px;
+    text-align   : center;
+    box-shadow   : 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Plan info styles */
+.plan-info {
+    background   : linear-gradient(135deg, #f8faff 0%, #e8f4fd 100%);
+    border-radius: 12px;
+    padding      : 20px;
+    margin-bottom: 30px;
+    border       : 1px solid #e3f2fd;
+}
+
+.plan-type {
+    text-align   : center;
+    margin-bottom: 10px;
+}
+
+.custom-plan-badge {
+    background   : linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color        : white;
+    padding      : 8px 16px;
+    border-radius: 20px;
+    font-size    : 16px;
+    font-weight  : 600;
+    box-shadow   : 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.system-plan-badge {
+    background   : linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    color        : white;
+    padding      : 8px 16px;
+    border-radius: 20px;
+    font-size    : 16px;
+    font-weight  : 600;
+    box-shadow   : 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+.plan-date {
+    text-align: center;
+    color     : #666;
+    font-size : 14px;
+    margin-top: 8px;
+}
+
+/* Target display styles */
+.tracking-target {
+    font-size       : 14px;
+    font-weight     : 600;
+    color           : #007AFF;
+    background-color: #F0F8FF;
+    padding         : 8px 12px;
+    border-radius   : 8px;
+    text-align      : center;
+    margin-bottom   : 15px;
+    border          : 1px solid #E3F2FD;
+}
+
+/* Loading and error styles */
+.loading-container,
+.error-container {
+    text-align: center;
+    padding   : 60px 20px;
+}
+
+.loading-spinner {
+    width        : 40px;
+    height       : 40px;
+    border       : 4px solid #f3f3f3;
+    border-top   : 4px solid #2196F3;
+    border-radius: 50%;
+    animation    : spin 1s linear infinite;
+    margin       : 0 auto 20px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.error-container h3 {
+    color        : #d32f2f;
+    margin-bottom: 10px;
+}
+
+.error-container p {
+    color    : #666;
+    font-size: 16px;
+}
+
+/* Modal styles - Simple and clean */
+.ant-modal .ant-modal-content {
+    border-radius: 8px;
+    box-shadow   : 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ant-modal .ant-modal-header {
+    background   : #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding      : 16px 20px;
+}
+
+.ant-modal .ant-modal-title {
+    color      : #2c3e50;
+    font-size  : 16px;
+    font-weight: 600;
+    margin     : 0;
+}
+
+.ant-modal .ant-modal-body {
+    padding    : 20px;
+    background : white;
+    font-size  : 14px;
+    line-height: 1.5;
+    color      : #495057;
+}
+
+/* Simple button */
 .custom-popup-button {
-    background-color: #1890ff;
-    color           : white;
-    border          : none;
-    padding         : 10px 26px;
-    border-radius   : 7px;
-    cursor          : pointer;
+    background   : #007bff;
+    color        : white;
+    border       : none;
+    padding      : 8px 16px;
+    border-radius: 4px;
+    font-size    : 14px;
+    cursor       : pointer;
+    transition   : background-color 0.2s;
 }
 
 .custom-popup-button:hover {
-    background-color: #40a9ff;
+    background: #0056b3;
+    color     : white;
 }
 
+/* Clean popup content */
+.popup-content {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Simple success message */
+.popup-success {
+    background   : #d4edda;
+    color        : #155724;
+    padding      : 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    border       : 1px solid #c3e6cb;
+}
+
+/* Simple warning message */
+.popup-warning {
+    background   : #fff3cd;
+    color        : #856404;
+    padding      : 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    border       : 1px solid #ffeaa7;
+}
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
