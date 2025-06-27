@@ -1,16 +1,25 @@
-
-/* Banner */
-.banner-create1 {
-    max-height: 300px;
-    border-radius: 12px;
-    object-fit: cover;
-    margin-top: 76px;
+/* ================== Base ================== */
+body {
+    background-color: #f9f9f9;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 }
 
-/* Container */
-.max-w-4xl {
-    max-width: 960px;
+/* ================== Banner ================== */
+.banner-create1 {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
 
+.banner-create1:hover {
+    transform: scale(1.02);
+}
+
+/* ================== Layout ================== */
+.max-w-4xl {
+    max-width: 1024px;
 }
 
 .mx-auto {
@@ -23,49 +32,63 @@
 }
 
 .mb-4 {
-    margin-bottom: 1rem;
+    margin-bottom: 16px;
 }
 
 .mb-8 {
-    margin-bottom: 2rem;
+    margin-bottom: 32px;
 }
 
-/* Stage Card */
+/* ================== Card ================== */
 .border {
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background-color: #fff;
+    padding: 16px;
+    transition: all 0.25s ease-in-out;
 }
 
-.rounded-lg {
-    border-radius: 12px;
+.border:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
 }
 
-.shadow {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+/* ================== Heading ================== */
+h2 {
+    color: #1c1c1e;
 }
 
-.bg-white {
-    background-color: #ffffff;
-}
-
-/* Header Text */
 .text-3xl {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
+    font-size: 28px;
 }
 
 .font-bold {
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .text-center {
     text-align: center;
 }
 
-.text-blue-700 {
-    color: #1d4ed8;
+/* ================== Text Colors ================== */
+.text-lg {
+    font-size: 18px;
 }
 
-/* Flex */
+.text-blue-700 {
+    color: #007aff;
+}
+
+.text-green-600 {
+    color: #0c0c0c;
+}
+
+.text-orange-500 {
+    color: #006eff;
+}
+
+/* ================== Flex ================== */
 .flex {
     display: flex;
 }
@@ -90,110 +113,133 @@
     gap: 16px;
 }
 
-.mt-4 {
-    margin-top: 1rem;
-}
-
-/* Antd Table Custom */
+/* ================== Table ================== */
 .ant-table {
-    border-radius: 8px;
+    border-radius: 12px !important;
     overflow: hidden;
 }
 
 .ant-table-thead>tr>th {
-    background-color: #f3f4f6 !important;
-    color: #374151;
+    background-color: #fafafa;
+    color: #1c1c1e;
     font-weight: 600;
     text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.ant-table-thead>tr>th:hover {
+    background-color: #f0f0f0;
 }
 
 .ant-table-tbody>tr>td {
     text-align: center;
-    vertical-align: middle;
+    padding: 12px;
+    transition: background-color 0.2s ease;
 }
 
-.ant-table-bordered .ant-table-cell {
-    border-color: #e5e7eb;
+.ant-table-tbody>tr:hover>td {
+    background-color: #f2f2f7;
 }
 
-/* Input */
+/* ================== Input ================== */
 .ant-input {
     border-radius: 8px;
     padding: 8px 12px;
+    transition: border-color 0.25s ease;
 }
 
 .ant-input:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    border-color: #007aff;
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
 }
 
-/* Button */
-button {
-    border-radius: 8px !important;
+/* ================== Buttons ================== */
+.ant-btn {
+    border-radius: 8px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease-in-out;
 }
 
-button:hover {
-    opacity: 0.9;
+.ant-btn:hover {
+    transform: scale(1.04);
 }
 
-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.ant-btn:active {
+    transform: scale(0.98);
 }
 
-/* Primary Button */
-.bg-blue-600,
-.bg-blue-700 {
-    background-color: #2563eb !important;
-    color: white !important;
+.ant-btn-primary {
+    background-color: #007aff;
+    border-color: #007aff;
 }
 
-.bg-blue-600:hover,
-.bg-blue-700:hover {
-    background-color: #1e40af !important;
+.ant-btn-primary:hover {
+    background-color: #005fcc;
+    border-color: #005fcc;
 }
 
-/* Green Button */
-.bg-green-600 {
-    background-color: #16a34a !important;
-    color: white !important;
-}
-
-.bg-green-600:hover {
-    background-color: #15803d !important;
-}
-
-/* Danger Button */
 .ant-btn-dangerous {
-    background-color: #dc2626 !important;
-    color: white !important;
-    border: none !important;
+    background-color: #ff3b30;
+    border-color: #ff3b30;
 }
 
 .ant-btn-dangerous:hover {
-    background-color: #b91c1c !important;
+    background-color: #d92a1c;
+    border-color: #d92a1c;
 }
 
-/* Modal */
-.ant-modal-content {
-    border-radius: 12px;
+.bg-green-600 {
+    background-color: #34c759 !important;
+    border-color: #34c759 !important;
 }
 
-.ant-modal-header {
-    border-radius: 12px 12px 0 0;
-    background-color: #eff6ff;
+.bg-green-600:hover {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
 }
 
+.bg-orange-500 {
+    background-color: #0033ff !important;
+    border-color: #0040ff !important;
+}
+
+.bg-orange-500:hover {
+    background-color: #0011cc !important;
+    border-color: #0022cc !important;
+}
+
+.bg-blue-600 {
+    background-color: #007aff !important;
+    border-color: #007aff !important;
+}
+
+.bg-blue-600:hover {
+    background-color: #005fcc !important;
+    border-color: #005fcc !important;
+}
+
+/* ================== Modal ================== */
 .ant-modal-title {
-    color: #1d4ed8;
     font-weight: 600;
+    color: #1c1c1e;
 }
 
-.ant-modal-footer .ant-btn-primary {
-    background-color: #2563eb !important;
-    border: none;
+.ant-modal {
+    animation: fadeIn 0.4s ease;
 }
 
-.ant-modal-footer .ant-btn-primary:hover {
-    background-color: #1e40af !important;
+/* ================== Loading ================== */
+.text-center.py-8 {
+    color: #666;
+    font-size: 16px;
 }
+
+.modal-btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+

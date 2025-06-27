@@ -76,10 +76,10 @@ function CreatePlanning() {
     newStages[stageIdx].weeks.push({ week: "", cigarettes: "" });
     setStages(newStages);
   };
-  const handleAddStage = () => {
-    if (mode === "view") return;
-    setStages([...stages, initialStage()]);
-  };
+  // const handleAddStage = () => {
+  //   if (mode === "view") return;
+  //   setStages([...stages, initialStage()]);
+  // };
   const handleChange = (stageIdx, rowIdx, field, value) => {
     if (mode === "view") return;
     const newStages = [...stages];
@@ -94,12 +94,12 @@ function CreatePlanning() {
       setStages(newStages);
     }
   };
-  const handleDeleteStage = (stageIdx) => {
-    if (mode === "view" || stages.length === 1) return;
-    const newStages = [...stages];
-    newStages.splice(stageIdx, 1);
-    setStages(newStages);
-  };
+  // const handleDeleteStage = (stageIdx) => {
+  //   if (mode === "view" || stages.length === 1) return;
+  //   const newStages = [...stages];
+  //   newStages.splice(stageIdx, 1);
+  //   setStages(newStages);
+  // };
 
   // Xác nhận lưu kế hoạch (tạo mới hoặc cập nhật)
   const handleConfirm = () => setModalOpen(true);
@@ -239,36 +239,25 @@ function CreatePlanning() {
         </h2>
         {loading && <div className="text-center py-8">Đang tải...</div>}
         {!loading &&
-          stages.map((stage, stageIdx) => (
+          stages.slice(0, 1).map((stage, stageIdx) => (
             <div
               key={stageIdx}
               className="mb-8 border rounded-lg shadow bg-white p-4"
             >
               <div className="flex justify-between items-center mb-2">
                 <span className="font-bold text-lg text-blue-700">
-                  Giai đoạn {stageIdx + 1}
+                  Giai đoạn
                 </span>
                 <div className="flex gap-2">
                   {mode !== "view" && (
-                    <>
-                      <Button
-                        type="primary"
-                        onClick={() => handleAddRow(stageIdx)}
-                        className="bg-blue-600"
-                        size="small"
-                      >
-                        Thêm dòng tuần
-                      </Button>
-                      {stageIdx !== 0 && (
-                        <Button
-                          danger
-                          onClick={() => handleDeleteStage(stageIdx)}
-                          size="small"
-                        >
-                          Xóa giai đoạn
-                        </Button>
-                      )}
-                    </>
+                    <Button
+                      type="primary"
+                      onClick={() => handleAddRow(stageIdx)}
+                      className="bg-blue-600"
+                      size="small"
+                    >
+                      Thêm giai đoạn
+                    </Button>
                   )}
                 </div>
               </div>
@@ -355,16 +344,16 @@ function CreatePlanning() {
         <div className="flex gap-4 justify-center mt-4">
           {mode === "create" && (
             <>
-              <Button
+              {/* <Button
                 type="default"
                 className="bg-green-600 text-white font-semibold"
                 onClick={handleAddStage}
               >
                 Thêm giai đoạn
-              </Button>
+              </Button> */}
               <Button
                 type="primary"
-                className="bg-blue-700 text-white font-semibold"
+                className="bg-green-600 text-white font-semibold"
                 onClick={handleConfirm}
               >
                 Lưu kế hoạch
@@ -399,11 +388,20 @@ function CreatePlanning() {
             mode === "edit" ? "Xác nhận cập nhật kế hoạch" : "Xác nhận kế hoạch"
           }
           open={modalOpen}
-          onOk={handleModalOk}
           onCancel={() => setModalOpen(false)}
-          okText="Đồng ý"
-          cancelText="Hủy"
-          confirmLoading={loading}
+          footer={
+            <div className="modal-btn-group">
+              <Button onClick={() => setModalOpen(false)}>Hủy</Button>
+              <Button
+                type="primary"
+                className="bg-blue-600"
+                loading={loading}
+                onClick={handleModalOk}
+              >
+                Đồng ý
+              </Button>
+            </div>
+          }
         >
           <p>
             {mode === "edit"
