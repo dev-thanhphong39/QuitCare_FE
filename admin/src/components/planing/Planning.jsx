@@ -571,3 +571,102 @@ function PlanPage() {
 }
 
 export default PlanPage;
+
+/*
+
+// Hiển thị tình hình sau khi nhập form và chọn đề xuất hoạc tự lập
+
+import { Input, Radio, Modal } from "antd"; // Thêm Modal vào import
+
+
+// Hàm đánh giá mức độ nghiện thuốc lá
+function calcAddictionLevel(form) {
+  let cigarettes = parseInt(form.cigarettes_per_day, 10);
+  let pointCig = 0;
+  if (cigarettes <= 10) pointCig = 0;
+  else if (cigarettes <= 20) pointCig = 1;
+  else if (cigarettes <= 30) pointCig = 2;
+  else pointCig = 3;
+
+  let pointTime = 0;
+  switch (form.timeToFirstCigarette) {
+    case "≤5 phút":
+      pointTime = 3;
+      break;
+    case "6–30 phút":
+      pointTime = 2;
+      break;
+    case "31–60 phút":
+      pointTime = 1;
+      break;
+    case ">60 phút":
+      pointTime = 0;
+      break;
+    default:
+      pointTime = 0;
+  }
+
+  const total = pointCig + pointTime;
+  let level = "";
+  let message = "";
+  if (total <= 2) {
+    level = "Nhẹ";
+    message =
+      "Bạn có mức độ nghiện thuốc lá nhẹ. Đây là thời điểm rất tốt để bắt đầu cai thuốc. Hãy kiên trì, bạn hoàn toàn có thể thành công!";
+  } else if (total <= 4) {
+    level = "Trung bình";
+    message =
+      "Bạn có mức độ nghiện thuốc lá trung bình. Đừng lo lắng, với quyết tâm và sự hỗ trợ phù hợp, bạn sẽ vượt qua được thử thách này!";
+  } else {
+    level = "Cao";
+    message =
+      "Bạn có mức độ nghiện thuốc lá cao. Đừng nản lòng, hãy kiên trì và tìm kiếm sự hỗ trợ từ gia đình, bạn bè hoặc chuyên gia. Bạn chắc chắn sẽ làm được!";
+  }
+  return {
+    total,
+    level,
+    message,
+    summary: `Bạn hút khoảng ${form.cigarettes_per_day} điếu/ngày và hút điếu đầu tiên sau khi thức dậy ${form.timeToFirstCigarette}.`,
+  };
+}
+
+// ...existing code...
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  if (!isFilled()) {
+    setError("Vui lòng nhập đầy đủ tất cả các thông tin!");
+    return;
+  }
+
+  // Đánh giá mức độ nghiện và hiển thị modal
+  const addiction = calcAddictionLevel(form);
+  Modal.info({
+    title: "Đánh giá mức độ nghiện thuốc lá",
+    content: (
+      <div>
+        <div style={{ marginBottom: 8 }}>{addiction.summary}</div>
+        <div>
+          <b>Mức độ nghiện: </b>
+          <span style={{
+            color:
+              addiction.level === "Cao"
+                ? "#e74c3c"
+                : addiction.level === "Trung bình"
+                ? "#f39c12"
+                : "#27ae60",
+            fontWeight: "bold"
+          }}>
+            {addiction.level}
+          </span>
+        </div>
+        <div style={{ marginTop: 12 }}>{addiction.message}</div>
+      </div>
+    ),
+    okText: "Tiếp tục",
+    onOk: () => setShowChoice(true),
+    centered: true,
+  });
+};
+
+*/
