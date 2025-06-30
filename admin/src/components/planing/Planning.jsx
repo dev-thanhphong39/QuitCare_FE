@@ -572,12 +572,12 @@ function PlanPage() {
 
 export default PlanPage;
 
+
 /*
 
 // Hiển thị tình hình sau khi nhập form và chọn đề xuất hoạc tự lập
 
 import { Input, Radio, Modal } from "antd"; // Thêm Modal vào import
-
 
 // Hàm đánh giá mức độ nghiện thuốc lá
 function calcAddictionLevel(form) {

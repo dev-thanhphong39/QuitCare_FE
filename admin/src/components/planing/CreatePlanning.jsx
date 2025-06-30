@@ -347,7 +347,7 @@ function CreatePlanning() {
                 }))}
                 columns={[
                   {
-                    title: "Khoảng thời gian (Ví dụ: Tuần 1-2)",
+                    title: "Khoảng thời gian",
                     dataIndex: "week",
                     key: "week",
                     align: "center",
