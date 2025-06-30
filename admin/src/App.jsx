@@ -29,8 +29,6 @@ import ForgotPasswordForm from "./components/forgot-password/forgot-pasword";
 import PaymentPage from "./components/payment/submitOrder";
 import PaymentResult from "./components/payment/PaymentResult";
 
-import RevenueStatistics from "./pages/dashboard-admin/revenue";
-import AdminDashboard from "./components/dashboard/admin-dashboard";
 
 function App() {
   const router = createBrowserRouter([
@@ -90,7 +88,7 @@ function App() {
           path: "comments",
           element: <CommentManagement />,
         },
-       
+
         {
           path: "revenue",
           element: < RevenueManagement />,
@@ -109,22 +107,7 @@ function App() {
         },
       ],
     },
-    {
-      path: "/dashboard-admin",
-      element: <AdminDashboard />,
-      children: [
-        {
-          path: "users",
-          element: <RevenueStatistics/>,
-        },
-        
-        {
-          path: "revenue-report",
-          element: <RevenueStatistics />,
-        },
-        
-      ],
-    },
+
     {
       path: "/suggest-planing",
       element: <SuggestPlaning />,
@@ -140,7 +123,7 @@ function App() {
     {
       path: "/payment",
       element: <PaymentPage />,
-    },{
+    }, {
       path: "/payment-result",
       element: <PaymentResult />,
     },

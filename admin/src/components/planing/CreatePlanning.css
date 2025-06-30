@@ -8,7 +8,6 @@ body {
 .banner-create1 {
     width: 100%;
     height: auto;
-    border-radius: 16px;
     object-fit: cover;
     transition: transform 0.6s ease;
     margin-top: 70px;
@@ -79,6 +78,7 @@ h2 {
 
 .text-blue-700 {
     color: #007aff;
+    margin-bottom: 4px
 }
 
 .text-green-600 {
@@ -203,13 +203,11 @@ h2 {
 }
 
 .bg-orange-500 {
-    background-color: #0033ff !important;
-    border-color: #0040ff !important;
+    background-color: #007aff !important;
 }
 
 .bg-orange-500:hover {
-    background-color: #0011cc !important;
-    border-color: #0022cc !important;
+    background-color: #026fe3 !important;
 }
 
 .bg-blue-600 {
@@ -243,4 +241,3 @@ h2 {
     justify-content: center;
     gap: 16px;
 }
-

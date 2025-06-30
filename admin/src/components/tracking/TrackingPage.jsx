@@ -44,7 +44,7 @@ const TrackingPage = () => {
   const [popupContent, setPopupContent] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const BOOKING_LINK = "http://localhost:5173/booking";
-  const isTestMode = true;
+  const isTestMode = false;
 
   useEffect(() => {
     async function fetchPlan() {
@@ -378,28 +378,6 @@ const TrackingPage = () => {
     }
   };
 
-  // Debug function để hiển thị cấu trúc kế hoạch
-  // useEffect(() => {
-  //   if (plan && window.location.search.includes("debug=true")) {
-  //     console.log("=== PLAN DEBUG INFO ===");
-  //     console.log(
-  //       "Plan type:",
-  //       plan.isCustomPlan ? "Custom Plan" : "System Plan"
-  //     );
-  //     console.log("System Plan flag:", plan.systemPlan);
-  //     console.log("Plan data:", plan);
-  //     console.log("Stages:", plan.stages);
-  //     if (plan.stages) {
-  //       plan.stages.forEach((stage, idx) => {
-  //         console.log(`Stage ${idx + 1}:`, stage);
-  //         if (stage.periods) {
-  //           console.log(`  Periods:`, stage.periods);
-  //         }
-  //       });
-  //     }
-  //     console.log("=======================");
-  //   }
-  // }, [plan]);
 
   // Tính toán ngày bắt đầu cho từng tuần trong kế hoạch tự tạo
   const calculateCustomPlanDays = (
@@ -511,47 +489,47 @@ const TrackingPage = () => {
                   <div style={{ marginLeft: "1rem", marginTop: "0.5rem" }}>
                     {isCustomStage && stage.periods
                       ? // Hiển thị cho kế hoạch tự tạo - theo periods
-                        stage.periods.map((period, periodIdx) => {
-                          const weeks = parseWeekRange(period.week_range);
+                      stage.periods.map((period, periodIdx) => {
+                        const weeks = parseWeekRange(period.week_range);
 
-                          return (
-                            <div
-                              key={`period-${periodIdx}`}
-                              className="tracking-period"
-                            >
-                              <div className="period-header">
-                                <strong>
-                                  📅 {period.week_range} -{" "}
-                                  {period.targetCigarettes} điếu/ngày
-                                </strong>
-                              </div>
+                        return (
+                          <div
+                            key={`period-${periodIdx}`}
+                            className="tracking-period"
+                          >
+                            <div className="period-header">
+                              <strong>
+                                📅
+                                Mục tiêu của bạn là {period.targetCigarettes} điếu/ngày
+                              </strong>
+                            </div>
 
-                              {weeks.map((weekNum, weekIdx) => (
-                                <div
-                                  key={`week-${weekNum}`}
-                                  style={{
-                                    marginLeft: "1rem",
-                                    marginTop: "0.5rem",
-                                  }}
-                                >
-                                  <button
-                                    onClick={() =>
-                                      setSelected((prev) => ({
-                                        ...prev,
-                                        week:
-                                          prev.week ===
+                            {weeks.map((weekNum, weekIdx) => (
+                              <div
+                                key={`week-${weekNum}`}
+                                style={{
+                                  marginLeft: "1rem",
+                                  marginTop: "0.5rem",
+                                }}
+                              >
+                                <button
+                                  onClick={() =>
+                                    setSelected((prev) => ({
+                                      ...prev,
+                                      week:
+                                        prev.week ===
                                           `${periodIdx}-${weekIdx}`
-                                            ? null
-                                            : `${periodIdx}-${weekIdx}`,
-                                      }))
-                                    }
-                                    className="tracking-week-button"
-                                  >
-                                    📅 Tuần {weekNum}
-                                  </button>
+                                          ? null
+                                          : `${periodIdx}-${weekIdx}`,
+                                    }))
+                                  }
+                                  className="tracking-week-button"
+                                >
+                                  📅 Tuần {weekNum}
+                                </button>
 
-                                  {selected.week ===
-                                    `${periodIdx}-${weekIdx}` && (
+                                {selected.week ===
+                                  `${periodIdx}-${weekIdx}` && (
                                     <div
                                       style={{
                                         display: "grid",
@@ -576,7 +554,7 @@ const TrackingPage = () => {
                                           );
                                         actualDate.setDate(
                                           actualDate.getDate() +
-                                            totalDaysFromStart
+                                          totalDaysFromStart
                                         );
 
                                         const currentTargetCigs =
@@ -715,179 +693,179 @@ const TrackingPage = () => {
                                       })}
                                     </div>
                                   )}
-                                </div>
-                              ))}
-                            </div>
-                          );
-                        })
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })
                       : // Hiển thị cho kế hoạch hệ thống - cấu trúc cũ
-                        [0, 1, 2, 3].map((weekIdx) => (
-                          <div
-                            key={weekIdx}
-                            style={{ marginLeft: "1rem", marginTop: "0.5rem" }}
+                      [0, 1, 2, 3].map((weekIdx) => (
+                        <div
+                          key={weekIdx}
+                          style={{ marginLeft: "1rem", marginTop: "0.5rem" }}
+                        >
+                          <button
+                            onClick={() =>
+                              setSelected((prev) => ({
+                                ...prev,
+                                week: prev.week === weekIdx ? null : weekIdx,
+                              }))
+                            }
+                            className="tracking-week-button"
                           >
-                            <button
-                              onClick={() =>
-                                setSelected((prev) => ({
-                                  ...prev,
-                                  week: prev.week === weekIdx ? null : weekIdx,
-                                }))
-                              }
-                              className="tracking-week-button"
+                            📅 Tuần {weekIdx + 1}
+                          </button>
+
+                          {selected.week === weekIdx && (
+                            <div
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns:
+                                  "repeat(auto-fill, minmax(280px, 1fr))",
+                                gap: "1rem",
+                                marginTop: "0.5rem",
+                              }}
                             >
-                              📅 Tuần {weekIdx + 1}
-                            </button>
+                              {[0, 1, 2, 3, 4, 5, 6].map((dayIdx) => {
+                                const dayKey = `${stageIdx}-${weekIdx}-${dayIdx}`;
+                                const actualDate = new Date(
+                                  plan.createdDate || new Date()
+                                );
+                                actualDate.setDate(
+                                  actualDate.getDate() +
+                                  stageIdx * 28 +
+                                  weekIdx * 7 +
+                                  dayIdx
+                                );
 
-                            {selected.week === weekIdx && (
-                              <div
-                                style={{
-                                  display: "grid",
-                                  gridTemplateColumns:
-                                    "repeat(auto-fill, minmax(280px, 1fr))",
-                                  gap: "1rem",
-                                  marginTop: "0.5rem",
-                                }}
-                              >
-                                {[0, 1, 2, 3, 4, 5, 6].map((dayIdx) => {
-                                  const dayKey = `${stageIdx}-${weekIdx}-${dayIdx}`;
-                                  const actualDate = new Date(
-                                    plan.createdDate || new Date()
-                                  );
-                                  actualDate.setDate(
-                                    actualDate.getDate() +
-                                      stageIdx * 28 +
-                                      weekIdx * 7 +
-                                      dayIdx
-                                  );
+                                const dayStatus = getDayStatus(
+                                  dayKey,
+                                  actualDate
+                                );
+                                const isSubmitted =
+                                  trackingData[dayKey]?.submitted;
+                                const isEditing =
+                                  editingDays[dayKey] || false;
 
-                                  const dayStatus = getDayStatus(
-                                    dayKey,
-                                    actualDate
-                                  );
-                                  const isSubmitted =
-                                    trackingData[dayKey]?.submitted;
-                                  const isEditing =
-                                    editingDays[dayKey] || false;
+                                return (
+                                  <div
+                                    key={dayIdx}
+                                    className="tracking-day-card"
+                                  >
+                                    <div className="tracking-day-title">
+                                      Ngày {dayIdx + 1}
+                                    </div>
+                                    <div className="tracking-day-date">
+                                      {format(actualDate, "dd/MM/yyyy")}
+                                    </div>
+                                    <div className="tracking-target">
+                                      Mục tiêu: {stage.targetCigarettes} điếu
+                                    </div>
 
-                                  return (
-                                    <div
-                                      key={dayIdx}
-                                      className="tracking-day-card"
-                                    >
-                                      <div className="tracking-day-title">
-                                        Ngày {dayIdx + 1}
-                                      </div>
-                                      <div className="tracking-day-date">
-                                        {format(actualDate, "dd/MM/yyyy")}
-                                      </div>
-                                      <div className="tracking-target">
-                                        Mục tiêu: {stage.targetCigarettes} điếu
-                                      </div>
+                                    <input
+                                      type="number"
+                                      className="tracking-input"
+                                      placeholder="Số điếu thuốc"
+                                      value={
+                                        trackingData[dayKey]?.smoked || ""
+                                      }
+                                      disabled={!isEditing}
+                                      onChange={(e) =>
+                                        handleInput(
+                                          dayKey,
+                                          "smoked",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
 
-                                      <input
-                                        type="number"
-                                        className="tracking-input"
-                                        placeholder="Số điếu thuốc"
-                                        value={
-                                          trackingData[dayKey]?.smoked || ""
-                                        }
-                                        disabled={!isEditing}
-                                        onChange={(e) =>
-                                          handleInput(
-                                            dayKey,
-                                            "smoked",
-                                            e.target.value
-                                          )
-                                        }
-                                      />
-
-                                      <div className="tracking-symptoms">
-                                        {SYMPTOMS.map((symp) => (
-                                          <label
-                                            key={symp}
-                                            className="tracking-symptom-label"
-                                          >
-                                            <input
-                                              type="checkbox"
-                                              checked={
-                                                trackingData[dayKey]
-                                                  ?.symptoms?.[symp] || false
-                                              }
-                                              onChange={() =>
-                                                handleSymptomToggle(
-                                                  dayKey,
-                                                  symp
-                                                )
-                                              }
-                                              disabled={!isEditing}
-                                            />
-                                            {" " + symp}
-                                          </label>
-                                        ))}
-                                      </div>
-
-                                      <div
-                                        style={{
-                                          display: "flex",
-                                          justifyContent: "flex-end",
-                                          gap: "0.5rem",
-                                          marginTop: "0.5rem",
-                                        }}
-                                      >
-                                        {dayStatus.canEdit && !isEditing && (
-                                          <button
-                                            className="tracking-button-edit"
-                                            onClick={() =>
-                                              setEditingDays((prev) => ({
-                                                ...prev,
-                                                [dayKey]: true,
-                                              }))
+                                    <div className="tracking-symptoms">
+                                      {SYMPTOMS.map((symp) => (
+                                        <label
+                                          key={symp}
+                                          className="tracking-symptom-label"
+                                        >
+                                          <input
+                                            type="checkbox"
+                                            checked={
+                                              trackingData[dayKey]
+                                                ?.symptoms?.[symp] || false
                                             }
-                                          >
-                                            {isSubmitted ? "Chỉnh sửa" : "Edit"}
-                                          </button>
-                                        )}
-                                        {isEditing && (
-                                          <button
-                                            className="tracking-button-submit"
-                                            onClick={() => {
-                                              handleInput(
+                                            onChange={() =>
+                                              handleSymptomToggle(
                                                 dayKey,
-                                                "submitted",
-                                                true
-                                              );
-                                              saveData(
-                                                dayKey,
-                                                trackingData[dayKey]?.smoked ||
-                                                  "0",
-                                                stage.targetCigarettes
-                                              );
-                                            }}
+                                                symp
+                                              )
+                                            }
+                                            disabled={!isEditing}
+                                          />
+                                          {" " + symp}
+                                        </label>
+                                      ))}
+                                    </div>
+
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        justifyContent: "flex-end",
+                                        gap: "0.5rem",
+                                        marginTop: "0.5rem",
+                                      }}
+                                    >
+                                      {dayStatus.canEdit && !isEditing && (
+                                        <button
+                                          className="tracking-button-edit"
+                                          onClick={() =>
+                                            setEditingDays((prev) => ({
+                                              ...prev,
+                                              [dayKey]: true,
+                                            }))
+                                          }
+                                        >
+                                          {isSubmitted ? "Chỉnh sửa" : "Edit"}
+                                        </button>
+                                      )}
+                                      {isEditing && (
+                                        <button
+                                          className="tracking-button-submit"
+                                          onClick={() => {
+                                            handleInput(
+                                              dayKey,
+                                              "submitted",
+                                              true
+                                            );
+                                            saveData(
+                                              dayKey,
+                                              trackingData[dayKey]?.smoked ||
+                                              "0",
+                                              stage.targetCigarettes
+                                            );
+                                          }}
+                                        >
+                                          Submit
+                                        </button>
+                                      )}
+                                      {!dayStatus.canEdit &&
+                                        dayStatus.message && (
+                                          <div
+                                            className={`tracking-warning tracking-warning-${dayStatus.type}`}
                                           >
-                                            Submit
-                                          </button>
-                                        )}
-                                        {!dayStatus.canEdit &&
-                                          dayStatus.message && (
-                                            <div
-                                              className={`tracking-warning tracking-warning-${dayStatus.type}`}
-                                            >
-                                              {dayStatus.message}
-                                            </div>
-                                          )}
-                                        {isSubmitted && !dayStatus.canEdit && (
-                                          <div className="tracking-submitted">
-                                            ✅ Đã hoàn thành
+                                            {dayStatus.message}
                                           </div>
                                         )}
-                                      </div>
+                                      {isSubmitted && !dayStatus.canEdit && (
+                                        <div className="tracking-submitted">
+                                          ✅ Đã hoàn thành
+                                        </div>
+                                      )}
                                     </div>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      ))}
                   </div>
                 )}
               </div>
