@@ -172,7 +172,7 @@
 }
 
 .form-input::placeholder {
-    color: #ccc;
+    color: #fffcfc;
 }
 
 /* --- Nút --- */
@@ -196,9 +196,9 @@
 .cross-banner-wrapper {
     position     : relative;
     z-index      : 5;
-    margin-top   : -30px;
+    margin-top   : -55px;
     /* đẩy lên gần phần trên nếu cần */
-    margin-bottom: -80px;
+    margin-bottom: -106px;
     /* đẩy sát xuống experience */
     overflow     : hidden;
 }
