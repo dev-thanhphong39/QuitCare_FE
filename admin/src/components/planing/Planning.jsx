@@ -3,7 +3,7 @@ import api from "../../configs/axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../footer/Footer";
 import Navbar from "../navbar/Navbar";
-import { Input, Radio } from "antd";
+import { Input, Radio, Modal } from "antd";
 import "./Planning.css";
 
 const initialState = {
@@ -87,11 +87,63 @@ const mapReadiness = (value) => {
   }
 };
 
+// Hàm đánh giá mức độ nghiện thuốc lá
+function calcAddictionLevel(form) {
+  let cigarettes = parseInt(form.cigarettes_per_day, 10);
+  let pointCig = 0;
+  if (cigarettes <= 10) pointCig = 0;
+  else if (cigarettes <= 20) pointCig = 1;
+  else if (cigarettes <= 30) pointCig = 2;
+  else pointCig = 3;
+
+  let pointTime = 0;
+  switch (form.timeToFirstCigarette) {
+    case "≤5 phút":
+      pointTime = 3;
+      break;
+    case "6–30 phút":
+      pointTime = 2;
+      break;
+    case "31–60 phút":
+      pointTime = 1;
+      break;
+    case ">60 phút":
+      pointTime = 0;
+      break;
+    default:
+      pointTime = 0;
+  }
+
+  const total = pointCig + pointTime;
+  let level = "";
+  let message = "";
+  if (total <= 2) {
+    level = "Nhẹ";
+    message =
+      "Bạn có mức độ nghiện thuốc lá nhẹ. Đây là thời điểm rất tốt để bắt đầu cai thuốc. Hãy kiên trì, bạn hoàn toàn có thể thành công!";
+  } else if (total <= 4) {
+    level = "Trung bình";
+    message =
+      "Bạn có mức độ nghiện thuốc lá trung bình. Đừng lo lắng, với quyết tâm và sự hỗ trợ phù hợp, bạn sẽ vượt qua được thử thách này!";
+  } else {
+    level = "Cao";
+    message =
+      "Bạn có mức độ nghiện thuốc lá cao. Đừng nản lòng, hãy kiên trì và tìm kiếm sự hỗ trợ từ gia đình, bạn bè hoặc chuyên gia. Bạn chắc chắn sẽ làm được!";
+  }
+  return {
+    total,
+    level,
+    message,
+    summary: `Bạn hút khoảng ${form.cigarettes_per_day} điếu/ngày và hút điếu đầu tiên sau khi thức dậy ${form.timeToFirstCigarette}.`,
+  };
+}
+
 function PlanPage() {
   const [form, setForm] = useState(initialState);
   const [showChoice, setShowChoice] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [addictionInfo, setAddictionInfo] = useState(null); // Thêm state để lưu thông tin đánh giá
   const navigate = useNavigate();
 
   const accountId = localStorage.getItem("accountId");
@@ -147,6 +199,10 @@ function PlanPage() {
       setError("Vui lòng nhập đầy đủ tất cả các thông tin!");
       return;
     }
+
+    // Đánh giá mức độ nghiện và lưu vào state
+    const addiction = calcAddictionLevel(form);
+    setAddictionInfo(addiction);
     setShowChoice(true);
   };
 
@@ -544,6 +600,51 @@ function PlanPage() {
               className="planpage-choice-box"
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Hiển thị đánh giá mức độ nghiện */}
+              {addictionInfo && (
+                <div
+                  style={{
+                    marginBottom: 20,
+                    padding: 16,
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: 8,
+                    border: "1px solid #e9ecef",
+                  }}
+                >
+                  <h4 style={{ margin: "0 0 12px 0", color: "#495057" }}>
+                    📊 Đánh giá mức độ nghiện thuốc lá
+                  </h4>
+                  <div style={{ marginBottom: 8, fontSize: 14 }}>
+                    {addictionInfo.summary}
+                  </div>
+                  <div style={{ marginBottom: 12 }}>
+                    <b>Mức độ nghiện: </b>
+                    <span
+                      style={{
+                        color:
+                          addictionInfo.level === "Cao"
+                            ? "#e74c3c"
+                            : addictionInfo.level === "Trung bình"
+                            ? "#f39c12"
+                            : "#27ae60",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {addictionInfo.level}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      color: "#6c757d",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    {addictionInfo.message}
+                  </div>
+                </div>
+              )}
+
               <h3>Bạn muốn chọn phương án nào?</h3>
               <div className="planpage-choice-btns">
                 <button
@@ -571,102 +672,3 @@ function PlanPage() {
 }
 
 export default PlanPage;
-
-
-/*
-
-// Hiển thị tình hình sau khi nhập form và chọn đề xuất hoạc tự lập
-
-import { Input, Radio, Modal } from "antd"; // Thêm Modal vào import
-
-// Hàm đánh giá mức độ nghiện thuốc lá
-function calcAddictionLevel(form) {
-  let cigarettes = parseInt(form.cigarettes_per_day, 10);
-  let pointCig = 0;
-  if (cigarettes <= 10) pointCig = 0;
-  else if (cigarettes <= 20) pointCig = 1;
-  else if (cigarettes <= 30) pointCig = 2;
-  else pointCig = 3;
-
-  let pointTime = 0;
-  switch (form.timeToFirstCigarette) {
-    case "≤5 phút":
-      pointTime = 3;
-      break;
-    case "6–30 phút":
-      pointTime = 2;
-      break;
-    case "31–60 phút":
-      pointTime = 1;
-      break;
-    case ">60 phút":
-      pointTime = 0;
-      break;
-    default:
-      pointTime = 0;
-  }
-
-  const total = pointCig + pointTime;
-  let level = "";
-  let message = "";
-  if (total <= 2) {
-    level = "Nhẹ";
-    message =
-      "Bạn có mức độ nghiện thuốc lá nhẹ. Đây là thời điểm rất tốt để bắt đầu cai thuốc. Hãy kiên trì, bạn hoàn toàn có thể thành công!";
-  } else if (total <= 4) {
-    level = "Trung bình";
-    message =
-      "Bạn có mức độ nghiện thuốc lá trung bình. Đừng lo lắng, với quyết tâm và sự hỗ trợ phù hợp, bạn sẽ vượt qua được thử thách này!";
-  } else {
-    level = "Cao";
-    message =
-      "Bạn có mức độ nghiện thuốc lá cao. Đừng nản lòng, hãy kiên trì và tìm kiếm sự hỗ trợ từ gia đình, bạn bè hoặc chuyên gia. Bạn chắc chắn sẽ làm được!";
-  }
-  return {
-    total,
-    level,
-    message,
-    summary: `Bạn hút khoảng ${form.cigarettes_per_day} điếu/ngày và hút điếu đầu tiên sau khi thức dậy ${form.timeToFirstCigarette}.`,
-  };
-}
-
-// ...existing code...
-
-const handleSubmit = (e) => {
-  e.preventDefault();
-  if (!isFilled()) {
-    setError("Vui lòng nhập đầy đủ tất cả các thông tin!");
-    return;
-  }
-
-  // Đánh giá mức độ nghiện và hiển thị modal
-  const addiction = calcAddictionLevel(form);
-  Modal.info({
-    title: "Đánh giá mức độ nghiện thuốc lá",
-    content: (
-      <div>
-        <div style={{ marginBottom: 8 }}>{addiction.summary}</div>
-        <div>
-          <b>Mức độ nghiện: </b>
-          <span style={{
-            color:
-              addiction.level === "Cao"
-                ? "#e74c3c"
-                : addiction.level === "Trung bình"
-                ? "#f39c12"
-                : "#27ae60",
-            fontWeight: "bold"
-          }}>
-            {addiction.level}
-          </span>
-        </div>
-        <div style={{ marginTop: 12 }}>{addiction.message}</div>
-      </div>
-    ),
-    okText: "Tiếp tục",
-    onOk: () => setShowChoice(true),
-    centered: true,
-  });
-};
-
-*/

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import api from "../../configs/axios"; // Import cấu hình axios để gọi API
+import api from "../../configs/axios";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import "./SuggestPlaning.css";
 import { useNavigate } from "react-router-dom";
+import { Modal, Button } from "antd"; // Thêm import Modal và Button
 
 function SuggestPlaning() {
-  // State lưu kế hoạch, trạng thái loading và lỗi
   const [plan, setPlan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false); // Thêm state để theo dõi trạng thái xác nhận
   const navigate = useNavigate();
   const accountId = localStorage.getItem("accountId");
 
@@ -40,6 +42,52 @@ function SuggestPlaning() {
     }
     fetchPlan();
   }, [accountId, navigate]);
+
+  // Hàm xử lý xác nhận kế hoạch
+  const handleConfirmPlan = async () => {
+    setConfirmLoading(true);
+    try {
+      // Sửa lại API call theo đúng format
+      await api.put(`/v1/customers/${accountId}/quit-plans/${plan.id}`, {
+        isAgreedPlan: true,
+        quitPlanStatus: "DRAFT",
+      });
+
+      // Đánh dấu đã xác nhận
+      setIsConfirmed(true);
+
+      Modal.success({
+        title: "Xác nhận thành công!",
+        content: "Kế hoạch cai thuốc đã được xác nhận. Chúc bạn thành công!",
+        okText: "Đóng",
+        onOk: () => {
+          // Có thể chuyển đến trang theo dõi hoặc ở lại trang này
+          // navigate("/tracking"); // Bỏ comment nếu muốn chuyển trang
+        },
+      });
+    } catch (err) {
+      Modal.error({
+        title: "Lỗi xác nhận",
+        content: "Không thể xác nhận kế hoạch. Vui lòng thử lại!",
+      });
+    } finally {
+      setConfirmLoading(false);
+    }
+  };
+
+  // Hàm chuyển sang tự lập kế hoạch
+  const handleCreateOwnPlan = () => {
+    Modal.confirm({
+      title: "Chuyển sang tự lập kế hoạch",
+      content:
+        "Bạn có chắc chắn muốn bỏ kế hoạch đề xuất này và tự tạo kế hoạch riêng?",
+      okText: "Đồng ý",
+      cancelText: "Hủy",
+      onOk: () => {
+        navigate("/create-planning");
+      },
+    });
+  };
 
   return (
     <>
@@ -90,6 +138,7 @@ function SuggestPlaning() {
                 </b>
               </div>
             </div>
+
             <div className="suggest-table-wrapper">
               <table className="suggest-table">
                 <thead>
@@ -121,6 +170,75 @@ function SuggestPlaning() {
                 </tbody>
               </table>
             </div>
+
+            {/* Chỉ hiển thị phần xác nhận nếu chưa được xác nhận */}
+            {!isConfirmed && (
+              <div className="suggest-actions">
+                <div className="suggest-question">
+                  <h3>🤔 Bạn có muốn xác nhận kế hoạch này không?</h3>
+                  <p style={{ color: "#666", marginBottom: 20 }}>
+                    Sau khi xác nhận, kế hoạch sẽ được lưu và bạn có thể bắt đầu
+                    theo dõi tiến trình cai thuốc.
+                  </p>
+                </div>
+
+                <div className="suggest-buttons">
+                  <Button
+                    type="primary"
+                    size="large"
+                    loading={confirmLoading}
+                    onClick={handleConfirmPlan}
+                    style={{
+                      backgroundColor: "#52c41a",
+                      borderColor: "#52c41a",
+                      marginRight: 16,
+                    }}
+                  >
+                    ✅ Xác nhận kế hoạch này
+                  </Button>
+
+                  <Button
+                    size="large"
+                    onClick={handleCreateOwnPlan}
+                    style={{
+                      backgroundColor: "#f0f0f0",
+                      borderColor: "#d9d9d9",
+                      color: "#333",
+                    }}
+                  >
+                    📝 Tự lập kế hoạch khác
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Hiển thị thông báo đã xác nhận */}
+            {isConfirmed && (
+              <div className="suggest-confirmed">
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: 30,
+                    backgroundColor: "#f6ffed",
+                    border: "1px solid #b7eb8f",
+                    borderRadius: 8,
+                    marginTop: 20,
+                  }}
+                >
+                  <h3
+                    style={{
+                      color: "#52c41a",
+                      marginBottom: 10,
+                    }}
+                  >
+                    ✅ Kế hoạch đã được xác nhận!
+                  </h3>
+                  <p style={{ color: "#666", margin: 0 }}>
+                    Bạn có thể bắt đầu theo dõi tiến trình cai thuốc của mình.
+                  </p>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
