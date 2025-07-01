@@ -7,13 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { Modal, Button } from "antd"; // Thêm import Modal và Button
 
 function SuggestPlaning() {
+  // Đọc trạng thái xác nhận từ localStorage khi khởi tạo
+  const accountId = localStorage.getItem("accountId");
+  const [isConfirmed, setIsConfirmed] = useState(
+    () => localStorage.getItem(`plan_confirmed_${accountId}`) === "true"
+  );
   const [plan, setPlan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false); // Thêm state để theo dõi trạng thái xác nhận
   const navigate = useNavigate();
-  const accountId = localStorage.getItem("accountId");
 
   useEffect(() => {
     // Nếu chưa đăng nhập thì chuyển về trang đăng nhập
@@ -32,6 +35,7 @@ function SuggestPlaning() {
         // Nếu API trả về object (đã có kế hoạch)
         if (res.data && !Array.isArray(res.data)) {
           setPlan(res.data); // Lưu kế hoạch vào state
+          // Không cần kiểm tra isAgreedPlan từ backend nữa, chỉ dùng FE
         } else {
           setError("Không tìm thấy kế hoạch."); // Không có kế hoạch
         }
@@ -55,15 +59,12 @@ function SuggestPlaning() {
 
       // Đánh dấu đã xác nhận
       setIsConfirmed(true);
+      localStorage.setItem(`plan_confirmed_${accountId}`, "true"); // Lưu trạng thái đã xác nhận vào localStorage
 
       Modal.success({
         title: "Xác nhận thành công!",
         content: "Kế hoạch cai thuốc đã được xác nhận. Chúc bạn thành công!",
         okText: "Đóng",
-        onOk: () => {
-          // Có thể chuyển đến trang theo dõi hoặc ở lại trang này
-          // navigate("/tracking"); // Bỏ comment nếu muốn chuyển trang
-        },
       });
     } catch (err) {
       Modal.error({
@@ -177,8 +178,8 @@ function SuggestPlaning() {
                 <div className="suggest-question">
                   <h3>🤔 Bạn có muốn xác nhận kế hoạch này không?</h3>
                   <p style={{ color: "#666", marginBottom: 20 }}>
-                    Sau khi xác nhận, kế hoạch sẽ được lưu và bạn có thể bắt đầu
-                    theo dõi tiến trình cai thuốc.
+                    Kế hoạch sẽ được lưu và bạn có thể bắt đầu
+                    theo dõi tiến trình cai thuốc. Chúc bạn thành công!
                   </p>
                 </div>
 
