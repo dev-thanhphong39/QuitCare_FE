@@ -12,10 +12,10 @@ const Package = () => {
     // Giả sử có 2 gói: ID 1 là FREE, ID 2 là PREMIUM
     const fetchPackages = async () => {
       try {
-        const freeRes = await api.get(`/membership-plans/1`);
+        const basicRes = await api.get(`/membership-plans/1`);
         const premiumRes = await api.get(`/membership-plans/2`);
         setPackages([
-          { ...freeRes.data, image: freeCard },
+          { ...basicRes.data, image: freeCard },
           { ...premiumRes.data, image: premiumCard },
         ]);
       } catch (error) {
@@ -47,13 +47,13 @@ const Package = () => {
             <img src={pkg.image} alt={pkg.name} className="card-img" />
             <div className="info">
               <h3
-                className={`package-name ${pkg.price === 0 ? "free" : "premium"
+                className={`package-name ${pkg.price === 0 ? "basic" : "premium"
                   }`}
               >
                 {pkg.name.toUpperCase()}
               </h3>
               <p className="price">
-                {pkg.price === 0 ? "0 VND" : `${pkg.price.toLocaleString()} VND`}
+                {`${pkg.price.toLocaleString()} VND`}
               </p>
               <p className="benefit">{pkg.description}</p>
               <button
@@ -61,10 +61,10 @@ const Package = () => {
   onClick={() => {
     if (pkg.price === 0) {
       // Với gói FREE, xử lý như hiện tại (có thể thêm logic nếu cần)
-      console.log("Dùng ngay");
+      console.log("Mua gói");
     } else {
       // Với gói PREMIUM → chuyển đến trang payment kèm theo thông tin gói
-      navigate("/payment", { state: { packageId: pkg.id, price: pkg.price, name: pkg.name } });
+      navigate("/payment", { state: { packageId: pkg.id, price: pkg.price, name: pkg.name, description: pkg.description } });
     }
   }}
 >

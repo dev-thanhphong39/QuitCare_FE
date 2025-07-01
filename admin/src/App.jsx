@@ -73,6 +73,10 @@ function App() {
       element: <BlogDetail />,
     },
     {
+      path: "/payment-result",
+      element: <PaymentResult  />,
+    },
+    {
       path: "/edit-profile",
       element: <EditProfile />,
     },

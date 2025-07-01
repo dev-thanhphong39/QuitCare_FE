@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../configs/axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import './PaymentPage.css';
 
@@ -28,7 +28,7 @@ const PaymentPage = () => {
 
     const fetchPackage = async () => {
       try {
-        const res = await axios.get(`http://14.225.218.238:8080/api/membership-plans/${packageId}`);
+        const res = await api.get(`/membership-plans/${packageId}`);
         setPkg(res.data);
       } catch (err) {
         console.error("Lỗi lấy thông tin gói:", err);
@@ -44,13 +44,23 @@ const PaymentPage = () => {
     setLoading(true);
 
     try {
-      const orderInfo = encodeURIComponent(`Thanh toán gói ${pkg.name}`);
-      const res = await axios.post(
-        `http://14.225.218.238:8080/api/VNP/submitOrder?amount=${pkg.price}&orderInfo=${orderInfo}`
-      );
+      const orderInfo = encodeURIComponent(`Thanh toán gói ${pkg.name}
+        Mô tả: ${pkg.descirption}`);
+      const res = await api.post("/VNP/submitOrder", null, {
+        params: {
+          amount: pkg.price,
+          orderInfo: orderInfo,
+        }
+      });
+      console.log("Toàn bộ response từ submitOrder:", res);
+      console.log("Kết quả trả về từ submitOrder:", res.data);
+      
+      const paymentUrl = res.data.startsWith("redirect:")
+      ? res.data.split("redirect:")[1]
+      : null;
 
-      if (res.data && res.data.url) {
-        window.location.href = res.data.url;
+      if (res.data && paymentUrl) {
+        window.location.href = paymentUrl;
       } else {
         console.log("Không nhận được URL thanh toán.")
         setError("Không nhận được URL thanh toán.");
@@ -58,6 +68,7 @@ const PaymentPage = () => {
       }
     } catch (err) {
       console.error("Lỗi khi gửi yêu cầu thanh toán:", err);
+      console.log(err.response?.data || err.message)
       setError("Không thể gửi yêu cầu thanh toán.");
     } finally {
       setLoading(false);
