@@ -138,6 +138,65 @@ function calcAddictionLevel(form) {
   };
 }
 
+// Thêm hàm tính toán kế hoạch đề xuất
+const generateSuggestedPlan = (form) => {
+  const cigarettesPerDay = parseInt(form.cigarettes_per_day);
+  const addictionLevel = calcAddictionLevel(form);
+
+  // Tính toán các giai đoạn dựa trên số điếu/ngày
+  const stages = [];
+  let currentCigarettes = cigarettesPerDay;
+
+  // Giai đoạn 1: Giảm 25%
+  stages.push({
+    stageNumber: 1,
+    week_range: "Tuần 1 - 4",
+    targetCigarettes: Math.max(1, Math.ceil(currentCigarettes * 0.75)),
+  });
+
+  // Giai đoạn 2: Giảm 50%
+  currentCigarettes = stages[0].targetCigarettes;
+  stages.push({
+    stageNumber: 2,
+    week_range: "Tuần 5 - 8",
+    targetCigarettes: Math.max(1, Math.ceil(currentCigarettes * 0.5)),
+  });
+
+  // Giai đoạn 3: Giảm 75%
+  currentCigarettes = stages[1].targetCigarettes;
+  stages.push({
+    stageNumber: 3,
+    week_range: "Tuần 9 - 12",
+    targetCigarettes: Math.max(1, Math.ceil(currentCigarettes * 0.5)),
+  });
+
+  // Giai đoạn 4: Gần như cai hoàn toàn
+  stages.push({
+    stageNumber: 4,
+    week_range: "Tuần 13 - 16",
+    targetCigarettes: 1,
+  });
+
+  // Giai đoạn 5: Cai hoàn toàn
+  stages.push({
+    stageNumber: 5,
+    week_range: "Tuần 17 - 20",
+    targetCigarettes: 0,
+  });
+
+  return {
+    addictionLevel:
+      addictionLevel.level === "Nhẹ"
+        ? "LOW"
+        : addictionLevel.level === "Trung bình"
+        ? "MEDIUM"
+        : "HIGH",
+    stages: stages,
+    systemPlan: true,
+    customPlan: false,
+  };
+};
+
 function PlanPage() {
   const [form, setForm] = useState(initialState);
   const [showChoice, setShowChoice] = useState(false);
@@ -156,7 +215,6 @@ function PlanPage() {
     async function checkPlan() {
       try {
         const res = await api.get(`/v1/customers/${accountId}/quit-plans`);
-
         if (res.data && typeof res.data === "object" && res.data.id) {
           if (res.data.systemPlan === false) {
             navigate("/create-planning");
@@ -165,8 +223,15 @@ function PlanPage() {
           }
           return;
         }
-      } catch (err) {}
-      setLoading(false); // Chỉ setLoading khi không chuyển hướng
+      } catch (err) {
+        // Nếu lỗi là 404 thì KHÔNG chuyển hướng, chỉ cho phép lập kế hoạch mới
+        if (err?.response?.status === 404) {
+          setLoading(false); // Cho phép hiển thị form khảo sát
+        } else {
+          setError("Có lỗi xảy ra khi kiểm tra kế hoạch. Vui lòng thử lại!");
+          setLoading(false);
+        }
+      }
     }
     checkPlan();
   }, [accountId, navigate]);
@@ -212,29 +277,32 @@ function PlanPage() {
       setShowChoice(false);
       setLoading(true);
 
-      const payload = {
-        started_smoking_age: parseInt(form.started_smoking_age),
-        cigarettes_per_day: parseInt(form.cigarettes_per_day),
-        cigarettes_per_pack: parseInt(form.cigarettes_per_pack),
-        timeToFirstCigarette: mapTime(form.timeToFirstCigarette),
-        status: "ACTIVE",
-        quitAttempts: mapQuitAttempts(form.quitAttempts),
-        longestQuitDuration: mapDuration(form.longestQuitDuration),
-        cravingWithoutSmoking: form.cravingWithoutSmoking === "true",
-        triggerSituation: form.triggerSituation.trim(),
-        quitIntentionTimeline: mapTimeline(form.quitIntentionTimeline),
-        readinessLevel: mapReadiness(form.readinessLevel),
-        quitReasons: form.quitReasons,
-      };
-
       if (type === "recommend") {
-        await api.post(`/smoking-status/account/${accountId}`, payload);
-        await api.post(`/v1/customers/${accountId}/quit-plans`, {
-          systemPlan: true,
-        });
+        // Chỉ tính toán kế hoạch đề xuất, không gọi API
+        const suggestedPlan = generateSuggestedPlan(form);
+
+        // Lưu thông tin khảo sát và kế hoạch đề xuất vào localStorage
+        localStorage.setItem("planSurvey", JSON.stringify(form));
+        localStorage.setItem("suggestedPlan", JSON.stringify(suggestedPlan));
+
         navigate("/suggest-planing");
       } else {
-        // Gọi API tạo kế hoạch tự lập
+        // Tự lập kế hoạch - gọi API như cũ
+        const payload = {
+          started_smoking_age: parseInt(form.started_smoking_age),
+          cigarettes_per_day: parseInt(form.cigarettes_per_day),
+          cigarettes_per_pack: parseInt(form.cigarettes_per_pack),
+          timeToFirstCigarette: mapTime(form.timeToFirstCigarette),
+          status: "ACTIVE",
+          quitAttempts: mapQuitAttempts(form.quitAttempts),
+          longestQuitDuration: mapDuration(form.longestQuitDuration),
+          cravingWithoutSmoking: form.cravingWithoutSmoking === "true",
+          triggerSituation: form.triggerSituation.trim(),
+          quitIntentionTimeline: mapTimeline(form.quitIntentionTimeline),
+          readinessLevel: mapReadiness(form.readinessLevel),
+          quitReasons: form.quitReasons,
+        };
+
         await api.post(`/smoking-status/account/${accountId}`, payload);
         const res = await api.post(`/v1/customers/${accountId}/quit-plans`, {
           systemPlan: false,

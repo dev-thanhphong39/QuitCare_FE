@@ -3,7 +3,7 @@ import api from "../../configs/axios";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import "./SuggestPlaning.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Modal, Button } from "antd"; // Thêm import Modal và Button
 
 function SuggestPlaning() {
@@ -19,47 +19,110 @@ function SuggestPlaning() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Nếu chưa đăng nhập thì chuyển về trang đăng nhập
     if (!accountId) {
       navigate("/login");
       return;
     }
-    // Hàm lấy kế hoạch đề xuất từ API
+
+    // Hàm lấy kế hoạch đề xuất
     async function fetchPlan() {
-      setLoading(true); // Bắt đầu loading
-      setError(""); // Xóa lỗi cũ
+      setLoading(true);
+      setError("");
+
       try {
-        // Gọi API lấy kế hoạch cai thuốc của user
+        // Kiểm tra xem có kế hoạch đã được lưu trong backend không
         const res = await api.get(`/v1/customers/${accountId}/quit-plans`);
-        console.log("API trả về:", res.data);
-        // Nếu API trả về object (đã có kế hoạch)
         if (res.data && !Array.isArray(res.data)) {
-          setPlan(res.data); // Lưu kế hoạch vào state
-          // Không cần kiểm tra isAgreedPlan từ backend nữa, chỉ dùng FE
-        } else {
-          setError("Không tìm thấy kế hoạch."); // Không có kế hoạch
+          setPlan(res.data);
+          // Kiểm tra xem đã xác nhận chưa
+          if (res.data.isAgreedPlan) {
+            setIsConfirmed(true);
+          }
+          setLoading(false); // THÊM DÒNG NÀY
+          return;
         }
       } catch (err) {
-        setError("Không lấy được kế hoạch đề xuất. Vui lòng thử lại!"); // Lỗi gọi API
+        // Nếu chưa có kế hoạch trong backend, đọc từ localStorage
+        console.log("Chưa có kế hoạch trong backend, đọc từ localStorage");
       }
-      setLoading(false); // Kết thúc loading
+
+      // Đọc kế hoạch đề xuất từ localStorage
+      const suggestedPlan = localStorage.getItem("suggestedPlan");
+      if (suggestedPlan) {
+        const planData = JSON.parse(suggestedPlan);
+        setPlan(planData);
+      } else {
+        setError("Không tìm thấy kế hoạch đề xuất.");
+      }
+
+      setLoading(false);
     }
+
     fetchPlan();
   }, [accountId, navigate]);
 
-  // Hàm xử lý xác nhận kế hoạch
+  // Hàm xử lý xác nhận kế hoạch - GỌI API LÚC NÀY
   const handleConfirmPlan = async () => {
     setConfirmLoading(true);
     try {
-      // Sửa lại API call theo đúng format
-      await api.put(`/v1/customers/${accountId}/quit-plans/${plan.id}`, {
-        isAgreedPlan: true,
-        quitPlanStatus: "DRAFT",
-      });
+      // Lấy thông tin khảo sát từ localStorage
+      const surveyData = localStorage.getItem("planSurvey");
+      if (!surveyData) {
+        throw new Error("Không tìm thấy thông tin khảo sát");
+      }
+
+      const survey = JSON.parse(surveyData);
+
+      // Bước 1: Gửi thông tin khảo sát
+      const payload = {
+        started_smoking_age: parseInt(survey.started_smoking_age),
+        cigarettes_per_day: parseInt(survey.cigarettes_per_day),
+        cigarettes_per_pack: parseInt(survey.cigarettes_per_pack),
+        timeToFirstCigarette: mapTime(survey.timeToFirstCigarette),
+        status: "ACTIVE",
+        quitAttempts: mapQuitAttempts(survey.quitAttempts),
+        longestQuitDuration: mapDuration(survey.longestQuitDuration),
+        cravingWithoutSmoking: survey.cravingWithoutSmoking === "true",
+        triggerSituation: survey.triggerSituation.trim(),
+        quitIntentionTimeline: mapTimeline(survey.quitIntentionTimeline),
+        readinessLevel: mapReadiness(survey.readinessLevel),
+        quitReasons: survey.quitReasons,
+      };
+
+      await api.post(`/smoking-status/account/${accountId}`, payload);
+
+      // Bước 2: Tạo kế hoạch với systemPlan = true
+      const planResponse = await api.post(
+        `/v1/customers/${accountId}/quit-plans`,
+        {
+          systemPlan: true,
+        }
+      );
+
+      // Bước 3: Xác nhận kế hoạch
+      await api.put(
+        `/v1/customers/${accountId}/quit-plans/${planResponse.data.id}`,
+        {
+          isAgreedPlan: true,
+          quitPlanStatus: "DRAFT",
+        }
+      );
+
+      // Bước 4: Lấy lại dữ liệu kế hoạch từ backend và cập nhật state
+      const updatedPlanResponse = await api.get(
+        `/v1/customers/${accountId}/quit-plans`
+      );
+      if (updatedPlanResponse.data) {
+        setPlan(updatedPlanResponse.data); // Cập nhật state với dữ liệu từ backend
+      }
 
       // Đánh dấu đã xác nhận
       setIsConfirmed(true);
-      localStorage.setItem(`plan_confirmed_${accountId}`, "true"); // Lưu trạng thái đã xác nhận vào localStorage
+      localStorage.setItem(`plan_confirmed_${accountId}`, "true");
+
+      // Xóa dữ liệu tạm thời NHƯNG GIỮ LẠI state plan
+      localStorage.removeItem("suggestedPlan");
+      localStorage.removeItem("planSurvey");
 
       Modal.success({
         title: "Xác nhận thành công!",
@@ -67,6 +130,7 @@ function SuggestPlaning() {
         okText: "Đóng",
       });
     } catch (err) {
+      console.error("Lỗi xác nhận:", err);
       Modal.error({
         title: "Lỗi xác nhận",
         content: "Không thể xác nhận kế hoạch. Vui lòng thử lại!",
@@ -76,18 +140,72 @@ function SuggestPlaning() {
     }
   };
 
-  // Hàm chuyển sang tự lập kế hoạch
-  const handleCreateOwnPlan = () => {
-    Modal.confirm({
-      title: "Chuyển sang tự lập kế hoạch",
-      content:
-        "Bạn có chắc chắn muốn bỏ kế hoạch đề xuất này và tự tạo kế hoạch riêng?",
-      okText: "Đồng ý",
-      cancelText: "Hủy",
-      onOk: () => {
-        navigate("/create-planning");
-      },
-    });
+  // Thêm các hàm mapping từ Planning.jsx
+  const mapTime = (value) => {
+    switch (value) {
+      case "≤5 phút":
+        return "LESS_THAN_5_MIN";
+      case "6–30 phút":
+        return "BETWEEN_6_AND_30_MIN";
+      case "31–60 phút":
+        return "BETWEEN_31_AND_60_MIN";
+      case ">60 phút":
+        return "MORE_THAN_60_MIN";
+      default:
+        return "";
+    }
+  };
+
+  const mapQuitAttempts = (value) => {
+    const num = parseInt(value);
+    if (num === 0) return "NONE";
+    if (num <= 2) return "ONE_TO_TWO";
+    return "MORE_THAN_THREE";
+  };
+
+  const mapDuration = (value) => {
+    switch (value) {
+      case "LESS_THAN_1_DAY":
+        return "LESS_THAN_1_DAY";
+      case "BETWEEN_1_AND_3_DAYS":
+        return "BETWEEN_1_AND_3_DAYS";
+      case "ONE_WEEK":
+        return "ONE_WEEK";
+      case "MORE_THAN_ONE_WEEK":
+        return "MORE_THAN_ONE_WEEK";
+      default:
+        return "";
+    }
+  };
+
+  const mapTimeline = (value) => {
+    switch (value) {
+      case "7 ngày":
+        return "ONEWEEK";
+      case "1 tháng":
+        return "ONEMONTH";
+      case "3 tháng":
+        return "THREEMONTH";
+      case "5 tháng":
+        return "FIVEMONTH";
+      case "Chưa chắc":
+        return "UNKNOWN";
+      default:
+        return "";
+    }
+  };
+
+  const mapReadiness = (value) => {
+    switch (value) {
+      case "Chưa sẵn sàng":
+        return "NOTREADY";
+      case "Đang cân nhắc":
+        return "UNDERCONSIDERATION";
+      case "Rất sẵn sàng":
+        return "ALREADY";
+      default:
+        return "";
+    }
   };
 
   return (
@@ -177,9 +295,10 @@ function SuggestPlaning() {
               <div className="suggest-actions">
                 <div className="suggest-question">
                   <h3>🤔 Bạn có muốn xác nhận kế hoạch này không?</h3>
-                  <p style={{ color: "#666", marginBottom: 20 }}>
-                    Kế hoạch sẽ được lưu và bạn có thể bắt đầu
-                    theo dõi tiến trình cai thuốc. Chúc bạn thành công!
+                  <p>
+                    Nếu đồng ý, kế hoạch sẽ được lưu và bạn có thể bắt đầu theo
+                    dõi tiến trình cai thuốc. Nếu không, bạn có thể tự lập kế
+                    hoạch khác.
                   </p>
                 </div>
 
@@ -198,17 +317,26 @@ function SuggestPlaning() {
                     ✅ Xác nhận kế hoạch này
                   </Button>
 
-                  <Button
-                    size="large"
-                    onClick={handleCreateOwnPlan}
+                  <Link
+                    to="/create-planning"
+                    onClick={() => {
+                      // Xóa quitPlanId cũ để tạo kế hoạch mới
+                      localStorage.removeItem("quitPlanId");
+                    }}
                     style={{
+                      display: "inline-block",
+                      padding: "12px 24px",
                       backgroundColor: "#f0f0f0",
-                      borderColor: "#d9d9d9",
+                      border: "1px solid #d9d9d9",
+                      borderRadius: "8px",
                       color: "#333",
+                      textDecoration: "none",
+                      fontSize: "16px",
+                      fontWeight: "600",
                     }}
                   >
                     📝 Tự lập kế hoạch khác
-                  </Button>
+                  </Link>
                 </div>
               </div>
             )}
@@ -235,7 +363,8 @@ function SuggestPlaning() {
                     ✅ Kế hoạch đã được xác nhận!
                   </h3>
                   <p style={{ color: "#666", margin: 0 }}>
-                    Bạn có thể bắt đầu theo dõi tiến trình cai thuốc của mình.
+                    Kế hoạch sẽ được lưu và bạn có thể bắt đầu theo dõi tiến
+                    trình cai thuốc. Chúc bạn thành công!
                   </p>
                 </div>
               </div>
