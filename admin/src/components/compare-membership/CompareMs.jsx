@@ -6,8 +6,15 @@ function MemberComparison() {
     <div className="compare-container">
       <div className="compare-content">
         <h1 className="compare-title">So sánh quyền lợi hội viên</h1>
-        <p style={{ textAlign: "center", fontSize: "18px", marginBottom: "2rem" }}>
-          Chọn gói thành viên phù hợp với bạn để bắt đầu hành trình cai thuốc hiệu quả và cá nhân hoá.
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "18px",
+            marginBottom: "2rem",
+          }}
+        >
+          Chọn gói thành viên phù hợp với bạn để bắt đầu hành trình cai thuốc
+          hiệu quả và cá nhân hoá.
         </p>
 
         <div className="benefit-table">
@@ -47,13 +54,11 @@ function MemberComparison() {
               </tr>
               <tr>
                 <td>Chi phí</td>
-                <td>Free</td>
+                <td>99.000 VND</td>
                 <td>499.000 VND</td>
               </tr>
             </tbody>
           </table>
-
-         
         </div>
       </div>
     </div>

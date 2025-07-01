@@ -11,7 +11,7 @@ function Footer() {
           <h2>Về chúng tôi</h2>
           <p>
             Chúng tôi là tổ chức phi lợi nhuận hỗ trợ người dân cai nghiện thuốc
-            lá thông qua các khóa học,tư vấn, tài liệu, và cộng đồng đồng hành.
+            lá thông qua các khóa học, tư vấn, tài liệu, và cộng đồng đồng hành.
           </p>
           <ul>
             <li>Số điện thoại: 1800 6969</li>

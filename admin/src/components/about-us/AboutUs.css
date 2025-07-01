@@ -1,97 +1,97 @@
 .aboutus-container {
-    padding: 60px 40px;
+    padding         : 60px 40px;
     background-color: #f9fafc;
-    font-family: 'Segoe UI', 'Arial', sans-serif;
-    color: #000000;
+    font-family     : 'Segoe UI', 'Arial', sans-serif;
+    color           : #000000;
 }
 
 .aboutus-content {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    display        : flex;
+    flex-wrap      : wrap;
+    align-items    : center;
     justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width      : 1200px;
+    margin         : 0 auto;
 }
 
 .aboutus-text {
-    flex: 1;
+    flex     : 1;
     min-width: 320px;
     max-width: 600px;
-    padding: 20px;
+    padding  : 20px;
 }
 
 .aboutus-title {
-    color: #003580;
-    font-size: 42px;
-    font-weight: 800;
+    color         : #003580;
+    font-size     : 42px;
+    font-weight   : 800;
     letter-spacing: 1px;
-    margin-bottom: 10px;
+    margin-bottom : 10px;
 }
 
 .aboutus-subtitle {
-    color: #00275e;
-    font-size: 22px;
-    font-style: italic;
-    font-weight: 700;
+    color        : #00275e;
+    font-size    : 22px;
+    font-style   : italic;
+    font-weight  : 700;
     margin-bottom: 30px;
 }
 
 .aboutus-highlight p {
-    font-size: 26px;
-    font-weight: 800;
-    font-style: italic;
-    line-height: 1.4;
+    font-size    : 26px;
+    font-weight  : 800;
+    font-style   : italic;
+    line-height  : 1.4;
     margin-bottom: 25px;
 }
 
 .aboutus-text p {
-    font-size: 19px;
+    font-size    : 19px;
     margin-bottom: 18px;
-    line-height: 1.7;
-    color: #000000;
+    line-height  : 1.7;
+    color        : #000000;
 }
 
 .aboutus-button {
     background-color: #0d2235;
-    color: #fff;
-    padding: 14px 28px;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    letter-spacing: 0.5px;
+    color           : #fff;
+    padding         : 14px 28px;
+    border          : none;
+    font-size       : 16px;
+    cursor          : pointer;
+    font-weight     : bold;
+    border-radius   : 6px;
+    transition      : all 0.3s ease;
+    letter-spacing  : 0.5px;
 }
 
 .aboutus-button:hover {
     background-color: #ffc107;
-    color: #0d2235;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color           : #0d2235;
+    transform       : translateY(-2px);
+    box-shadow      : 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .aboutus-image {
-    flex: 1;
-    min-width: 320px;
-    max-width: 600px;
-    padding: 20px;
+    flex      : 1;
+    min-width : 320px;
+    max-width : 600px;
+    padding   : 20px;
     text-align: center;
 }
 
 .aboutus-image img {
-    max-width: 100%;
-    height: auto;
+    max-width    : 100%;
+    height       : auto;
     border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow   : 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .aboutus-section {
-    display: flex;
-    align-items: center;
+    display        : flex;
+    align-items    : center;
     justify-content: space-between;
-    margin-bottom: 50px;
+    margin-bottom  : 50px;
 }
 
 /* Dat lich ngay */
@@ -99,45 +99,46 @@
 
 .experience-section {
     background-color: #0b2656;
-    color: white;
-    padding: 120px 40px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color           : white;
+    padding         : 120px 40px;
+    font-family     : 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 
 .experience-content {
-    display: flex;
+    display        : flex;
     justify-content: space-between;
-    flex-wrap: wrap;
-    max-width: 1200px;
-    margin: 0 auto;
-    gap: 40px;
+    flex-wrap      : wrap;
+    max-width      : 1200px;
+    margin         : 0 auto;
+    gap            : 40px;
 }
 
 /* --- Bên trái: nội dung --- */
 .experience-text {
-    flex: 1;
+    flex     : 1;
     min-width: 300px;
     max-width: 600px;
 }
 
 .experience-title {
-    font-size: 48px;
-    font-weight: bold;
-    line-height: 1.2;
+    font-size    : 48px;
+    font-weight  : bold;
+    line-height  : 1.2;
     margin-bottom: 30px;
+    color        : white;
 }
 
 .experience-description {
-    font-size: 16px;
-    line-height: 1.6;
+    font-size    : 16px;
+    line-height  : 1.6;
     margin-bottom: 16px;
 }
 
 .experience-list {
-    list-style: disc inside;
+    list-style   : disc inside;
     margin-bottom: 16px;
-    padding-left: 0;
+    padding-left : 0;
 }
 
 .experience-list li {
@@ -146,49 +147,58 @@
 
 .experience-callout {
     font-weight: bold;
-    font-size: 16px;
-    margin-top: 16px;
+    font-size  : 16px;
+    margin-top : 16px;
 }
 
 /* --- Bên phải: form --- */
 .experience-form {
-    flex: 1;
-    min-width: 300px;
-    max-width: 500px;
-    display: flex;
+    flex          : 1;
+    min-width     : 300px;
+    max-width     : 500px;
+    display       : flex;
     flex-direction: column;
-    gap: 24px;
+    gap           : 24px;
 }
 
 .form-input {
     background-color: transparent;
-    border: none;
-    border-bottom: 2px solid #ccc;
-    padding: 12px 8px;
-    font-size: 16px;
-    color: white;
-    outline: none;
+    border          : none;
+    border-bottom   : 2px solid #ccc;
+    padding         : 12px 8px;
+    font-size       : 16px;
+    color           : white;
+    outline         : none;
 }
 
 .form-input::placeholder {
-    color: #ccc;
+    color: #fffcfc;
 }
 
 /* --- Nút --- */
 .form-button {
     background-color: #036ee0;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease, color 0.3s ease;
+    color           : white;
+    font-weight     : bold;
+    font-size       : 16px;
+    padding         : 16px;
+    border          : none;
+    border-radius   : 8px;
+    cursor          : pointer;
+    transition      : background 0.3s ease, color 0.3s ease;
 }
 
 .form-button:hover {
     background-color: #ffd700;
-    color: #ffffff;
+    color           : #ffffff;
 }
 
+.cross-banner-wrapper {
+    position     : relative;
+    z-index      : 5;
+    margin-top   : -55px;
+    /* đẩy lên gần phần trên nếu cần */
+    margin-bottom: -106px;
+    /* đẩy sát xuống experience */
+    overflow     : hidden;
+}
