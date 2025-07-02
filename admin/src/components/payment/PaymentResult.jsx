@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../configs/axios";
 import { CheckCircleTwoTone, CloseCircleTwoTone, LoadingOutlined } from "@ant-design/icons";
 import "./PaymentResult.css"; // CSS tùy chỉnh
+import axios from "axios";
 
 const PaymentResult = () => {
   const [status, setStatus] = useState("loading"); // loading | success | fail
@@ -11,9 +12,11 @@ const PaymentResult = () => {
   const [transactionData, setTransactionData] = useState(null);
 
   useEffect(() => {
+    console.log("🔍 Query:", window.location.search);
     const confirmPayment = async () => {
       try {
-        const res = await api.get(`/VNP/vnpay-payment-return${window.location.search}`);
+        const res = await axios.get("http://14.225.218.238:8080/vnpay-payment-return" + window.location.search)
+
         console.log("Kết quả xác minh:", res.data);
 
         if (res.data && res.data.vnp_ResponseCode === "00") {
