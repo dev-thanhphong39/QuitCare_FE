@@ -16,6 +16,7 @@ function SuggestPlaning() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [showConfirmedMessage, setShowConfirmedMessage] = useState(false); // Thêm state này
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -118,11 +119,17 @@ function SuggestPlaning() {
 
       // Đánh dấu đã xác nhận
       setIsConfirmed(true);
+      setShowConfirmedMessage(true); // Hiển thị thông báo
       localStorage.setItem(`plan_confirmed_${accountId}`, "true");
 
       // Xóa dữ liệu tạm thời NHƯNG GIỮ LẠI state plan
       localStorage.removeItem("suggestedPlan");
       localStorage.removeItem("planSurvey");
+
+      // Ẩn thông báo sau 10 giây
+      setTimeout(() => {
+        setShowConfirmedMessage(false);
+      }, 10000);
 
       Modal.success({
         title: "Xác nhận thành công!",
@@ -317,32 +324,21 @@ function SuggestPlaning() {
                     ✅ Xác nhận kế hoạch này
                   </Button>
 
-                  <Link
-                    to="/create-planning"
+                  <Button
+                    type="default"
+                    size="large"
                     onClick={() => {
-                      // Xóa quitPlanId cũ để tạo kế hoạch mới
-                      localStorage.removeItem("quitPlanId");
-                    }}
-                    style={{
-                      display: "inline-block",
-                      padding: "12px 24px",
-                      backgroundColor: "#f0f0f0",
-                      border: "1px solid #d9d9d9",
-                      borderRadius: "8px",
-                      color: "#333",
-                      textDecoration: "none",
-                      fontSize: "16px",
-                      fontWeight: "600",
-                    }}
-                  >
+                      //localStorage.removeItem("quitPlanId");
+                      navigate("/planning");
+                    }}>
                     📝 Tự lập kế hoạch khác
-                  </Link>
+                  </Button>
                 </div>
               </div>
             )}
 
-            {/* Hiển thị thông báo đã xác nhận */}
-            {isConfirmed && (
+            {/* Hiển thị thông báo đã xác nhận - CHỈ KHI showConfirmedMessage = true */}
+            {isConfirmed && showConfirmedMessage && (
               <div className="suggest-confirmed">
                 <div
                   style={{
@@ -352,8 +348,26 @@ function SuggestPlaning() {
                     border: "1px solid #b7eb8f",
                     borderRadius: 8,
                     marginTop: 20,
+                    position: "relative",
                   }}
                 >
+                  {/* Thêm nút đóng thủ công */}
+                  <button
+                    onClick={() => setShowConfirmedMessage(false)}
+                    style={{
+                      position: "absolute",
+                      right: "12px",
+                      top: "12px",
+                      background: "none",
+                      border: "none",
+                      fontSize: "18px",
+                      cursor: "pointer",
+                      color: "#52c41a",
+                    }}
+                  >
+                    ×
+                  </button>
+
                   <h3
                     style={{
                       color: "#52c41a",
@@ -366,6 +380,17 @@ function SuggestPlaning() {
                     Kế hoạch sẽ được lưu và bạn có thể bắt đầu theo dõi tiến
                     trình cai thuốc. Chúc bạn thành công!
                   </p>
+
+                  {/* Thêm countdown timer (tùy chọn) */}
+                  <div
+                    style={{
+                      fontSize: "12px",
+                      color: "#999",
+                      marginTop: "8px",
+                    }}
+                  >
+                    Thông báo sẽ tự động ẩn sau 10 giây
+                  </div>
                 </div>
               </div>
             )}
@@ -378,3 +403,5 @@ function SuggestPlaning() {
 }
 
 export default SuggestPlaning;
+
+//De Xuat

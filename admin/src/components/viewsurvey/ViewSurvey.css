@@ -1,0 +1,14 @@
+.view-survey-container {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  max-width: 500px;
+  margin: 32px auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-top: 70px;
+}
+
+.survey-field {
+  margin-bottom: 16px;
+  font-size: 16px;
+}

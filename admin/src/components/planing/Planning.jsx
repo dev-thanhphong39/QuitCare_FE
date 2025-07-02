@@ -143,46 +143,56 @@ const generateSuggestedPlan = (form) => {
   const cigarettesPerDay = parseInt(form.cigarettes_per_day);
   const addictionLevel = calcAddictionLevel(form);
 
-  // Tính toán các giai đoạn dựa trên số điếu/ngày
+  // Tính toán các giai đoạn dựa trên số điếu/ngày theo công thức mới
   const stages = [];
   let currentCigarettes = cigarettesPerDay;
 
-  // Giai đoạn 1: Giảm 25%
+  // Giai đoạn 1: Giảm 50% N
+  const stage1Target = Math.max(1, Math.ceil(currentCigarettes * 0.5));
   stages.push({
     stageNumber: 1,
     week_range: "Tuần 1 - 4",
-    targetCigarettes: Math.max(1, Math.ceil(currentCigarettes * 0.75)),
+    targetCigarettes: stage1Target,
   });
 
-  // Giai đoạn 2: Giảm 50%
-  currentCigarettes = stages[0].targetCigarettes;
+  // Giai đoạn 2: Giảm 75% N (từ số ban đầu)
+  const stage2Target = Math.max(1, Math.ceil(cigarettesPerDay * 0.25));
   stages.push({
     stageNumber: 2,
     week_range: "Tuần 5 - 8",
-    targetCigarettes: Math.max(1, Math.ceil(currentCigarettes * 0.5)),
+    targetCigarettes: stage2Target,
   });
 
-  // Giai đoạn 3: Giảm 75%
-  currentCigarettes = stages[1].targetCigarettes;
+  // Giai đoạn 3: Giảm 87.5% N (từ số ban đầu)
+  const stage3Target = Math.max(1, Math.ceil(cigarettesPerDay * 0.125));
   stages.push({
     stageNumber: 3,
     week_range: "Tuần 9 - 12",
-    targetCigarettes: Math.max(1, Math.ceil(currentCigarettes * 0.5)),
+    targetCigarettes: stage3Target,
   });
 
-  // Giai đoạn 4: Gần như cai hoàn toàn
-  stages.push({
-    stageNumber: 4,
-    week_range: "Tuần 13 - 16",
-    targetCigarettes: 1,
-  });
+  // Giai đoạn 4: Nếu số điếu <= 1 → Giai đoạn bỏ hoàn toàn
+  if (stage3Target <= 1) {
+    stages.push({
+      stageNumber: 4,
+      week_range: "Tuần 13 - 16",
+      targetCigarettes: 0,
+    });
+  } else {
+    // Nếu vẫn > 1, tiếp tục giảm xuống 1 điếu
+    stages.push({
+      stageNumber: 4,
+      week_range: "Tuần 13 - 16",
+      targetCigarettes: 1,
+    });
 
-  // Giai đoạn 5: Cai hoàn toàn
-  stages.push({
-    stageNumber: 5,
-    week_range: "Tuần 17 - 20",
-    targetCigarettes: 0,
-  });
+    // Thêm giai đoạn 5: Cai hoàn toàn
+    stages.push({
+      stageNumber: 5,
+      week_range: "Tuần 17 - 20",
+      targetCigarettes: 0,
+    });
+  }
 
   return {
     addictionLevel:

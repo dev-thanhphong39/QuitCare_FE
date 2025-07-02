@@ -225,6 +225,13 @@ const Navbar = () => {
               >
                 Hồ sơ
               </Link>
+              <Link
+                to="/viewsurvey"
+                onClick={() => setShowDropdown(false)}
+                className="qc-dropdown-item"
+              >
+                Khảo sát
+              </Link>
               <button
                 onClick={handleLogout}
                 className="qc-dropdown-item qc-logout-btn"

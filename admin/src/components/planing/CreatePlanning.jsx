@@ -14,7 +14,7 @@ const LOCAL_KEY = "quitcare_planning_draft";
 
 function CreatePlanning() {
   const [stages, setStages] = useState([initialStage()]);
-  const [mode, setMode] = useState("create"); 
+  const [mode, setMode] = useState("create");
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -262,7 +262,6 @@ function CreatePlanning() {
           </div>
         )}
 
-        
         {loading && <div className="text-center py-8">Đang tải...</div>}
 
         {!loading &&

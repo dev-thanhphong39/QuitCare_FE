@@ -13,6 +13,7 @@ import EditProfile from "./components/edit-profile/edit-profile";
 import Dashboard from "./components/dashboard/dashboard";
 import SuggestPlaning from "./components/planing/SuggestPlaning";
 import CreatePlanning from "./components/planing/CreatePlanning";
+import ViewSurvey from "./components/viewsurvey/ViewSurvey";
 
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
@@ -82,11 +83,15 @@ function App() {
     },
     {
       path: "/payment-result",
-      element: <PaymentResult  />,
+      element: <PaymentResult />,
     },
     {
       path: "/edit-profile",
       element: <EditProfile />,
+    },
+    {
+      path: "/viewsurvey",
+      element: <ViewSurvey />,
     },
     {
       path: "/dashboard",
@@ -103,7 +108,7 @@ function App() {
 
         {
           path: "revenue",
-          element: < RevenueManagement />,
+          element: <RevenueManagement />,
         },
         {
           path: "feedback",
@@ -123,7 +128,6 @@ function App() {
       path: "/dashboard-coach",
       element: <CoachDashboard />,
       children: [
-        
         {
           path: "register",
           element: <CoachWorkRegister />,
@@ -149,7 +153,9 @@ function App() {
     {
       path: "/payment",
       element: <PaymentPage />,
-    }, {
+    },
+
+    {
       path: "/payment-result",
       element: <PaymentResult />,
     },

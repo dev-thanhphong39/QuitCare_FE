@@ -96,3 +96,76 @@
 .suggest-table tbody td {
   font-weight: 700 !important;
 }
+
+/* Nút hành động trong suggest-actions */
+.suggest-actions {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.suggest-question {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.suggest-question p {
+  color: #000000;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.suggest-buttons {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  width: 100%;
+}
+
+.suggest-buttons .ant-btn {
+  min-width: 200px;
+  border-radius: 12px !important;
+  font-size: 17px;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(82, 196, 26, 0.06);
+}
+
+.suggest-buttons .ant-btn-primary {
+  background: linear-gradient(90deg, #52c41a 60%, #73d13d 100%);
+  border: none;
+  color: #fff;
+}
+
+.suggest-buttons .ant-btn-primary:hover,
+.suggest-buttons .ant-btn-primary:focus {
+  background: linear-gradient(90deg, #389e0d 60%, #52c41a 100%);
+  color: #fff;
+}
+
+.suggest-buttons .ant-btn-default {
+  background: #fff;
+  border: 1.5px solid #d9d9d9;
+  color: #333;
+}
+
+.suggest-buttons .ant-btn-default:hover,
+.suggest-buttons .ant-btn-default:focus {
+  background: #f6ffed;
+  border-color: #52c41a;
+  color: #52c41a;
+}
+
+@media (max-width: 600px) {
+  .suggest-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .suggest-buttons .ant-btn {
+    min-width: 140px;
+    font-size: 15px;
+  }
+}
