@@ -28,9 +28,17 @@ import NotificationPage from "./components/notificate/NotificationPage";
 import ForgotPasswordForm from "./components/forgot-password/forgot-pasword";
 import PaymentPage from "./components/payment/submitOrder";
 import PaymentResult from "./components/payment/PaymentResult";
+import CoachDashboard from "./components/dashboard/coach-dashboard";
+import CoachWorkRegister from "./pages/dashboard-coach/register/CoachWorkRegister";
+import CoachWorkList from "./pages/dashboard-coach/list-session/viewList";
 
 
 function App() {
+  const AppLayout = ({ children }) => (
+    <div style={{ minHeight: "100vh", overflowY: "auto" }}>
+      {children}
+    </div>
+  );
   const router = createBrowserRouter([
     {
       path: "/",
@@ -111,7 +119,21 @@ function App() {
         },
       ],
     },
-
+    {
+      path: "/dashboard-coach",
+      element: <CoachDashboard />,
+      children: [
+        
+        {
+          path: "register",
+          element: <CoachWorkRegister />,
+        },
+        {
+          path: "listview",
+          element: <CoachWorkList />,
+        },
+      ],
+    },
     {
       path: "/suggest-planing",
       element: <SuggestPlaning />,

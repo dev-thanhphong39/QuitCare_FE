@@ -14,16 +14,13 @@ function getItem(label, key, icon, children) {
     key,
     icon,
     children,
-    label: <Link to={`/dashboard/${key}`}> {label} </Link>,
+    label: <Link to={`/dashboard-coach/${key}`}> {label} </Link>,
   };
 }
 const items = [
-  getItem("Quản lý người dùng", "users", <UserOutlined />),
-  getItem("Quản lý bình luận", "comments", <PieChartOutlined />),
-  getItem("Quản lý doanh thu", "revenue", <DesktopOutlined />),
-  getItem("Quản lý phản hồi", "feedback", <DesktopOutlined />),
-  getItem("Quản lý gói", "packages", <DesktopOutlined />),
-  getItem("Quản lý bài viết", "posts", <DesktopOutlined />),
+  getItem("Quản lý khách hàng", "listview", <UserOutlined />),
+  getItem("Đăng kí ngày làm", "register", <DesktopOutlined />),
+  
   //   getItem("Tom", "3"),
   //   getItem("Bill", "4"),
   //   getItem("Alex", "5"),
@@ -34,7 +31,7 @@ const items = [
   // ]),
   // getItem("Files", "9", <FileOutlined />),
 ];
-const Dashboard = () => {
+const CoachDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -64,7 +61,7 @@ const Dashboard = () => {
           <div
             style={{
               padding: 24,
-              minHeight: "calc(100vh - 112px)", 
+              minHeight: "calc(100vh - 112px)",
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
             }}
@@ -80,4 +77,4 @@ const Dashboard = () => {
     </Layout>
   );
 };
-export default Dashboard;
+export default CoachDashboard;
