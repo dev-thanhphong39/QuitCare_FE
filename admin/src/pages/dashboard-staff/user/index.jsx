@@ -9,21 +9,36 @@ import {
   Form,
   Input,
   Select,
+  Row,
+  Col,
+  Card,
 } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ReloadOutlined,
+  SearchOutlined,
+  FilterOutlined,
 } from "@ant-design/icons";
 import api from "../../../configs/axios";
 import { toast } from "react-toastify";
 
+const { Search } = Input;
+const { Option } = Select;
+
 function UserManagement() {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [form] = Form.useForm();
+
+  // Filter states
+  const [searchText, setSearchText] = useState("");
+  const [filterRole, setFilterRole] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
+  const [filterGender, setFilterGender] = useState("");
 
   // Gọi API lấy danh sách người dùng
   const fetchUsers = async () => {
@@ -31,12 +46,59 @@ function UserManagement() {
     try {
       const response = await api.get("/admin/user");
       setUsers(response.data);
+      setFilteredUsers(response.data);
     } catch (error) {
       toast.error("Lỗi khi lấy danh sách người dùng!");
     } finally {
       setLoading(false);
     }
   };
+
+  // Áp dụng filter và search
+  const applyFilters = () => {
+    let filtered = [...users];
+
+    // Search filter
+    if (searchText) {
+      filtered = filtered.filter(
+        (user) =>
+          user.fullName?.toLowerCase().includes(searchText.toLowerCase()) ||
+          user.email?.toLowerCase().includes(searchText.toLowerCase()) ||
+          user.username?.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+
+    // Role filter
+    if (filterRole) {
+      filtered = filtered.filter((user) => user.role === filterRole);
+    }
+
+    // Status filter
+    if (filterStatus) {
+      filtered = filtered.filter((user) => user.status === filterStatus);
+    }
+
+    // Gender filter
+    if (filterGender) {
+      filtered = filtered.filter((user) => user.gender === filterGender);
+    }
+
+    setFilteredUsers(filtered);
+  };
+
+  // Reset filters
+  const resetFilters = () => {
+    setSearchText("");
+    setFilterRole("");
+    setFilterStatus("");
+    setFilterGender("");
+    setFilteredUsers(users);
+  };
+
+  // Apply filters when any filter changes
+  useEffect(() => {
+    applyFilters();
+  }, [searchText, filterRole, filterStatus, filterGender, users]);
 
   // Gọi API xoá người dùng
   const deleteUser = async (id) => {
@@ -102,7 +164,11 @@ function UserManagement() {
       dataIndex: "gender",
       key: "gender",
       render: (gender) =>
-        gender === "MALE" ? <Tag color="blue">Nam</Tag> : <Tag color="pink">Nữ</Tag>,
+        gender === "MALE" ? (
+          <Tag color="blue">Nam</Tag>
+        ) : (
+          <Tag color="pink">Nữ</Tag>
+        ),
     },
     {
       title: "Vai trò",
@@ -148,10 +214,7 @@ function UserManagement() {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => showEditModal(record)}
-          >
+          <Button icon={<EditOutlined />} onClick={() => showEditModal(record)}>
             Sửa
           </Button>
           <Popconfirm
@@ -189,9 +252,75 @@ function UserManagement() {
         </Button>
       </div>
 
+      {/* Filter và Search Section */}
+      <Card style={{ marginBottom: "16px" }}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12} md={6}>
+            <Search
+              placeholder="Tìm kiếm theo tên, email, username..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              allowClear
+              prefix={<SearchOutlined />}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={4}>
+            <Select
+              placeholder="Lọc theo vai trò"
+              value={filterRole}
+              onChange={setFilterRole}
+              allowClear
+              style={{ width: "100%" }}
+            >
+              <Option value="ADMIN">ADMIN</Option>
+              <Option value="COACH">COACH</Option>
+              <Option value="STAFF">STAFF</Option>
+              <Option value="CUSTOMER">CUSTOMER</Option>
+              <Option value="GUEST">GUEST</Option>
+            </Select>
+          </Col>
+          <Col xs={24} sm={12} md={4}>
+            <Select
+              placeholder="Lọc theo trạng thái"
+              value={filterStatus}
+              onChange={setFilterStatus}
+              allowClear
+              style={{ width: "100%" }}
+            >
+              <Option value="ACTIVE">Đang hoạt động</Option>
+              <Option value="INACTIVE">Không hoạt động</Option>
+            </Select>
+          </Col>
+          <Col xs={24} sm={12} md={4}>
+            <Select
+              placeholder="Lọc theo giới tính"
+              value={filterGender}
+              onChange={setFilterGender}
+              allowClear
+              style={{ width: "100%" }}
+            >
+              <Option value="MALE">Nam</Option>
+              <Option value="FEMALE">Nữ</Option>
+            </Select>
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Space>
+              <Button
+                icon={<FilterOutlined />}
+                onClick={applyFilters}
+                type="primary"
+              >
+                Áp dụng bộ lọc
+              </Button>
+              <Button onClick={resetFilters}>Xóa bộ lọc</Button>
+            </Space>
+          </Col>
+        </Row>
+      </Card>
+
       <Table
         columns={columns}
-        dataSource={users}
+        dataSource={filteredUsers}
         rowKey="id"
         loading={loading}
       />
@@ -225,7 +354,9 @@ function UserManagement() {
           <Form.Item
             name="username"
             label="Tên người dùng"
-            rules={[{ required: true, message: "Vui lòng nhập tên người dùng" }]}
+            rules={[
+              { required: true, message: "Vui lòng nhập tên người dùng" },
+            ]}
           >
             <Input />
           </Form.Item>

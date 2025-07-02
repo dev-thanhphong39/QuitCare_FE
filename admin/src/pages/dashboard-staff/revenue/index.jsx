@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 
 function RevenueManagement() {
   return (
     <div>
-      anh em mình cứ thế thôi hẹ .. hẹ
+      <h1>Quản lý doanh thu</h1>
     </div>
-  )
+  );
 }
 
-export default  RevenueManagement
+export default RevenueManagement;
