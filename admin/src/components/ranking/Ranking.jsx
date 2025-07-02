@@ -3,81 +3,80 @@ import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import "./Ranking.css";
 import Confetti from "react-confetti";
-const users = [
-  {
-    rank: 1,
-    name: "Nguyễn Văn A",
-    score: 2240,
-    avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=A",
-  },
-  {
-    rank: 2,
-    name: "Trần Thị B",
-    score: 1982,
-    avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=B",
-  },
-  {
-    rank: 3,
-    name: "Lê Văn C",
-    score: 1834,
-    avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=C",
-  },
-  {
-    rank: 4,
-    name: "Phạm Thị D",
-    score: 1500,
-    avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=D",
-  },
-  {
-    rank: 5,
-    name: "Hoàng Văn E",
-    score: 1431,
-    avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=E",
-  },
-  {
-    rank: 6,
-    name: "Vũ Thị F",
-    score: 1322,
-    avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=F",
-  },
-  {
-    rank: 7,
-    name: "Đặng Văn G",
-    score: 1221,
-    avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=G",
-  },
-  {
-    rank: 8,
-    name: "Bùi Thị H",
-    score: 1102,
-    avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=H",
-  },
-  {
-    rank: 9,
-    name: "Phan Văn I",
-    score: 1102,
-    avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=I",
-  },
-  {
-    rank: 10,
-    name: "Đỗ Thị K",
-    score: 1102,
-    avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=K",
-  },
-];
 
 function Ranking() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
-  const top3 = [users[1], users[0], users[2]];
+  const currentUserId = localStorage.getItem("accountId");
 
   useEffect(() => {
-    const confettiTimeout = setTimeout(() => {
-      setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 5000); // Hide confetti after 5 seconds
-    }, 2000); 
+    loadRankingFromLocalStorage();
+    const interval = setInterval(loadRankingFromLocalStorage, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
-    return () => clearTimeout(confettiTimeout);
-  });
+  const loadRankingFromLocalStorage = () => {
+    try {
+      const userRankings = [];
+
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("user-total-points-")) {
+          const userId = key.replace("user-total-points-", "");
+          const totalPoints = parseInt(localStorage.getItem(key) || "0");
+          const userName =
+            localStorage.getItem(`user-name-${userId}`) || `User ${userId}`;
+
+          if (totalPoints > 0) {
+            userRankings.push({
+              id: userId,
+              name: userName,
+              score: totalPoints,
+              avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${userId}`,
+              isCurrentUser: userId === currentUserId,
+            });
+          }
+        }
+      });
+
+      userRankings.sort((a, b) => b.score - a.score);
+      const rankedUsers = userRankings.map((user, index) => ({
+        ...user,
+        rank: index + 1,
+      }));
+
+      setUsers(rankedUsers);
+      setLoading(false);
+
+      if (rankedUsers.length > 0) {
+        setTimeout(() => {
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 3000);
+        }, 500);
+      }
+    } catch (error) {
+      console.error("Error loading ranking:", error);
+      setUsers([]);
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="ranking-container">
+        <Navbar />
+        <div className="ranking-content">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Đang tải bảng xếp hạng...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  const top3 = users.length >= 3 ? [users[1], users[0], users[2]] : users;
 
   return (
     <div className="ranking-container">
@@ -86,29 +85,99 @@ function Ranking() {
       )}
       <Navbar />
       <div className="ranking-content">
-        <h2 className="ranking-title">Bảng Xếp Hạng</h2>
-
-        <div className="podium">
-          {top3.map((user) => (
-            <div key={user.rank} className={`podium-item podium-${user.rank}`}>
-              <img className="avatar" src={user.avatar} alt={user.name} />
-              <p>{user.name}</p>
-              <strong>{user.score}</strong>
-              <div className={`podium-step step-${user.rank}`}>{user.rank}</div>
-            </div>
-          ))}
+        <div className="ranking-header">
+          <h2 className="ranking-title">🏆 Bảng Xếp Hạng Cai Thuốc</h2>
+          <p className="ranking-subtitle">
+            Top những người cai thuốc thành công nhất
+          </p>
+          <button
+            className="refresh-button"
+            onClick={loadRankingFromLocalStorage}
+            title="Làm mới bảng xếp hạng"
+          >
+            🔄 Làm mới
+          </button>
         </div>
 
-        <div className="rank-list">
-          {users.slice(3).map((user, index) => (
-            <div className="rank-row" key={index}>
-              <span className="rank-number">{user.rank}</span>
-              <img className="avatar small" src={user.avatar} alt={user.name} />
-              <span className="rank-name">{user.name}</span>
-              <span className="rank-score">{user.score}</span>
-            </div>
-          ))}
-        </div>
+        {users.length >= 3 && (
+          <div className="podium">
+            {top3.map((user) => (
+              <div
+                key={user.rank}
+                className={`podium-item podium-${user.rank} ${
+                  user.isCurrentUser ? "current-user" : ""
+                }`}
+              >
+                <img className="avatar" src={user.avatar} alt={user.name} />
+                <p>
+                  {user.name} {user.isCurrentUser ? "(Bạn)" : ""}
+                </p>
+                <strong>{user.score.toLocaleString()} điểm</strong>
+                <div className={`podium-step step-${user.rank}`}>
+                  {user.rank}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {users.length > 0 && (
+          <div className="rank-list">
+            {(users.length < 3 ? users : users.slice(3)).map((user) => (
+              <div
+                key={user.id}
+                className={`rank-row ${
+                  user.isCurrentUser ? "current-user" : ""
+                }`}
+              >
+                <span className="rank-number">#{user.rank}</span>
+                <img
+                  className="avatar small"
+                  src={user.avatar}
+                  alt={user.name}
+                />
+                <span className="rank-name">
+                  {user.name} {user.isCurrentUser ? "(Bạn)" : ""}
+                </span>
+                <span className="rank-score">
+                  {user.score.toLocaleString()} điểm
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {users.length === 0 && (
+          <div className="empty-ranking">
+            <p>🎯 Chưa có ai có điểm</p>
+            <p>
+              Hãy bắt đầu theo dõi tiến trình cai thuốc để tham gia xếp hạng!
+            </p>
+          </div>
+        )}
+
+        {currentUserId && (
+          <div className="current-user-stats">
+            <h3>📊 Thống kê của bạn</h3>
+            <p>
+              Tên:{" "}
+              {localStorage.getItem(`user-name-${currentUserId}`) ||
+                "Chưa có tên"}
+            </p>
+            <p>
+              Tổng điểm:{" "}
+              {localStorage.getItem(`user-total-points-${currentUserId}`) ||
+                "0"}{" "}
+              điểm
+            </p>
+            {users.find((u) => u.isCurrentUser) && (
+              <p>
+                Xếp hạng: #{users.find((u) => u.isCurrentUser).rank} /{" "}
+                {users.length}
+              </p>
+            )}
+          </div>
+        )}
       </div>
       <Footer />
     </div>
