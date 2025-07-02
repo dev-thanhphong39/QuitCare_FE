@@ -30,7 +30,8 @@
 .ranking-title {
     color        : #2c3e50;
     font-size    : 2.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 3.5rem;
+    margin-top   : 12px;
 }
 
 .ranking-subtitle {
@@ -146,7 +147,7 @@
 }
 
 .podium-item strong {
-    color        : #ffeb3b;
+    color        : #929292;
     font-size    : 20px;
     font-weight  : 700;
     display      : block;

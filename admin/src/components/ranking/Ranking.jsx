@@ -87,16 +87,14 @@ function Ranking() {
       <div className="ranking-content">
         <div className="ranking-header">
           <h2 className="ranking-title">🏆 Bảng Xếp Hạng Cai Thuốc</h2>
-          <p className="ranking-subtitle">
-            Top những người cai thuốc thành công nhất
-          </p>
-          <button
+
+          {/* <button
             className="refresh-button"
             onClick={loadRankingFromLocalStorage}
             title="Làm mới bảng xếp hạng"
           >
             🔄 Làm mới
-          </button>
+          </button> */}
         </div>
 
         {users.length >= 3 && (
@@ -156,7 +154,7 @@ function Ranking() {
           </div>
         )}
 
-        {currentUserId && (
+        {/* {currentUserId && (
           <div className="current-user-stats">
             <h3>📊 Thống kê của bạn</h3>
             <p>
@@ -177,7 +175,7 @@ function Ranking() {
               </p>
             )}
           </div>
-        )}
+        )} */}
       </div>
       <Footer />
     </div>
