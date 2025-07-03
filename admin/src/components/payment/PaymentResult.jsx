@@ -1,41 +1,44 @@
 // src/components/payment/PaymentResult.jsx
-
 import React, { useEffect, useState } from "react";
-import api from "../../configs/axios";
+import { useLocation } from "react-router-dom";
 import { CheckCircleTwoTone, CloseCircleTwoTone, LoadingOutlined } from "@ant-design/icons";
-import "./PaymentResult.css"; // CSS tùy chỉnh
-import axios from "axios";
+import "./PaymentResult.css"; // Tùy chỉnh nếu cần
 
 const PaymentResult = () => {
+  const location = useLocation();
   const [status, setStatus] = useState("loading"); // loading | success | fail
   const [message, setMessage] = useState("");
-  const [transactionData, setTransactionData] = useState(null);
+  const [details, setDetails] = useState({});
 
   useEffect(() => {
-    console.log("🔍 Query:", window.location.search);
-    const confirmPayment = async () => {
-      try {
-        const res = await axios.get("http://14.225.218.238:8080/vnpay-payment-return" + window.location.search)
+    const queryParams = new URLSearchParams(location.search);
+    const statusParam = queryParams.get("status");
+    const txnId = queryParams.get("transactionId");
+    const bank = queryParams.get("vnp_BankCode");
+    const amount = queryParams.get("vnp_Amount");
+    const code = queryParams.get("code");
+    const error = queryParams.get("error");
 
-        console.log("Kết quả xác minh:", res.data);
-
-        if (res.data && res.data.vnp_ResponseCode === "00") {
-          setStatus("success");
-          setMessage("Thanh toán thành công!");
-          setTransactionData(res.data);
-        } else {
-          setStatus("fail");
-          setMessage("Thanh toán thất bại hoặc bị hủy.");
-        }
-      } catch (error) {
-        console.error("Lỗi khi xác minh thanh toán:", error);
-        setStatus("fail");
-        setMessage("Không thể xác minh thanh toán.");
-      }
-    };
-
-    confirmPayment();
-  }, []);
+    if (statusParam === "success") {
+      setStatus("success");
+      setMessage("Thanh toán thành công!");
+      setDetails({
+        txnId,
+        bank,
+        amount,
+      });
+    } else if (statusParam === "FAILED" || statusParam === "fail") {
+      setStatus("fail");
+      setMessage("Thanh toán thất bại.");
+      setDetails({
+        code,
+        error,
+      });
+    } else {
+      setStatus("fail");
+      setMessage("Không thể xác minh trạng thái thanh toán.");
+    }
+  }, [location.search]);
 
   return (
     <div className="payment-result-container">
@@ -50,9 +53,13 @@ const PaymentResult = () => {
         <div className="success">
           <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: 64 }} />
           <h2>{message}</h2>
-          <p>Mã giao dịch: {transactionData?.vnp_TxnRef}</p>
-          <p>Ngân hàng: {transactionData?.vnp_BankCode}</p>
-          <p>Số tiền: {(transactionData?.vnp_Amount / 100).toLocaleString("vi-VN")} VND</p>
+          {details.txnId && <p>Mã giao dịch: {details.txnId}</p>}
+          {details.bank && <p>Ngân hàng: {details.bank}</p>}
+          {details.amount && (
+            <p>
+              Số tiền: {(Number(details.amount) / 100).toLocaleString("vi-VN")} VND
+            </p>
+          )}
         </div>
       )}
 
@@ -60,6 +67,8 @@ const PaymentResult = () => {
         <div className="fail">
           <CloseCircleTwoTone twoToneColor="#ff4d4f" style={{ fontSize: 64 }} />
           <h2>{message}</h2>
+          {details.code && <p>Mã lỗi: {details.code}</p>}
+          {details.error && <p>Chi tiết lỗi: {details.error}</p>}
           <p>Vui lòng thử lại hoặc liên hệ hỗ trợ.</p>
         </div>
       )}

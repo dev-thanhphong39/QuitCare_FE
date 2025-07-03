@@ -104,12 +104,12 @@
     white-space  : nowrap;
 }
 
-.btn-free {
-    background-color: #00aaff;
+.btn-basic {
+    background-color: #dc8e19;
     color           : white;
 }
 
-.btn-free:hover {
+.btn-basic:hover {
     background-color: #0088cc;
     transform       : translateY(-2px);
 }
@@ -120,6 +120,6 @@
 }
 
 .btn-premium:hover {
-    background-color: #e09e00;
+    background-color: #00e016;
     transform       : translateY(-2px);
 }

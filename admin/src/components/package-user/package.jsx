@@ -57,18 +57,12 @@ const Package = () => {
               </p>
               <p className="benefit">{pkg.description}</p>
               <button
-  className={`btn ${pkg.price === 0 ? "btn-free" : "btn-premium"}`}
+  className={`btn ${pkg.name.toLowerCase() === "basic" ? "btn-basic" : "btn-premium"}`}
   onClick={() => {
-    if (pkg.price === 0) {
-      // Với gói FREE, xử lý như hiện tại (có thể thêm logic nếu cần)
-      console.log("Mua gói");
-    } else {
-      // Với gói PREMIUM → chuyển đến trang payment kèm theo thông tin gói
-      navigate("/payment", { state: { packageId: pkg.id, price: pkg.price, name: pkg.name, description: pkg.description } });
-    }
+    navigate("/payment", { state: { membershipPlanId: pkg.id } });
   }}
 >
-  {pkg.price === 0 ? "Dùng ngay" : "Mua gói"}
+  Mua gói
 </button>
             </div>
           </div>

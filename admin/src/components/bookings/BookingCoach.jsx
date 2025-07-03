@@ -52,12 +52,12 @@ const Booking = () => {
     }
 
     try {
-      const response = await api.post("/api/session", {
-        coachId: clinic.id,
-        sessionDate: date,
-        sessionTimeSlot: slot,
+      const response = await api.post("/booking	", {
+        sessionId : 1,
+        coachId: clinic.id,  
         
-        memberId: user.id,
+        appointmentDate: date,
+       
       });
 
       console.log("Booking response:", response.data);

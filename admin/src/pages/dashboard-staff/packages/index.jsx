@@ -99,6 +99,11 @@ function PackagesManagement() {
       render: (price) => `${price.toLocaleString()}₫`,
     },
     {
+      title: "Thời hạn (tháng)",
+      dataIndex: "duration",
+      render: (d) => `${d} tháng`,
+    },
+    {
       title: "Mô tả",
       dataIndex: "description",
     },
@@ -169,6 +174,20 @@ function PackagesManagement() {
               step={1000}
               formatter={(value) => `${value}₫`}
               parser={(value) => parseFloat(value.replace(/[^\d]/g, ""))}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Thời hạn (tháng)"
+            name="duration"
+            rules={[{ required: true, message: "Vui lòng nhập thời hạn!" }]}
+          >
+            <InputNumber
+              style={{ width: "100%" }}
+              min={1}
+              max={24}
+              step={1}
+              addonAfter="tháng"
             />
           </Form.Item>
 

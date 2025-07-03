@@ -30,8 +30,9 @@ import ForgotPasswordForm from "./components/forgot-password/forgot-pasword";
 import PaymentPage from "./components/payment/submitOrder";
 import PaymentResult from "./components/payment/PaymentResult";
 import CoachDashboard from "./components/dashboard/coach-dashboard";
-import CoachWorkRegister from "./pages/dashboard-coach/register/CoachWorkRegister";
-import CoachWorkList from "./pages/dashboard-coach/list-session/viewList";
+
+
+import WorkScheduleManagement from "./pages/dashboard-coach/register/management-schedule";
 
 
 function App() {
@@ -130,12 +131,9 @@ function App() {
       children: [
         {
           path: "register",
-          element: <CoachWorkRegister />,
+          element: <WorkScheduleManagement />,
         },
-        {
-          path: "listview",
-          element: <CoachWorkList />,
-        },
+       
       ],
     },
     {
@@ -159,6 +157,14 @@ function App() {
       path: "/payment-result",
       element: <PaymentResult />,
     },
+
+    {
+      path: "/payment-success",
+      element: <PaymentResult />,
+    },
+    { path: "/payment-fail" ,
+      element: <PaymentResult />,
+    } 
   ]);
   return (
     <>
