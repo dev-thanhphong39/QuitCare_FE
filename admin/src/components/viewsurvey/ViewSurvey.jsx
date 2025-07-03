@@ -107,11 +107,8 @@ function ViewSurvey() {
       }
 
       try {
-        const response = await api.get(`/smoking-status`);
-        const userSurvey = response.data.find(
-          (item) => item.accountId === accountId
-        );
-        setSurveyData(userSurvey || {});
+        const response = await api.get(`/smoking-status/account/${accountId}`);
+        setSurveyData(response.data || {});
       } catch (apiError) {
         console.log("API không có dữ liệu, chỉ lấy từ localStorage");
         setSurveyData({});

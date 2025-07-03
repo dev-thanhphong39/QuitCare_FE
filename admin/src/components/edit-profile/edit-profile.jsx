@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Input, Button, Radio, message } from "antd";
 import "./edit-profile.css";
 import { useDispatch, useSelector } from "react-redux";
-import Footer from "../Footer/Footer";
-import Navbar from "../Navbar/Navbar";
+import Footer from "../footer/Footer";
+import Navbar from "../navbar/Navbar";
 import api from "../../configs/axios";
 import { login } from "../../redux/features/userSlice";
 
@@ -71,62 +71,103 @@ function EditProfile() {
   };
 
   return (
-    <div className="ep-edit-profile-page">
+    <>
       <Navbar />
-      <div className="ep-edit-profile-wrapper">
-        <div className="ep-profile-container">
-          <div className="ep-card">
-            <div className="ep-avatar-only">
-              <img
-                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                  form.fullname || "User"
-                )}&background=ececec&color=555&size=128&rounded=true`}
-                alt="avatar"
-                className="ep-avatar-preview"
-              />
-            </div>
 
-            <div className="ep-form">
-              <label htmlFor="fullname">Tên đầy đủ</label>
-              <Input
-                id="fullname"
-                value={form.fullname}
-                onChange={(e) => handleChange("fullname", e.target.value)}
-                placeholder="Nhập tên đầy đủ"
-              />
+      <div className="ep-edit-profile-page">
+        <div className="ep-edit-profile-wrapper">
+          <div className="ep-profile-container">
+            <div className="ep-card">
+              <div className="ep-avatar-section">
+                <div className="ep-avatar-container">
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      form.fullname || "User"
+                    )}&background=4f46e5&color=ffffff&size=150&rounded=true`}
+                    alt="avatar"
+                    className="ep-avatar-preview"
+                  />
+                </div>
+                <h2 className="ep-profile-title">Chỉnh sửa hồ sơ</h2>
+              </div>
 
-              <label htmlFor="username">Tên đăng nhập</label>
-              <Input
-                id="username"
-                value={form.username}
-                onChange={(e) => handleChange("username", e.target.value)}
-                placeholder="Nhập tên đăng nhập"
-              />
+              <div className="ep-form">
+                <div className="ep-form-group">
+                  <label htmlFor="email" className="ep-label">
+                    Email
+                  </label>
+                  <Input
+                    id="email"
+                    value={user?.email || ""}
+                    disabled
+                    className="ep-input-readonly"
+                    placeholder="Email"
+                  />
+                </div>
 
-              <label>Giới tính</label>
-              <Radio.Group
-                value={form.gender}
-                onChange={(e) => handleChange("gender", e.target.value)}
-                style={{ marginBottom: 16 }}
-              >
-                <Radio value="MALE">Nam</Radio>
-                <Radio value="FEMALE">Nữ</Radio>
-                <Radio value="OTHER">Khác</Radio>
-              </Radio.Group>
+                <div className="ep-form-group">
+                  <label htmlFor="username-readonly" className="ep-label">
+                    Tên đăng nhập
+                  </label>
+                  <Input
+                    id="username-readonly"
+                    value={user?.username || ""}
+                    disabled
+                    className="ep-input-readonly"
+                    placeholder="Tên đăng nhập"
+                  />
+                </div>
 
-              <Button
-                type="primary"
-                onClick={handleSubmit}
-                style={{ marginTop: 20 }}
-              >
-                Lưu thay đổi
-              </Button>
+                <div className="ep-form-group">
+                  <label htmlFor="fullname" className="ep-label">
+                    Tên đầy đủ
+                  </label>
+                  <Input
+                    id="fullname"
+                    value={form.fullname}
+                    onChange={(e) => handleChange("fullname", e.target.value)}
+                    placeholder="Nhập tên đầy đủ"
+                    className="ep-input"
+                  />
+                </div>
+
+                <div className="ep-form-group">
+                  <label className="ep-label">Giới tính</label>
+                  <Radio.Group
+                    value={form.gender}
+                    onChange={(e) => handleChange("gender", e.target.value)}
+                    className="ep-radio-group"
+                  >
+                    <Radio value="MALE" className="ep-radio">
+                      Nam
+                    </Radio>
+                    <Radio value="FEMALE" className="ep-radio">
+                      Nữ
+                    </Radio>
+                    <Radio value="OTHER" className="ep-radio">
+                      Khác
+                    </Radio>
+                  </Radio.Group>
+                </div>
+
+                <div className="ep-button-container">
+                  <Button
+                    type="primary"
+                    onClick={handleSubmit}
+                    className="ep-submit-button"
+                    size="large"
+                  >
+                    Lưu thay đổi
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        
       </div>
       <Footer />
-    </div>
+    </>
   );
 }
 
