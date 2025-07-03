@@ -48,18 +48,18 @@
 }
 
 .auth-logo-link {
-    display        : flex;
-    align-items    : center;
-    text-decoration: none;
-    padding        : 12px 20px;
-    border-radius  : 16px;
-    transition     : all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position       : relative;
-    overflow       : hidden;
-    background     : rgba(255, 255, 255, 0.08);
+    display           : flex;
+    align-items       : center;
+    text-decoration   : none;
+    padding           : 12px 20px;
+    border-radius     : 16px;
+    transition        : all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position          : relative;
+    overflow          : hidden;
+    /* background     : rgba(255, 255, 255, 0.08); */
     /* Điều chỉnh cho phù hợp với background tối */
-    border         : 1px solid rgba(24, 144, 255, 0.2);
-    backdrop-filter: blur(8px);
+    /* border         : 1px solid rgba(24, 144, 255, 0.2); */
+    backdrop-filter   : blur(8px);
 }
 
 .auth-logo-link::before {
