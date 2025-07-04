@@ -591,6 +591,74 @@
     color      : #fa8c16;
 }
 
+/* Booking Alert Styles trong popup */
+.quit-tracking-booking-alert {
+    background   : linear-gradient(135deg, #fff2f0 0%, #ffebe8 100%);
+    border       : 2px solid #ff7875;
+    border-radius: 12px;
+    padding      : 20px;
+    margin       : 20px 0;
+    box-shadow   : 0 4px 12px rgba(255, 77, 79, 0.1);
+}
+
+.quit-tracking-booking-alert h4 {
+    color        : #ff4d4f;
+    margin-bottom: 15px;
+    font-size    : 16px;
+    font-weight  : 600;
+    display      : flex;
+    align-items  : center;
+    gap          : 8px;
+}
+
+.quit-tracking-frequent-symptoms-list {
+    background   : white;
+    border-radius: 8px;
+    padding      : 15px 20px;
+    margin       : 15px 0;
+    border-left  : 4px solid #ff7875;
+    box-shadow   : 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quit-tracking-frequent-symptoms-list li {
+    margin     : 8px 0;
+    color      : #d46b08;
+    font-size  : 14px;
+    font-weight: 500;
+}
+
+.quit-tracking-booking-recommendation {
+    background   : #e6f7ff;
+    border-radius: 8px;
+    padding      : 15px;
+    border-left  : 4px solid #1890ff;
+    margin-top   : 15px;
+}
+
+.quit-tracking-booking-recommendation p {
+    margin     : 0;
+    color      : #0958d9;
+    font-size  : 14px;
+    line-height: 1.6;
+}
+
+/* Styling cho booking button trong modal footer */
+.quit-tracking-result-modal .ant-modal-footer .ant-btn-primary.ant-btn-dangerous {
+    background   : linear-gradient(135deg, #ff7875 0%, #ff4d4f 100%);
+    border       : none;
+    font-weight  : 600;
+    height       : 40px;
+    padding      : 0 20px;
+    border-radius: 8px;
+    transition   : all 0.3s ease;
+}
+
+.quit-tracking-result-modal .ant-modal-footer .ant-btn-primary.ant-btn-dangerous:hover {
+    background: linear-gradient(135deg, #ff4d4f 0%, #d9363e 100%);
+    transform : translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 77, 79, 0.3);
+}
+
 /* Responsive cho calendar */
 @media (max-width: 768px) {
     .quit-tracking-calendar-cell {
@@ -651,7 +719,124 @@
     }
 }
 
-/* Styles cũ đã được xóa để tránh conflict */
+/* Thêm vào file TrackingPage.css */
+
+/* Style cho ngày bắt đầu giai đoạn mới */
+.quit-tracking-cell-new-stage {
+    position  : relative;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border    : 2px solid #2196f3;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+.quit-tracking-cell-new-stage.quit-tracking-cell-selected {
+    border-color: #1976d2;
+    box-shadow  : 0 4px 12px rgba(25, 118, 210, 0.4);
+}
+
+/* Badge hiển thị giai đoạn mới */
+.quit-tracking-new-stage-badge {
+    position     : absolute;
+    top          : -8px;
+    left         : -8px;
+    right        : -8px;
+    background   : linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+    color        : white;
+    padding      : 4px 2px;
+    border-radius: 8px;
+    font-size    : 10px;
+    font-weight  : bold;
+    text-align   : center;
+    box-shadow   : 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index      : 10;
+}
+
+.quit-tracking-stage-label {
+    font-size    : 9px;
+    line-height  : 1.2;
+    margin-bottom: 1px;
+}
+
+.quit-tracking-stage-target {
+    font-size  : 8px;
+    opacity    : 0.9;
+    line-height: 1;
+}
+
+/* Style cho legend giai đoạn mới */
+.quit-tracking-legend-new-stage {
+    background   : linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+    color        : white;
+    padding      : 4px 8px;
+    border-radius: 12px;
+    font-size    : 11px;
+    font-weight  : bold;
+    margin       : 0 4px;
+    box-shadow   : 0 2px 4px rgba(33, 150, 243, 0.3);
+}
+
+/* Điều chỉnh cell để có đủ chỗ cho badge */
+.quit-tracking-cell-new-stage .quit-tracking-cell-number {
+    margin-top : 16px;
+    font-weight: bold;
+    color      : #1976d2;
+}
+
+/* Style cho trạng thái hoàn thành trên ngày giai đoạn mới */
+.quit-tracking-cell-new-stage .quit-tracking-cell-status {
+    bottom    : 2px;
+    right     : 2px;
+    background: rgba(255, 255, 255, 0.9);
+    border    : 1px solid #2196f3;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+    .quit-tracking-new-stage-badge {
+        top    : -6px;
+        left   : -6px;
+        right  : -6px;
+        padding: 2px 1px;
+    }
+
+    .quit-tracking-stage-label {
+        font-size: 8px;
+    }
+
+    .quit-tracking-stage-target {
+        font-size: 7px;
+    }
+
+    .quit-tracking-cell-new-stage .quit-tracking-cell-number {
+        margin-top: 12px;
+    }
+}
+
+/* Animation cho giai đoạn mới */
+@keyframes newStageGlow {
+    0% {
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 4px 16px rgba(33, 150, 243, 0.6);
+    }
+
+    100% {
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+    }
+}
+
+.quit-tracking-cell-new-stage {
+    animation: newStageGlow 2s ease-in-out infinite;
+}
+
+/* Hover effect */
+.quit-tracking-cell-new-stage:hover {
+    transform : translateY(-2px);
+    box-shadow: 0 4px 16px rgba(33, 150, 243, 0.5);
+    transition: all 0.3s ease;
+}
 
 /* Loading & Error States */
 .quit-tracking-loading-container,
