@@ -219,7 +219,7 @@ const Navbar = () => {
           {showDropdown && (
             <div className="qc-navbar-dropdown">
               <Link
-                to="/edit-profile"
+                to="/profile"
                 onClick={() => setShowDropdown(false)}
                 className="qc-dropdown-item"
               >

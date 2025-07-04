@@ -1,190 +1,304 @@
 import React, { useState, useEffect } from "react";
-import { Table, Checkbox, Button, message, Tag, Space } from "antd";
+import {
+  Card,
+  Checkbox,
+  Button,
+  message,
+  Tag,
+  Space,
+  Typography,
+  Row,
+  Col,
+  DatePicker,
+  Divider,
+  Alert,
+} from "antd";
+import {
+  CalendarOutlined,
+  CloseCircleOutlined,
+  SaveOutlined,
+  LeftOutlined,
+  RightOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+} from "@ant-design/icons";
 import dayjs from "dayjs";
 import api from "../../../configs/axios";
 import { useSelector } from "react-redux";
+import "./management-schedule.css";
 
+const { Title, Text } = Typography;
 
-const timeSlots = [
-  { label: "06:00 - 07:00", value: "06:00" },
-  { label: "07:00 - 08:00", value: "07:00" },
-  { label: "08:00 - 09:00", value: "08:00" },
-  { label: "09:00 - 10:00", value: "09:00" },
-  { label: "10:00 - 11:00", value: "10:00" },
-  { label: "11:00 - 12:00", value: "11:00" },
-  { label: "12:00 - 13:00", value: "12:00" },
-  { label: "13:00 - 14:00", value: "13:00" },
-  { label: "14:00 - 15:00", value: "14:00" },
+// Giờ hành chính cố định
+const WORKING_HOURS = [
+  "08:00 - 09:00",
+  "09:00 - 10:00",
+  "10:00 - 11:00",
+  "11:00 - 12:00",
+  "13:00 - 14:00",
+  "14:00 - 15:00",
+  "15:00 - 16:00",
+  "16:00 - 17:00",
 ];
 
 const WorkScheduleManagement = () => {
   const user = useSelector((state) => state.user);
   const accountId = user?.id;
 
-  const [startDate, setStartDate] = useState(dayjs().startOf("week").add(1, "day"));
+  const [currentMonth, setCurrentMonth] = useState(dayjs());
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    generate7DaySchedule();
-  }, [startDate]);
+    generateMonthSchedule();
+  }, [currentMonth]);
 
-  const generate7DaySchedule = () => {
-    const next7 = Array.from({ length: 7 }, (_, i) => {
-      const date = startDate.add(i, "day");
+  const generateMonthSchedule = () => {
+    const startOfMonth = currentMonth.startOf("month");
+    const daysInMonth = currentMonth.daysInMonth();
+
+    const monthData = Array.from({ length: daysInMonth }, (_, i) => {
+      const date = startOfMonth.add(i, "day");
       return {
         key: date.format("YYYY-MM-DD"),
         date,
         dateStr: date.format("YYYY-MM-DD"),
+        dayName: date.format("dddd"),
         isLeave: false,
-        proposedLeaveSlots: [],
       };
     });
-    setData(next7);
+
+    setData(monthData);
   };
 
-  const toggleSlot = (record, slotValue) => {
-    setData((prev) =>
-      prev.map((item) => {
-        if (item.dateStr !== record.dateStr) return item;
-        const current = item.proposedLeaveSlots || [];
-        const updated = current.includes(slotValue)
-          ? current.filter((s) => s !== slotValue)
-          : [...current, slotValue];
-        return { ...item, proposedLeaveSlots: updated };
-      })
-    );
-  };
-
-  const handleLeaveChange = (record, checked) => {
+  const handleLeaveChange = (dateStr, checked) => {
     setData((prev) =>
       prev.map((item) =>
-        item.dateStr === record.dateStr
-          ? { ...item, isLeave: checked, proposedLeaveSlots: checked ? [] : item.proposedLeaveSlots }
-          : item
+        item.dateStr === dateStr ? { ...item, isLeave: checked } : item
       )
     );
   };
 
-  const handleSubmit = async (record) => {
+  const handleSubmitAll = async () => {
+    setLoading(true);
     try {
-      await api.post("/session/register", {
-        accountId,
-        date: record.dateStr,
-        isLeave: record.isLeave,
-        slots: record.proposedLeaveSlots,
-      });
-      message.success(`✅ Đã lưu lịch cho ${record.dateStr}`);
-    } catch {
-      message.error("❌ Lưu thất bại.");
+      for (const record of data) {
+        await api.post("/session/register", {
+          accountId,
+          date: record.dateStr,
+          isLeave: record.isLeave,
+          workingSlots: record.isLeave ? [] : WORKING_HOURS,
+        });
+      }
+      message.success(
+        `✅ Đã lưu lịch tháng ${currentMonth.format("MM/YYYY")} thành công!`
+      );
+    } catch (error) {
+      message.error("❌ Có lỗi xảy ra khi lưu lịch.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const renderSlotButton = (record, slot, isPast) => {
-    const isSelected = record.proposedLeaveSlots?.includes(slot.value);
-    const className = isSelected ? "slot-selected" : "slot-default";
+  const getDateStatus = (record) => {
+    const isPast = dayjs(record.dateStr).isBefore(dayjs(), "day");
+    const isToday = dayjs(record.dateStr).isSame(dayjs(), "day");
+    const isWeekend = record.date.day() === 0 || record.date.day() === 6;
 
-    return (
-      <Button
-        key={slot.value}
-        size="small"
-        disabled={record.isLeave || isPast}
-        onClick={() => toggleSlot(record, slot.value)}
-        className={className}
-      >
-        {slot.label}
-      </Button>
-    );
+    if (isPast) return { status: "past", color: "#d9d9d9" };
+    if (isToday) return { status: "today", color: "#1890ff" };
+    if (isWeekend) return { status: "weekend", color: "#722ed1" };
+    if (record.isLeave) return { status: "leave", color: "#ff4d4f" };
+    return { status: "working", color: "#52c41a" };
   };
 
-  const columns = [
-    {
-      title: "Ngày",
-      dataIndex: "dateStr",
-      render: (_, record) => {
-        const isPast = dayjs(record.dateStr).isBefore(dayjs(), "day");
-        const isToday = dayjs(record.dateStr).isSame(dayjs(), "day");
-        let tagClass = "";
-
-        if (isToday) tagClass = "tag-today";
-        else if (isPast) tagClass = "tag-past";
-
-        return (
-          <Tag className={tagClass}>
-            {record.dateStr} {isToday ? "(Hôm nay)" : ""}
-          </Tag>
-        );
-      },
-    },
-    {
-      title: "Nghỉ cả ngày",
-      render: (_, record) => {
-        const isPast = dayjs(record.dateStr).isBefore(dayjs(), "day");
-        return (
-          <Checkbox
-            disabled={isPast}
-            checked={record.isLeave}
-            onChange={(e) => handleLeaveChange(record, e.target.checked)}
-          />
-        );
-      },
-    },
-    {
-      title: "Đề nghị nghỉ slot",
-      render: (_, record) => {
-        const isPast = dayjs(record.dateStr).isBefore(dayjs(), "day");
-        return (
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
-            {timeSlots.map((slot) => renderSlotButton(record, slot, isPast))}
-          </div>
-        );
-      },
-    },
-    {
-      title: "Hành động",
-      render: (_, record) => {
-        const isPast = dayjs(record.dateStr).isBefore(dayjs(), "day");
-        return (
-          <Button type="primary" disabled={isPast} onClick={() => handleSubmit(record)}>
-            Lưu
-          </Button>
-        );
-      },
-    },
-  ];
+  const workingDays = data.filter((item) => !item.isLeave).length;
+  const leaveDays = data.filter((item) => item.isLeave).length;
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>
-        📅 Quản Lý Lịch Làm Việc ({startDate.format("DD/MM")} -{" "}
-        {startDate.add(6, "day").format("DD/MM")})
-      </h2>
+    <div className="schedule-page">
+      <div className="container">
+        {/* Header */}
+        <div className="page-header">
+          <div className="header-content">
+            <div className="title-section">
+              <CalendarOutlined className="page-icon" />
+              <div>
+                <Title level={2} className="page-title">
+                  Đăng ký lịch nghỉ
+                </Title>
+                <Text className="page-subtitle">
+                  Chọn những ngày bạn muốn nghỉ - Lịch làm mặc định: 8:00-17:00
+                </Text>
+              </div>
+            </div>
 
-      <Space style={{ marginBottom: 16 }}>
-        <Button onClick={() => setStartDate(startDate.subtract(7, "day"))}>
-          ⏪ Tuần trước
-        </Button>
-        <Button onClick={() => setStartDate(dayjs().startOf("week").add(1, "day"))}>
-          📅 Tuần hiện tại
-        </Button>
-        <Button onClick={() => setStartDate(startDate.add(7, "day"))}>
-          ⏩ Tuần sau
-        </Button>
-      </Space>
+            <div className="header-actions">
+              <DatePicker
+                picker="month"
+                value={currentMonth}
+                onChange={(date) => setCurrentMonth(date || dayjs())}
+                format="MM/YYYY"
+                size="large"
+                className="month-picker"
+              />
+            </div>
+          </div>
+        </div>
 
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={false}
-        bordered
-        rowKey="dateStr"
-        rowClassName={(record) => {
-          const date = dayjs(record.dateStr);
-          if (date.isBefore(dayjs(), "day")) return "past-row";
-          if (date.isSame(dayjs(), "day")) return "today-row";
-          return "future-row";
-        }}
-        
-      />
+        {/* Month Navigation */}
+        <div className="month-nav">
+          <Button
+            icon={<LeftOutlined />}
+            onClick={() => setCurrentMonth(currentMonth.subtract(1, "month"))}
+            size="large"
+            className="nav-btn"
+          >
+            Tháng trước
+          </Button>
+
+          <div className="current-month">
+            <Text strong className="month-text">
+              Tháng {currentMonth.format("MM/YYYY")}
+            </Text>
+          </div>
+
+          <Button
+            icon={<RightOutlined />}
+            onClick={() => setCurrentMonth(currentMonth.add(1, "month"))}
+            size="large"
+            className="nav-btn"
+          >
+            Tháng sau
+          </Button>
+        </div>
+
+        {/* Stats */}
+        <Row gutter={24} className="stats-row">
+          <Col span={8}>
+            <div className="stat-card working">
+              <div className="stat-icon">
+                <CheckCircleOutlined />
+              </div>
+              <div className="stat-info">
+                <div className="stat-number">{workingDays}</div>
+                <div className="stat-label">Ngày làm việc</div>
+              </div>
+            </div>
+          </Col>
+          <Col span={8}>
+            <div className="stat-card leave">
+              <div className="stat-icon">
+                <CloseCircleOutlined />
+              </div>
+              <div className="stat-info">
+                <div className="stat-number">{leaveDays}</div>
+                <div className="stat-label">Ngày nghỉ</div>
+              </div>
+            </div>
+          </Col>
+          <Col span={8}>
+            <div className="stat-card total">
+              <div className="stat-icon">
+                <ClockCircleOutlined />
+              </div>
+              <div className="stat-info">
+                <div className="stat-number">{workingDays * 8}</div>
+                <div className="stat-label">Tổng giờ làm</div>
+              </div>
+            </div>
+          </Col>
+        </Row>
+
+        {/* Working Schedule Info */}
+        <Alert
+          message="Lịch làm việc cố định"
+          description="Sáng: 8:00-12:00 (4 tiếng) • Chiều: 13:00-17:00 (4 tiếng) • Tổng: 8 tiếng/ngày"
+          type="info"
+          showIcon
+          className="schedule-info"
+        />
+
+        {/* Calendar Grid */}
+        <Card className="calendar-card">
+          <div className="calendar-header">
+            <Title level={4}>Chọn ngày nghỉ</Title>
+            <Text type="secondary">Click vào ô checkbox để chọn ngày nghỉ</Text>
+          </div>
+
+          <div className="calendar-grid">
+            {data.map((record) => {
+              const dateStatus = getDateStatus(record);
+              const isPast = dayjs(record.dateStr).isBefore(dayjs(), "day");
+
+              return (
+                <div
+                  key={record.dateStr}
+                  className={`day-cell ${dateStatus.status} ${
+                    isPast ? "disabled" : ""
+                  }`}
+                  style={{ borderColor: dateStatus.color }}
+                >
+                  <div className="day-header">
+                    <span className="day-number">
+                      {record.date.format("DD")}
+                    </span>
+                    <span className="day-name">
+                      {record.date.format("ddd")}
+                    </span>
+                  </div>
+
+                  <div className="day-content">
+                    {!isPast && (
+                      <Checkbox
+                        checked={record.isLeave}
+                        onChange={(e) =>
+                          handleLeaveChange(record.dateStr, e.target.checked)
+                        }
+                        className="leave-checkbox"
+                      >
+                        Nghỉ
+                      </Checkbox>
+                    )}
+
+                    {isPast && (
+                      <Tag size="small" color="default">
+                        Đã qua
+                      </Tag>
+                    )}
+                  </div>
+
+                  <div className="day-status">
+                    {record.isLeave ? (
+                      <Tag color="red" size="small">
+                        Nghỉ
+                      </Tag>
+                    ) : (
+                      <Tag color="green" size="small">
+                        8h
+                      </Tag>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+
+        {/* Save Button */}
+        <div className="save-section">
+          <Button
+            type="primary"
+            size="large"
+            icon={<SaveOutlined />}
+            onClick={handleSubmitAll}
+            loading={loading}
+            className="save-btn"
+          >
+            Lưu lịch tháng {currentMonth.format("MM/YYYY")}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

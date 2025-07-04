@@ -9,7 +9,7 @@ import BookingPage from "./pages/Booking";
 import PlanPage from "./components/planing/Planning";
 import BackToTopButton from "./components/back-to-top/BackToTopButton";
 import BlogDetail from "./components/blog/BlogDetail";
-import EditProfile from "./components/edit-profile/edit-profile";
+import Profile from "./components/profile/profile";
 import Dashboard from "./components/dashboard/dashboard";
 import SuggestPlaning from "./components/planing/SuggestPlaning";
 import CreatePlanning from "./components/planing/CreatePlanning";
@@ -29,11 +29,10 @@ import NotificationPage from "./components/notificate/NotificationPage";
 import ForgotPasswordForm from "./components/forgot-password/forgot-pasword";
 import PaymentPage from "./components/payment/submitOrder";
 import PaymentResult from "./components/payment/PaymentResult";
+
 import CoachDashboard from "./components/dashboard/coach-dashboard";
-
-
 import WorkScheduleManagement from "./pages/dashboard-coach/register/management-schedule";
-
+import AdviseUser from "./pages/dashboard-coach/calendar/advise-user";
 
 function App() {
   const AppLayout = ({ children }) => (
@@ -87,8 +86,8 @@ function App() {
       element: <PaymentResult />,
     },
     {
-      path: "/edit-profile",
-      element: <EditProfile />,
+      path: "/profile",
+      element: <Profile />,
     },
     {
       path: "/viewsurvey",
@@ -133,7 +132,10 @@ function App() {
           path: "register",
           element: <WorkScheduleManagement />,
         },
-       
+        {
+          path: "calendar",
+          element: <AdviseUser />,
+        },
       ],
     },
     {
@@ -162,9 +164,8 @@ function App() {
       path: "/payment-success",
       element: <PaymentResult />,
     },
-    { path: "/payment-fail" ,
-      element: <PaymentResult />,
-    } 
+
+    { path: "/payment-fail", element: <PaymentResult /> },
   ]);
   return (
     <>

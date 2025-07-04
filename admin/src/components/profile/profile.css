@@ -1,0 +1,415 @@
+.profile-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 20px 0;
+}
+
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    margin-top: 80px;
+}
+
+/* Page Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.page-title {
+    margin: 0 !important;
+    color: #1a202c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.title-icon {
+    font-size: 28px;
+    color: #4f46e5;
+}
+
+.page-subtitle {
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+/* Section Layout */
+.personal-info-section {
+    margin-bottom: 24px;
+}
+
+.section-divider {
+    margin: 32px 0;
+    border-color: #e5e7eb;
+}
+
+.consultation-section {
+    margin-bottom: 40px;
+}
+
+/* Profile Info Card */
+.profile-info-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.profile-info-card .ant-card-head {
+    border-bottom: 2px solid #f0f0f0;
+    border-radius: 16px 16px 0 0;
+}
+
+.profile-info-card .ant-card-head-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a202c;
+}
+
+.profile-info-card .ant-card-body {
+    padding: 32px;
+}
+
+/* Avatar Section */
+.avatar-section {
+    text-align: center;
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.profile-avatar {
+    margin-bottom: 16px;
+    border: 4px solid white;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.avatar-info h4 {
+    margin-bottom: 4px !important;
+    color: #1a202c;
+}
+
+/* Form */
+.info-form {
+    padding: 0 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.readonly-input,
+.readonly-select {
+    background: #f9fafb !important;
+    border-color: #e5e7eb !important;
+    color: #6b7280 !important;
+}
+
+.editable-input:focus,
+.editable-select:focus {
+    border-color: #4f46e5 !important;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1) !important;
+}
+
+.action-buttons {
+    text-align: right;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.edit-btn,
+.save-btn {
+    height: 40px;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0 24px;
+}
+
+/* Consultation History Card */
+.consultation-history-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.consultation-history-card .ant-card-head {
+    border-bottom: 2px solid #f0f0f0;
+    border-radius: 16px 16px 0 0;
+}
+
+.consultation-history-card .ant-card-body {
+    padding: 32px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-icon {
+    font-size: 20px;
+    color: #4f46e5;
+}
+
+.count-badge {
+    margin-left: 8px;
+}
+
+/* Consultation Filters - Simplified */
+.consultation-filters {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.filter-group {
+    margin-bottom: 8px;
+}
+
+.filter-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #374151;
+    font-size: 14px;
+}
+
+.status-filter {
+    border-radius: 6px;
+}
+
+.stats-summary {
+    text-align: center;
+    padding-top: 8px;
+}
+
+.duration-info {
+    text-align: right;
+    padding-top: 8px;
+}
+
+.duration-info .text-blue-600 {
+    color: #2563eb;
+    font-size: 14px;
+}
+
+/* Consultation Table */
+.consultation-table .ant-table-thead>tr>th {
+    background: #fafbfc;
+    border-bottom: 2px solid #e5e7eb;
+    font-weight: 600;
+    color: #374151;
+}
+
+.consultation-table .ant-table-tbody>tr:hover>td {
+    background: #f8faff;
+}
+
+.datetime-cell {
+    text-align: center;
+}
+
+.datetime-cell .date {
+    font-weight: 600;
+    color: #1a202c;
+    font-size: 14px;
+}
+
+.datetime-cell .time {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.coach-cell {
+    display: flex;
+    align-items: center;
+}
+
+.meeting-link-btn {
+    padding: 0;
+    font-weight: 600;
+}
+
+.status-tag {
+    font-weight: 500;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.action-btn {
+    color: #4f46e5;
+    font-weight: 500;
+}
+
+.action-btn:hover {
+    color: #3730a3;
+    background: #e0e7ff;
+}
+
+/* Consultation Detail Modal */
+.consultation-detail-modal .ant-modal-header {
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.consultation-detail {
+    padding: 16px 0;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.meeting-link {
+    word-break: break-all;
+    padding: 0;
+    height: auto;
+    text-align: left;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .profile-container {
+        padding: 0 16px;
+    }
+
+    .page-header {
+        padding: 32px 24px;
+    }
+
+    .profile-info-card .ant-card-body,
+    .consultation-history-card .ant-card-body {
+        padding: 24px 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        margin-top: 60px;
+    }
+
+    .page-header {
+        padding: 24px 16px;
+    }
+
+    .page-title {
+        font-size: 24px;
+    }
+
+    .avatar-section {
+        padding: 16px;
+    }
+
+    .info-form {
+        padding: 0 8px;
+    }
+
+    .consultation-filters {
+        padding: 16px;
+    }
+
+    .filter-group {
+        margin-bottom: 16px;
+    }
+
+    .stats-summary,
+    .duration-info {
+        text-align: center;
+        padding-top: 0;
+    }
+
+    .action-buttons {
+        text-align: center;
+    }
+
+    .card-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-page {
+        padding: 10px 0;
+    }
+
+    .profile-container {
+        padding: 0 10px;
+    }
+
+    .page-header {
+        padding: 20px 12px;
+        margin-bottom: 20px;
+    }
+
+    .profile-info-card .ant-card-body,
+    .consultation-history-card .ant-card-body {
+        padding: 16px 8px;
+    }
+
+    .profile-avatar {
+        width: 100px !important;
+        height: 100px !important;
+    }
+
+    .consultation-filters {
+        padding: 12px;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-info-card,
+.consultation-history-card,
+.page-header {
+    animation: fadeInUp 0.3s ease-out; }
