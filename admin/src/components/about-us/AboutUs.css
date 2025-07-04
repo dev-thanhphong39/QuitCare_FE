@@ -198,7 +198,7 @@
     z-index      : 5;
     margin-top   : -55px;
     /* đẩy lên gần phần trên nếu cần */
-    margin-bottom: -100px;
+    margin-bottom: -106px;
     /* đẩy sát xuống experience */
     overflow     : hidden;
 }
