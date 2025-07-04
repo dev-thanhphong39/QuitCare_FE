@@ -226,6 +226,13 @@ const Navbar = () => {
                 Hồ sơ
               </Link>
               <Link
+                to="/viewadvise"
+                onClick={() => setShowDropdown(false)}
+                className="qc-dropdown-item"
+              >
+                Lịch tư vấn
+              </Link>
+              <Link
                 to="/viewsurvey"
                 onClick={() => setShowDropdown(false)}
                 className="qc-dropdown-item"

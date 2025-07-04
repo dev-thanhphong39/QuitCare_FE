@@ -33,6 +33,7 @@ import PaymentResult from "./components/payment/PaymentResult";
 import CoachDashboard from "./components/dashboard/coach-dashboard";
 import WorkScheduleManagement from "./pages/dashboard-coach/register/management-schedule";
 import AdviseUser from "./pages/dashboard-coach/calendar/advise-user";
+import ViewAdvise from "./components/view-advise/ViewAdvise";
 
 function App() {
   const AppLayout = ({ children }) => (
@@ -92,6 +93,10 @@ function App() {
     {
       path: "/viewsurvey",
       element: <ViewSurvey />,
+    },
+    {
+      path: "/viewadvise",
+      element: <ViewAdvise />,
     },
     {
       path: "/dashboard",

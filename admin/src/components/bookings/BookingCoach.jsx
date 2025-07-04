@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 import api from "../../configs/axios";
 import "./BookingCoach.css";
 import { useSelector } from "react-redux";
@@ -21,14 +22,36 @@ const clinics = [
     desc: "Viện trưởng Viện Nghiên cứu Sức khỏe Cộng đồng (RICHS). Chuyên sâu về bệnh phổi, phòng ngừa và điều trị các bệnh liên quan đến hút thuốc. Rất nhiều trung tâm y tế dự phòng địa phương (TP.HCM, Hà Nội, Đà Nẵng, Cần Thơ...) có chuyên viên tư vấn cai thuốc lá miễn phí.",
     image: "",
   },
+
+  {
+    id: 3,
+    name: "PHẠM THIÊN AN",
+    hotline: "1900 1888",
+    phone: "0988 666 888",
+    desc: "Viện trưởng Viện Nghiên cứu Sức khỏe Cộng đồng (RICHS). Chuyên sâu về bệnh phổi, phòng ngừa và điều trị các bệnh liên quan đến hút thuốc. Rất nhiều trung tâm y tế dự phòng địa phương (TP.HCM, Hà Nội, Đà Nẵng, Cần Thơ...) có chuyên viên tư vấn cai thuốc lá miễn phí.",
+    image: "",
+  },
 ];
 
-const timeSlots = ["7:00 - 9:00", "9:00 - 11:00", "12:00 - 14:00", "15:00 - 17:00"];
+const timeSlots = [
+  "8:00 - 9:00",
+  "9:00 - 10:00",
+  "10:00 - 11:00",
+  "11:00 - 12:00",
+  "13:00 - 14:00",
+  "14:00 - 15:00",
+  "15:00 - 16:00",
+  "16:00 - 17:00",
+];
 
 const Booking = () => {
-  const [selectedDates, setSelectedDates] = useState(clinics.map(() => "2025-06-21"));
+  const [selectedDates, setSelectedDates] = useState(
+    clinics.map(() => "2025-06-21")
+  );
   const [selectedSlots, setSelectedSlots] = useState(clinics.map(() => ""));
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
   const handleDateChange = (idx, value) => {
     const newDates = [...selectedDates];
     newDates[idx] = value;
@@ -45,27 +68,35 @@ const Booking = () => {
     const clinic = clinics[idx];
     const date = selectedDates[idx];
     const slot = selectedSlots[idx];
-    
+
     if (!slot) {
       message.warning("Vui lòng chọn khung giờ trước khi đặt lịch.");
       return;
     }
 
     try {
-      const response = await api.post("/booking	", {
-        sessionId : 1,
-        coachId: clinic.id,  
-        
+      const response = await api.post("/booking", {
+        sessionId: 1,
+        coachId: clinic.id,
         appointmentDate: date,
-       
+        timeSlot: slot,
       });
 
       console.log("Booking response:", response.data);
-      message.success(`Đã đặt lịch thành công cho ${clinic.name}`);
+      message.success(`Đã đặt lịch thành công cho ${clinic.name}!`);
+
+      // Chuyển đến trang ViewAdvise sau khi đặt lịch thành công
+      setTimeout(() => {
+        navigate("/view-advise");
+      }, 1500);
     } catch (error) {
       console.error("Booking error:", error);
       message.error("Đặt lịch thất bại. Vui lòng thử lại sau.");
     }
+  };
+
+  const handleViewAdvise = () => {
+    navigate("/viewadvise");
   };
 
   return (
@@ -103,7 +134,9 @@ const Booking = () => {
               {timeSlots.map((slot, i) => (
                 <button
                   key={i}
-                  className={`booking-slot ${selectedSlots[idx] === slot ? "active" : ""}`}
+                  className={`booking-slot ${
+                    selectedSlots[idx] === slot ? "active" : ""
+                  }`}
                   onClick={() => handleSlotSelect(idx, slot)}
                 >
                   {slot}
@@ -117,8 +150,11 @@ const Booking = () => {
               >
                 Đặt Lịch
               </button>
-              <button className="booking-btn booking-btn-secondary">
-                Phòng Khám
+              <button
+                className="booking-btn booking-btn-secondary"
+                onClick={handleViewAdvise}
+              >
+                Xem Lịch Tư Vấn
               </button>
             </div>
           </div>
