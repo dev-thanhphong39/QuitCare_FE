@@ -5,12 +5,10 @@ import {
   Button,
   message,
   Tag,
-  Space,
   Typography,
   Row,
   Col,
   DatePicker,
-  Divider,
   Alert,
 } from "antd";
 import {
@@ -29,18 +27,6 @@ import "./management-schedule.css";
 
 const { Title, Text } = Typography;
 
-// Giờ hành chính cố định
-const WORKING_HOURS = [
-  "08:00 - 09:00",
-  "09:00 - 10:00",
-  "10:00 - 11:00",
-  "11:00 - 12:00",
-  "13:00 - 14:00",
-  "14:00 - 15:00",
-  "15:00 - 16:00",
-  "16:00 - 17:00",
-];
-
 const WorkScheduleManagement = () => {
   const user = useSelector((state) => state.user);
   const accountId = user?.id;
@@ -48,53 +34,99 @@ const WorkScheduleManagement = () => {
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [serverWorkingDays, setServerWorkingDays] = useState([]);
 
   useEffect(() => {
     generateMonthSchedule();
   }, [currentMonth]);
 
-  const generateMonthSchedule = () => {
-    const startOfMonth = currentMonth.startOf("month");
-    const daysInMonth = currentMonth.daysInMonth();
-
-    const monthData = Array.from({ length: daysInMonth }, (_, i) => {
-      const date = startOfMonth.add(i, "day");
-      return {
-        key: date.format("YYYY-MM-DD"),
-        date,
-        dateStr: date.format("YYYY-MM-DD"),
-        dayName: date.format("dddd"),
-        isLeave: false,
-      };
-    });
-
-    setData(monthData);
+  const generateMonthSchedule = async () => {
+    const startOfMonth = currentMonth.startOf("month").format("YYYY-MM-DD");
+    const endOfMonth = currentMonth.endOf("month").format("YYYY-MM-DD");
+  
+    try {
+      const res = await api.get("/session/working-days", {
+        params: {
+          from: startOfMonth,
+          to: endOfMonth,
+          accountId, // ✅ Truyền accountId để API lọc đúng lịch
+        },
+      });
+  
+      const workingDays = Array.from(
+        new Set((res.data || []).map((item) => item.date || item.appointmentDate))
+      ); // ✅ Trích mảng ngày string
+      setServerWorkingDays(workingDays);
+      console.log("🌐 Working days từ server:", workingDays);
+      const daysInMonth = currentMonth.daysInMonth();
+      const startDate = dayjs(startOfMonth);
+  
+      const monthData = Array.from({ length: daysInMonth }, (_, i) => {
+        const date = startDate.add(i, "day");
+        const dateStr = date.format("YYYY-MM-DD");
+  
+        return {
+          key: dateStr,
+          date,
+          dateStr,
+          dayName: date.format("dddd"),
+          isLeave: !workingDays.includes(dateStr), // ✅ Ngày không có trong workingDays ⇒ nghỉ
+        };
+      });
+  
+      setData(monthData);
+      // 🪵 In log toàn bộ danh sách ngày trong tháng
+console.log("📅 Danh sách ngày trong tháng:", monthData);
+monthData.forEach((item) => {
+  console.log(`${item.dateStr} - ${item.dayName} - ${item.isLeave ? "🚫 Nghỉ" : "💼 Làm"}`);
+});
+    } catch (err) {
+      console.error("❌ Error fetching working days:", err);
+      message.error("Lỗi khi tải dữ liệu lịch làm việc!");
+    }
   };
 
   const handleLeaveChange = (dateStr, checked) => {
     setData((prev) =>
       prev.map((item) =>
-        item.dateStr === dateStr ? { ...item, isLeave: checked } : item
+        item.dateStr === dateStr
+          ? {
+              ...item,
+              isLeave: checked,
+              isNewLeave:
+                checked && !item.isLeave && !item.isNewLeave, // đánh dấu chỉ khi chuyển từ làm → nghỉ
+            }
+          : item
       )
     );
   };
-
   const handleSubmitAll = async () => {
     setLoading(true);
     try {
-      for (const record of data) {
-        await api.post("/session/register", {
+      const leaveRecords = data.filter(
+        (record) => record.isLeave && serverWorkingDays.includes(record.dateStr)
+      );
+      console.log("📌 leaveRecords:", leaveRecords);
+      console.log("🟡 Các ngày được chọn để nghỉ:", leaveRecords);
+      console.log("👉 Tổng số ngày nghỉ cần xóa:", leaveRecords.length);
+      
+      for (const record of leaveRecords) {
+        console.log("🚀 Gửi xoá ngày:", {
           accountId,
           date: record.dateStr,
-          isLeave: record.isLeave,
-          workingSlots: record.isLeave ? [] : WORKING_HOURS,
         });
+        const res = await api.delete("/session/remove-day", {
+          data: { accountId, date: record.dateStr },
+        });
+        console.log("🧹 Xoá thành công:", res.data);
       }
+
       message.success(
-        `✅ Đã lưu lịch tháng ${currentMonth.format("MM/YYYY")} thành công!`
+        `✅ Đã cập nhật ngày nghỉ cho tháng ${currentMonth.format("MM/YYYY")} thành công!`
       );
     } catch (error) {
-      message.error("❌ Có lỗi xảy ra khi lưu lịch.");
+      message.error("❌ Có lỗi xảy ra khi cập nhật ngày nghỉ.");
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -118,7 +150,6 @@ const WorkScheduleManagement = () => {
   return (
     <div className="schedule-page">
       <div className="container">
-        {/* Header */}
         <div className="page-header">
           <div className="header-content">
             <div className="title-section">
@@ -128,7 +159,7 @@ const WorkScheduleManagement = () => {
                   Đăng ký lịch nghỉ
                 </Title>
                 <Text className="page-subtitle">
-                  Chọn những ngày bạn muốn nghỉ - Lịch làm mặc định: 8:00-17:00
+                  Mặc định là làm việc. Tick vào để đăng ký nghỉ từng ngày.
                 </Text>
               </div>
             </div>
@@ -146,7 +177,6 @@ const WorkScheduleManagement = () => {
           </div>
         </div>
 
-        {/* Month Navigation */}
         <div className="month-nav">
           <Button
             icon={<LeftOutlined />}
@@ -173,7 +203,6 @@ const WorkScheduleManagement = () => {
           </Button>
         </div>
 
-        {/* Stats */}
         <Row gutter={24} className="stats-row">
           <Col span={8}>
             <div className="stat-card working">
@@ -210,16 +239,14 @@ const WorkScheduleManagement = () => {
           </Col>
         </Row>
 
-        {/* Working Schedule Info */}
         <Alert
           message="Lịch làm việc cố định"
-          description="Sáng: 8:00-12:00 (4 tiếng) • Chiều: 13:00-17:00 (4 tiếng) • Tổng: 8 tiếng/ngày"
+          description="Mặc định: 8:00-17:00 (8 tiếng/ngày). Tick vào ngày nếu muốn nghỉ."
           type="info"
           showIcon
           className="schedule-info"
         />
 
-        {/* Calendar Grid */}
         <Card className="calendar-card">
           <div className="calendar-header">
             <Title level={4}>Chọn ngày nghỉ</Title>
@@ -234,18 +261,12 @@ const WorkScheduleManagement = () => {
               return (
                 <div
                   key={record.dateStr}
-                  className={`day-cell ${dateStatus.status} ${
-                    isPast ? "disabled" : ""
-                  }`}
+                  className={`day-cell ${dateStatus.status} ${isPast ? "disabled" : ""}`}
                   style={{ borderColor: dateStatus.color }}
                 >
                   <div className="day-header">
-                    <span className="day-number">
-                      {record.date.format("DD")}
-                    </span>
-                    <span className="day-name">
-                      {record.date.format("ddd")}
-                    </span>
+                    <span className="day-number">{record.date.format("DD")}</span>
+                    <span className="day-name">{record.date.format("ddd")}</span>
                   </div>
 
                   <div className="day-content">
@@ -275,7 +296,7 @@ const WorkScheduleManagement = () => {
                       </Tag>
                     ) : (
                       <Tag color="green" size="small">
-                        8h
+                        Làm
                       </Tag>
                     )}
                   </div>
@@ -285,7 +306,6 @@ const WorkScheduleManagement = () => {
           </div>
         </Card>
 
-        {/* Save Button */}
         <div className="save-section">
           <Button
             type="primary"
