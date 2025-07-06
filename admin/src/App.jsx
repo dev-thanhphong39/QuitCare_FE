@@ -28,7 +28,7 @@ import Tracking from "./pages/Tracking";
 import NotificationPage from "./components/notificate/NotificationPage";
 import ForgotPasswordForm from "./components/forgot-password/forgot-pasword";
 import PaymentPage from "./components/payment/submitOrder";
-import PaymentResult from "./components/payment/PaymentResult";
+import PaymentResult from "./pages/payment-result/PaymentResult";
 
 import CoachDashboard from "./components/dashboard/coach-dashboard";
 import WorkScheduleManagement from "./pages/dashboard-coach/register/management-schedule";
@@ -162,7 +162,7 @@ function App() {
 
     {
       path: "/payment-result",
-      element: <PaymentResult />,
+      element: <PaymentResult />, 
     },
 
     {
@@ -170,7 +170,10 @@ function App() {
       element: <PaymentResult />,
     },
 
-    { path: "/payment-fail", element: <PaymentResult /> },
+    { 
+      path: "/payment-fail", 
+      element: <PaymentResult />
+    },
   ]);
   return (
     <>

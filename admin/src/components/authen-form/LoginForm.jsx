@@ -31,7 +31,7 @@ const LoginForm = ({ onLogin, errorMessage }) => {
         navigate("/");
       }
     } catch (error) {
-      console.log(error);
+      console.log("login:"+error);
       toast.error("Đăng nhập không thành công, vui lòng thử lại sau!");
     }
   };
