@@ -16,7 +16,14 @@ const VnpayReturn = () => {
 
   if (!paymentResult) {
     return (
-      <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Spin size="large" tip="Đang xác nhận thanh toán..." />
       </div>
     );
@@ -31,13 +38,29 @@ const VnpayReturn = () => {
           status={isSuccess ? "success" : "error"}
           title={isSuccess ? "Giao dịch thành công" : "Giao dịch thất bại"}
           subTitle={`Mã đơn hàng: ${paymentResult.vnp_TxnRef} | Ngân hàng: ${paymentResult.vnp_BankCode}`}
-          icon={isSuccess ? <CheckCircleOutlined style={{ color: "#52c41a" }} /> : <CloseCircleOutlined style={{ color: "#ff4d4f" }} />}
+          icon={
+            isSuccess ? (
+              <CheckCircleOutlined style={{ color: "#52c41a" }} />
+            ) : (
+              <CloseCircleOutlined style={{ color: "#ff4d4f" }} />
+            )
+          }
           extra={[
             <div key="info" style={{ textAlign: "left", marginBottom: 16 }}>
-              <p><strong>Số tiền:</strong> {(paymentResult.vnp_Amount / 100).toLocaleString()} VND</p>
-              <p><strong>Thời gian thanh toán:</strong> {paymentResult.vnp_PayDate}</p>
+              <p>
+                <strong>Số tiền:</strong>{" "}
+                {(paymentResult.vnp_Amount / 100).toLocaleString()} VND
+              </p>
+              <p>
+                <strong>Thời gian thanh toán:</strong>{" "}
+                {paymentResult.vnp_PayDate}
+              </p>
             </div>,
-            <Button type="primary" key="history" onClick={() => navigate("/payment-history")}>
+            <Button
+              type="primary"
+              key="history"
+              onClick={() => navigate("/payment-history")}
+            >
               Xem lịch sử giao dịch
             </Button>,
           ]}
