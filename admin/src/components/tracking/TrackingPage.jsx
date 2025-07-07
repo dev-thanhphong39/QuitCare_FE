@@ -467,7 +467,28 @@ const TrackingPage = () => {
     setIsModalVisible(true);
   };
 
-  // Lưu dữ liệu theo dõi
+  // Thêm hàm tạo thông báo tự động
+  const generateNotification = async (progressId) => {
+    try {
+      console.log("🔔 Tạo thông báo cho progress ID:", progressId);
+
+      const response = await api.post(
+        `/quit-progress/generate-notification/${progressId}`
+      );
+      console.log("✅ Thông báo đã được tạo:", response.data);
+
+      // Hiển thị thông báo thành công nhẹ nhàng
+      message.success("📢 Đã tạo thông báo theo dõi!");
+
+      return response.data;
+    } catch (error) {
+      console.error("❌ Lỗi tạo thông báo:", error);
+      // Không hiển thị lỗi để không làm phiền user
+      return null;
+    }
+  };
+
+  // Sửa lại hàm handleSubmit để thêm việc tạo thông báo
   const handleSubmit = async () => {
     const currentStage = getCurrentStage(selectedDate);
 
@@ -513,6 +534,11 @@ const TrackingPage = () => {
       const response = await api.post("/quit-progress", progressData);
       console.log("✅ API Response:", response.data);
       message.success("✅ Đã lưu dữ liệu vào hệ thống!");
+
+      // **THÊM: Tạo thông báo tự động sau khi lưu thành công**
+      if (response.data && response.data.id) {
+        await generateNotification(response.data.id);
+      }
 
       // Lưu vào localStorage
       const dateStr = format(selectedDate, "yyyy-MM-dd");
