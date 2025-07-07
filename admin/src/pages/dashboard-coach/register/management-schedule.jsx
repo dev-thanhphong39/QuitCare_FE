@@ -43,43 +43,49 @@ const WorkScheduleManagement = () => {
   const generateMonthSchedule = async () => {
     const startOfMonth = currentMonth.startOf("month").format("YYYY-MM-DD");
     const endOfMonth = currentMonth.endOf("month").format("YYYY-MM-DD");
-  
+
+    
+
     try {
       const res = await api.get("/session/working-days", {
         params: {
           from: startOfMonth,
           to: endOfMonth,
-          accountId, // ✅ Truyền accountId để API lọc đúng lịch
         },
       });
-  
-      const workingDays = Array.from(
-        new Set((res.data || []).map((item) => item.date || item.appointmentDate))
-      ); // ✅ Trích mảng ngày string
-      setServerWorkingDays(workingDays);
-      console.log("🌐 Working days từ server:", workingDays);
+
+      const workingDays = (res.data || []).filter(item => item.available !== false);
+      const workingDateStrings = Array.from(
+        new Set(workingDays.map(item => item.date))
+      );
+      setServerWorkingDays(workingDateStrings);
+      console.log("🌐 Working days từ server:", workingDateStrings);
       const daysInMonth = currentMonth.daysInMonth();
       const startDate = dayjs(startOfMonth);
-  
+
       const monthData = Array.from({ length: daysInMonth }, (_, i) => {
         const date = startDate.add(i, "day");
         const dateStr = date.format("YYYY-MM-DD");
-  
+
         return {
           key: dateStr,
           date,
           dateStr,
           dayName: date.format("dddd"),
-          isLeave: !workingDays.includes(dateStr), // ✅ Ngày không có trong workingDays ⇒ nghỉ
+          isLeave : !workingDateStrings.includes(dateStr), // ✅ Ngày không có trong workingDayStrings ⇒ nghỉ
         };
       });
-  
+
       setData(monthData);
-      // 🪵 In log toàn bộ danh sách ngày trong tháng
-console.log("📅 Danh sách ngày trong tháng:", monthData);
-monthData.forEach((item) => {
-  console.log(`${item.dateStr} - ${item.dayName} - ${item.isLeave ? "🚫 Nghỉ" : "💼 Làm"}`);
-});
+      // //  In log toàn bộ danh sách ngày trong tháng
+      // console.log(" Danh sách ngày trong tháng:", monthData);
+      // monthData.forEach((item) => {
+      //   console.log(
+      //     `${item.dateStr} - ${item.dayName} - ${
+      //       item.isLeave ? "🚫 Nghỉ" : "💼 Làm"
+      //     }`
+      //   );
+      // });
     } catch (err) {
       console.error("❌ Error fetching working days:", err);
       message.error("Lỗi khi tải dữ liệu lịch làm việc!");
@@ -93,8 +99,7 @@ monthData.forEach((item) => {
           ? {
               ...item,
               isLeave: checked,
-              isNewLeave:
-                checked && !item.isLeave && !item.isNewLeave, // đánh dấu chỉ khi chuyển từ làm → nghỉ
+              isNewLeave: checked && !item.isLeave && !item.isNewLeave, // đánh dấu chỉ khi chuyển từ làm → nghỉ
             }
           : item
       )
@@ -109,21 +114,25 @@ monthData.forEach((item) => {
       console.log("📌 leaveRecords:", leaveRecords);
       console.log("🟡 Các ngày được chọn để nghỉ:", leaveRecords);
       console.log("👉 Tổng số ngày nghỉ cần xóa:", leaveRecords.length);
-      
+
       for (const record of leaveRecords) {
         console.log("🚀 Gửi xoá ngày:", {
           accountId,
           date: record.dateStr,
         });
-        const res = await api.delete("/session/remove-day", {
-          data: { accountId, date: record.dateStr },
+        const res = await api.put("/session/availability-day", {
+          accountId,
+          date: record.dateStr,
         });
         console.log("🧹 Xoá thành công:", res.data);
       }
 
       message.success(
-        `✅ Đã cập nhật ngày nghỉ cho tháng ${currentMonth.format("MM/YYYY")} thành công!`
+        `✅ Đã cập nhật ngày nghỉ cho tháng ${currentMonth.format(
+          "MM/YYYY"
+        )} thành công!`
       );
+      await generateMonthSchedule();
     } catch (error) {
       message.error("❌ Có lỗi xảy ra khi cập nhật ngày nghỉ.");
       console.error(error);
@@ -261,12 +270,18 @@ monthData.forEach((item) => {
               return (
                 <div
                   key={record.dateStr}
-                  className={`day-cell ${dateStatus.status} ${isPast ? "disabled" : ""}`}
+                  className={`day-cell ${dateStatus.status} ${
+                    isPast ? "disabled" : ""
+                  }`}
                   style={{ borderColor: dateStatus.color }}
                 >
                   <div className="day-header">
-                    <span className="day-number">{record.date.format("DD")}</span>
-                    <span className="day-name">{record.date.format("ddd")}</span>
+                    <span className="day-number">
+                      {record.date.format("DD")}
+                    </span>
+                    <span className="day-name">
+                      {record.date.format("ddd")}
+                    </span>
                   </div>
 
                   <div className="day-content">
