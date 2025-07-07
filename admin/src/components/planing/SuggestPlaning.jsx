@@ -4,7 +4,8 @@ import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import "./SuggestPlaning.css";
 import { useNavigate, Link } from "react-router-dom";
-import { Modal, Button } from "antd"; // Thêm import Modal và Button
+import { Modal, Button } from "antd";
+import dayjs from "dayjs"; // ✅ Thêm import dayjs
 
 function SuggestPlaning() {
   // Đọc trạng thái xác nhận từ localStorage khi khởi tạo
@@ -16,8 +17,49 @@ function SuggestPlaning() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [showConfirmedMessage, setShowConfirmedMessage] = useState(false); // Thêm state này
+  const [showConfirmedMessage, setShowConfirmedMessage] = useState(false);
+  const [justConfirmed, setJustConfirmed] = useState(false);
   const navigate = useNavigate();
+
+  // ✅ Sửa lại hàm tính toán ngày bắt đầu và kết thúc
+  const getPlanDates = (plan) => {
+    if (!plan || !plan.stages || plan.stages.length === 0) {
+      return { startDate: null, endDate: null };
+    }
+
+    // Lấy ngày bắt đầu từ backend hoặc dùng ngày hiện tại
+    const startDate = plan.startDate ? dayjs(plan.startDate) : dayjs();
+
+    // ✅ Tính ngày kết thúc = ngày kết thúc của giai đoạn cuối cùng
+    const lastStageIndex = plan.stages.length - 1;
+    const lastStageStart = startDate.add(lastStageIndex * 4, "week");
+    const endDate = lastStageStart.add(4, "week").subtract(1, "day");
+
+    return { startDate, endDate };
+  };
+
+  // ✅ Giữ nguyên hàm getStageDates
+  const getStageDates = (stageIndex, startDate) => {
+    if (!startDate) return { stageStart: null, stageEnd: null };
+
+    const stageStart = startDate.add(stageIndex * 4, "week");
+    const stageEnd = stageStart.add(4, "week").subtract(1, "day");
+
+    return { stageStart, stageEnd };
+  };
+
+  // ✅ Sửa useEffect - chỉ hiển thị khi vừa mới xác nhận
+  useEffect(() => {
+    if (justConfirmed) {
+      setShowConfirmedMessage(true);
+      const timer = setTimeout(() => {
+        setShowConfirmedMessage(false);
+        setJustConfirmed(false);
+      }, 10000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [justConfirmed]);
 
   useEffect(() => {
     if (!accountId) {
@@ -39,7 +81,7 @@ function SuggestPlaning() {
           if (res.data.isAgreedPlan) {
             setIsConfirmed(true);
           }
-          setLoading(false); // THÊM DÒNG NÀY
+          setLoading(false);
           return;
         }
       } catch (err) {
@@ -62,7 +104,7 @@ function SuggestPlaning() {
     fetchPlan();
   }, [accountId, navigate]);
 
-  // Hàm xử lý xác nhận kế hoạch - GỌI API LÚC NÀY
+  // Hàm xử lý xác nhận kế hoạch
   const handleConfirmPlan = async () => {
     setConfirmLoading(true);
     try {
@@ -92,11 +134,12 @@ function SuggestPlaning() {
 
       await api.post(`/smoking-status/account/${accountId}`, payload);
 
-      // Bước 2: Tạo kế hoạch với systemPlan = true
+      // Bước 2: Tạo kế hoạch với systemPlan = true và startDate
       const planResponse = await api.post(
         `/v1/customers/${accountId}/quit-plans`,
         {
           systemPlan: true,
+          startDate: dayjs().format("YYYY-MM-DD"), // ✅ Thêm ngày bắt đầu
         }
       );
 
@@ -106,6 +149,7 @@ function SuggestPlaning() {
         {
           isAgreedPlan: true,
           quitPlanStatus: "DRAFT",
+          startDate: dayjs().format("YYYY-MM-DD"), // ✅ Thêm ngày bắt đầu
         }
       );
 
@@ -114,22 +158,17 @@ function SuggestPlaning() {
         `/v1/customers/${accountId}/quit-plans`
       );
       if (updatedPlanResponse.data) {
-        setPlan(updatedPlanResponse.data); // Cập nhật state với dữ liệu từ backend
+        setPlan(updatedPlanResponse.data);
       }
 
-      // Đánh dấu đã xác nhận
+      // Đánh dấu đã xác nhận và vừa mới xác nhận
       setIsConfirmed(true);
-      setShowConfirmedMessage(true); // Hiển thị thông báo
+      setJustConfirmed(true);
       localStorage.setItem(`plan_confirmed_${accountId}`, "true");
 
-      // Xóa dữ liệu tạm thời NHƯNG GIỮ LẠI state plan
+      // Xóa dữ liệu tạm thời
       localStorage.removeItem("suggestedPlan");
       localStorage.removeItem("planSurvey");
-
-      // Ẩn thông báo sau 10 giây
-      setTimeout(() => {
-        setShowConfirmedMessage(false);
-      }, 10000);
 
       Modal.success({
         title: "Xác nhận thành công!",
@@ -146,6 +185,9 @@ function SuggestPlaning() {
       setConfirmLoading(false);
     }
   };
+
+  // ✅ Tính toán ngày bắt đầu và kết thúc
+  const { startDate, endDate } = getPlanDates(plan);
 
   // Thêm các hàm mapping từ Planning.jsx
   const mapTime = (value) => {
@@ -220,15 +262,12 @@ function SuggestPlaning() {
       <Navbar />
       <div className="suggest-container">
         {loading ? (
-          // Hiển thị loading khi đang tải dữ liệu
           <div style={{ textAlign: "center", padding: 40 }}>Đang tải...</div>
         ) : error ? (
-          // Hiển thị lỗi nếu có lỗi
           <div style={{ color: "red", textAlign: "center", padding: 40 }}>
             {error}
           </div>
         ) : (
-          // Nếu có dữ liệu kế hoạch thì hiển thị thông tin kế hoạch
           <>
             <div className="suggest-header">
               <div>
@@ -241,7 +280,6 @@ function SuggestPlaning() {
                 <span role="img" aria-label="brain">
                   🧠
                 </span>
-                {/* Hiển thị mức độ nghiện */}
                 Mức độ nghiện hệ thống đánh giá:{" "}
                 <b>
                   {plan.addictionLevel === "LOW"
@@ -255,7 +293,6 @@ function SuggestPlaning() {
                 <span role="img" aria-label="cigarette">
                   🚬
                 </span>
-                {/* Hiển thị số điếu hút mỗi ngày ở giai đoạn đầu */}
                 Trung bình số điếu hút mỗi ngày:{" "}
                 <b>
                   {plan.stages && plan.stages.length > 0
@@ -263,34 +300,75 @@ function SuggestPlaning() {
                     : "-"}
                 </b>
               </div>
+              {/* ✅ Thêm hiển thị ngày bắt đầu dự kiến */}
+              <div>
+                <span role="img" aria-label="calendar">
+                  📅
+                </span>
+                Ngày bắt đầu dự kiến:{" "}
+                <b>
+                  {startDate ? startDate.format("DD/MM/YYYY") : "07/07/2025"}
+                </b>
+              </div>
+              {/* ✅ Thêm hiển thị ngày kết thúc dự kiến */}
+              <div>
+                <span role="img" aria-label="finish">
+                  🏁
+                </span>
+                Ngày kết thúc dự kiến:{" "}
+                <b>{endDate ? endDate.format("DD/MM/YYYY") : "24/11/2025"}</b>
+              </div>
             </div>
 
             <div className="suggest-table-wrapper">
               <table className="suggest-table">
                 <thead>
                   <tr>
-                    <th>Giai đoạn (khoảng 4 tuần)</th>
+                    <th>Giai đoạn</th>
                     <th>Thời gian</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Ngày kết thúc</th>
                     <th>Số điếu mỗi ngày</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {/* Nếu có dữ liệu các giai đoạn thì hiển thị từng dòng */}
                   {plan.stages && plan.stages.length > 0 ? (
-                    plan.stages.map((stage, idx) => (
-                      <tr key={stage.id || idx}>
-                        <td>Giai đoạn {stage.stageNumber || idx + 1}</td>
-                        <td>
-                          {stage.week_range ||
-                            `Tuần ${1 + idx * 4}-${4 + idx * 4}`}
-                        </td>
-                        <td>{stage.targetCigarettes} điếu</td>
-                      </tr>
-                    ))
+                    plan.stages.map((stage, idx) => {
+                      const { stageStart, stageEnd } = getStageDates(
+                        idx,
+                        startDate
+                      );
+
+                      return (
+                        <tr key={stage.id || idx}>
+                          <td>Giai đoạn {stage.stageNumber || idx + 1}</td>
+                          <td>
+                            {stage.week_range ||
+                              `Tuần ${1 + idx * 4} - ${4 + idx * 4}`}
+                          </td>
+                          <td>
+                            {stageStart ? stageStart.format("DD/MM/YYYY") : "-"}
+                          </td>
+                          <td>
+                            {stageEnd ? stageEnd.format("DD/MM/YYYY") : "-"}
+                          </td>
+                          <td>
+                            {stage.targetCigarettes === 0 ? (
+                              <span
+                                style={{ color: "#52c41a", fontWeight: "bold" }}
+                              >
+                                Hoàn toàn cai
+                              </span>
+                            ) : (
+                              `${stage.targetCigarettes} điếu`
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
                   ) : (
-                    // Nếu không có dữ liệu giai đoạn thì báo không có
                     <tr>
-                      <td colSpan={3}>Không có dữ liệu giai đoạn</td>
+                      <td colSpan={5}>Không có dữ liệu giai đoạn</td>
                     </tr>
                   )}
                 </tbody>
@@ -328,16 +406,16 @@ function SuggestPlaning() {
                     type="default"
                     size="large"
                     onClick={() => {
-                      //localStorage.removeItem("quitPlanId");
                       navigate("/planning");
-                    }}>
+                    }}
+                  >
                     📝 Tự lập kế hoạch khác
                   </Button>
                 </div>
               </div>
             )}
 
-            {/* Hiển thị thông báo đã xác nhận - CHỈ KHI showConfirmedMessage = true */}
+            {/* Hiển thị thông báo đã xác nhận */}
             {isConfirmed && showConfirmedMessage && (
               <div className="suggest-confirmed">
                 <div
@@ -351,7 +429,6 @@ function SuggestPlaning() {
                     position: "relative",
                   }}
                 >
-                  {/* Thêm nút đóng thủ công */}
                   <button
                     onClick={() => setShowConfirmedMessage(false)}
                     style={{
@@ -381,7 +458,6 @@ function SuggestPlaning() {
                     trình cai thuốc. Chúc bạn thành công!
                   </p>
 
-                  {/* Thêm countdown timer (tùy chọn) */}
                   <div
                     style={{
                       fontSize: "12px",
@@ -403,5 +479,3 @@ function SuggestPlaning() {
 }
 
 export default SuggestPlaning;
-
-//De Xuat

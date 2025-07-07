@@ -5,6 +5,7 @@ import Footer from "../footer/Footer";
 import Navbar from "../navbar/Navbar";
 import { Input, Radio, Modal } from "antd";
 import "./Planning.css";
+import planningBanner from "../../assets/images/planning1.png";
 
 const initialState = {
   started_smoking_age: "",
@@ -238,7 +239,7 @@ function PlanPage() {
         if (err?.response?.status === 404) {
           setLoading(false); // Cho phép hiển thị form khảo sát
         } else {
-          setError("Có lỗi xảy ra khi kiểm tra kế hoạch. Vui lòng thử lại!");
+          setError("Bạn chưa điền thông tin. Vui lòng điền đầy đủ thông tin!");
           setLoading(false);
         }
       }
@@ -331,7 +332,7 @@ function PlanPage() {
       } else if (err?.response?.status === 409) {
         setError("Bạn đã có kế hoạch. Không thể tạo thêm.");
       } else {
-        setError("Có lỗi xảy ra khi lập kế hoạch. Vui lòng thử lại!");
+        setError("Bạn chưa điền thông tin. Vui lòng điền đầy đủ thông tin!");
       }
     } finally {
       setLoading(false);
@@ -353,6 +354,22 @@ function PlanPage() {
   return (
     <>
       <Navbar />
+      <div className="planpage-banner">
+        <img
+          src={planningBanner}
+          alt="QuitCare Planning Banner"
+          className="planpage-banner-image"
+        />
+        <div className="planpage-banner-overlay">
+          <h1 className="planpage-banner-title">
+            Bắt đầu hành trình cai thuốc của bạn
+          </h1>
+          <p className="planpage-banner-subtitle">
+            vì sức khỏe, vì gia đình, vì chính bạn.
+          </p>
+        </div>
+      </div>
+
       <div className="planpage-container">
         <h2 className="planpage-title">Thông tin khảo sát</h2>
         <form className="planpage-form">
@@ -528,7 +545,7 @@ function PlanPage() {
                 </label>
               </div>
               <div className="planpage-question">
-                <b>[8]</b> Bạn hút nhiều hơn khi nào? (Tình huống kích hoạt)
+                <b>[8]</b> Bạn hút nhiều hơn khi nào? 
               </div>
               <input
                 type="text"
@@ -536,7 +553,7 @@ function PlanPage() {
                 value={form.triggerSituation}
                 onChange={handleChange}
                 className="planpage-input"
-                placeholder="Ví dụ: khi căng thẳng, sau bữa ăn..."
+                placeholder="Ví dụ: căng thẳng, sau bữa ăn..."
               />
             </div>
             <div>

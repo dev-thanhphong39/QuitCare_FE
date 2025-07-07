@@ -1,577 +1,611 @@
 /* CreatePlanning.css */
 /* ================== Base Styles ================== */
-* {
-    box-sizing: border-box;
+.qc-planning-banner-container {
+    width: 100%;
+    margin-top: 75px;
+    margin-bottom: 24px;
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-body {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    color: #1a202c;
-    overflow-x: hidden;
-}
-
-/* ================== Banner ================== */
-.banner-create1 {
+.qc-planning-banner-image {
     width: 100%;
     height: auto;
+    display: block;
     object-fit: cover;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    margin-top: 70px;
-    border-radius: 0 0 24px 24px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-.banner-create1:hover {
-    transform: scale(1.01);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-/* ================== Layout Container ================== */
-.planning-container {
-    position: relative;
-    min-height: 100vh;
-}
-
-.planning-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.max-w-4xl {
-    max-width: 1400px;
-    position: relative;
-    z-index: 2;
-}
-
-.mx-auto {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.p-6 {
-    padding: 40px 24px;
-}
-
-.mb-4 {
-    margin-bottom: 24px;
-}
-
-.mb-6 {
-    margin-bottom: 32px;
-}
-
-.mb-8 {
-    margin-bottom: 40px;
+/* ================== Main Container ================== */
+.qc-planning-main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px;
+    background: #ffffff;
+    min-height: calc(100vh - 150px);
 }
 
 /* ================== Main Title ================== */
-h2.text-3xl {
-    font-size: 3rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.qc-planning-main-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0C1C2C;
     text-align: center;
-    margin-bottom: 40px;
-    letter-spacing: 1px;
+    margin-bottom: 32px;
     position: relative;
 }
 
-h2.text-3xl::after {
+.qc-planning-main-title::after {
     content: '';
     position: absolute;
-    bottom: -12px;
+    bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    width: 60px;
+    height: 3px;
+    background: #0C1C2C;
     border-radius: 2px;
 }
 
 /* ================== Guide Card ================== */
-.bg-blue-50 {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.1) 100%) !important;
-    border: 2px solid rgba(59, 130, 246, 0.2) !important;
-    border-radius: 16px !important;
-    padding: 24px !important;
-    margin-bottom: 32px !important;
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1) !important;
-    backdrop-filter: blur(10px);
+.qc-planning-guide-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
 }
 
-.bg-blue-50 h3 {
-    color: #1e40af !important;
-    font-size: 1.2rem !important;
-    font-weight: 700 !important;
-    margin-bottom: 16px !important;
+.qc-planning-guide-title {
+    color: #0C1C2C;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 12px 0;
 }
 
-.bg-blue-50 ul {
-    margin: 0 !important;
-    padding-left: 0 !important;
-    list-style: none !important;
+.qc-planning-guide-list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
 }
 
-.bg-blue-50 li {
-    color: #1e40af !important;
-    font-size: 0.95rem !important;
-    line-height: 1.6 !important;
-    margin-bottom: 8px !important;
-    padding-left: 24px !important;
-    position: relative !important;
-}
-
-.bg-blue-50 li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 18px;
-    height: 18px;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-/* ================== Stage Cards ================== */
-.stage-card {
-    background: rgba(255, 255, 255, 0.95) !important;
-    backdrop-filter: blur(20px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
-    padding: 24px !important;
-    margin-bottom: 32px !important;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+.qc-planning-guide-list li {
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 6px;
+    padding-left: 20px;
     position: relative;
-    overflow: hidden;
 }
 
-.stage-card::before {
-    content: '';
+.qc-planning-guide-list li::before {
+    content: '•';
     position: absolute;
-    top: 0;
     left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #3b82f6, #1d4ed8, #7c3aed);
-    opacity: 0.8;
-}
-
-.stage-card:hover {
-    transform: translateY(-4px) !important;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15) !important;
-    background: rgba(255, 255, 255, 0.98) !important;
-}
-
-/* ================== Stage Header ================== */
-.stage-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid #f1f5f9;
-}
-
-.stage-title {
-    font-size: 1.4rem !important;
-    font-weight: 700 !important;
-    color: #1e40af !important;
-    margin: 0 !important;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* ================== Buttons ================== */
-.btn-modern {
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
-    height: 40px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-    letter-spacing: 0.5px !important;
-    position: relative !important;
-    overflow: hidden !important;
-    border: none !important;
-}
-
-.btn-modern::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.btn-modern:hover::before {
-    left: 100%;
-}
-
-.btn-modern:hover {
-    transform: translateY(-2px) !important;
-}
-
-/* Primary Button */
-.ant-btn-primary.btn-modern {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
-}
-
-.ant-btn-primary.btn-modern:hover {
-    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
-}
-
-/* Success Button */
-.bg-green-600 {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-    color: white !important;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
-}
-
-.bg-green-600:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
-}
-
-/* Orange Button */
-.bg-orange-500 {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-    color: white !important;
-    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3) !important;
-}
-
-.bg-orange-500:hover {
-    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
-    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4) !important;
-}
-
-/* Danger Button */
-.ant-btn-dangerous.btn-modern {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
-    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3) !important;
-}
-
-.ant-btn-dangerous.btn-modern:hover {
-    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
-    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4) !important;
-}
-
-/* ================== Table Styles ================== */
-.ant-table {
-    border-radius: 16px !important;
-    overflow: hidden !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid #e2e8f0 !important;
-}
-
-.ant-table-thead>tr>th {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
-    color: #1e293b !important;
-    font-weight: 700 !important;
-    font-size: 15px !important;
-    text-align: center !important;
-    border-bottom: 2px solid #e2e8f0 !important;
-    padding: 16px 12px !important;
-}
-
-.ant-table-thead>tr>th:hover {
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
-}
-
-.ant-table-tbody>tr>td {
-    text-align: center !important;
-    padding: 16px 12px !important;
-    font-weight: 500 !important;
-    transition: all 0.2s ease !important;
-    border-bottom: 1px solid #f1f5f9 !important;
-}
-
-.ant-table-tbody>tr:hover>td {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
-}
-
-/* ================== Input Styles ================== */
-.ant-input {
-    border-radius: 12px !important;
-    padding: 12px 16px !important;
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    border: 2px solid #e2e8f0 !important;
-    background: #ffffff !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-}
-
-.ant-input:focus {
-    border-color: #3b82f6 !important;
-    background: #f8faff !important;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-    transform: translateY(-1px);
-}
-
-.ant-input::placeholder {
-    color: #94a3b8 !important;
-    font-weight: 400 !important;
-}
-
-/* ================== Modal Styles ================== */
-.ant-modal {
-    border-radius: 20px !important;
-    overflow: hidden !important;
-    backdrop-filter: blur(20px) !important;
-}
-
-.ant-modal-content {
-    border-radius: 20px !important;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-.ant-modal-header {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
-    border-bottom: 2px solid #e2e8f0 !important;
-    padding: 24px !important;
-}
-
-.ant-modal-title {
-    font-weight: 700 !important;
-    font-size: 1.3rem !important;
-    color: #1e293b !important;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.ant-modal-body {
-    padding: 32px 24px !important;
-    font-size: 1.1rem !important;
-    line-height: 1.6 !important;
-    color: #475569 !important;
-}
-
-.ant-modal-footer {
-    padding: 24px !important;
-    border-top: 2px solid #f1f5f9 !important;
-    background: #f8fafc !important;
-}
-
-.modal-btn-group {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-}
-
-/* ================== Responsive Design ================== */
-@media (max-width: 1024px) {
-    .p-6 {
-        padding: 30px 20px;
-    }
-
-    .stage-card {
-        padding: 20px !important;
-    }
-
-    .bg-blue-50 {
-        padding: 20px !important;
-    }
-}
-
-@media (max-width: 768px) {
-    .p-6 {
-        padding: 24px 16px;
-    }
-
-    h2.text-3xl {
-        font-size: 2.2rem;
-        margin-bottom: 24px;
-    }
-
-    .stage-header {
-        flex-direction: column;
-        gap: 16px;
-        align-items: flex-start;
-    }
-
-    .stage-card {
-        padding: 16px !important;
-        margin-bottom: 24px !important;
-    }
-
-    .bg-blue-50 {
-        padding: 16px !important;
-        margin-bottom: 24px !important;
-    }
-
-    .bg-blue-50 h3 {
-        font-size: 1.1rem !important;
-    }
-
-    .bg-blue-50 li {
-        font-size: 0.9rem !important;
-        padding-left: 20px !important;
-    }
-
-    .bg-blue-50 li::before {
-        width: 16px;
-        height: 16px;
-        font-size: 11px;
-    }
-
-    .ant-table-thead>tr>th {
-        padding: 12px 8px !important;
-        font-size: 13px !important;
-    }
-
-    .ant-table-tbody>tr>td {
-        padding: 12px 8px !important;
-    }
-
-    .btn-modern {
-        height: 36px !important;
-        font-size: 13px !important;
-    }
-
-    .modal-btn-group {
-        flex-direction: column;
-        gap: 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    .p-6 {
-        padding: 20px 12px;
-    }
-
-    h2.text-3xl {
-        font-size: 1.8rem;
-    }
-
-    .stage-card {
-        padding: 12px !important;
-    }
-
-    .bg-blue-50 {
-        padding: 12px !important;
-    }
-
-    .ant-input {
-        padding: 10px 12px !important;
-        font-size: 14px !important;
-    }
-
-    .btn-modern {
-        height: 32px !important;
-        font-size: 12px !important;
-        padding: 0 12px !important;
-    }
-
-    .banner-create1 {
-        border-radius: 0 0 16px 16px;
-    }
-}
-
-/* ================== Animations ================== */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.stage-card {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-.stage-card:nth-child(even) {
-    animation-delay: 0.1s;
-}
-
-.stage-card:nth-child(odd) {
-    animation-delay: 0.05s;
-}
-
-.bg-blue-50 {
-    animation: slideInLeft 0.5s ease-out;
+    color: #0C1C2C;
+    font-weight: bold;
 }
 
 /* ================== Loading State ================== */
-.text-center.py-8 {
-    color: #64748b !important;
-    font-size: 1.1rem !important;
-    font-weight: 500 !important;
-    padding: 60px 20px !important;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 197, 253, 0.05) 100%);
-    border-radius: 16px;
-    margin: 40px 0;
+.qc-planning-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #64748b;
+    font-size: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+/* ================== Stage Card ================== */
+.qc-planning-stage-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s ease;
+}
+
+.qc-planning-stage-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* ================== Stage Header ================== */
+.qc-planning-stage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.qc-planning-stage-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #0C1C2C;
+    margin: 0;
+}
+
+.qc-planning-stage-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* ================== Table Styles ================== */
+.qc-planning-stage-table {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.qc-planning-stage-table .ant-table-thead>tr>th {
+    background: #f8fafc;
+    color: #374151;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 12px 8px;
+}
+
+.qc-planning-stage-table .ant-table-tbody>tr>td {
+    text-align: center;
+    padding: 12px 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.qc-planning-stage-table .ant-table-tbody>tr:hover>td {
+    background: #f8fafc;
+}
+
+/* ================== Cell View Styles ================== */
+.qc-planning-cell-view-week {
+    text-align: center;
+    font-weight: 500;
+    color: #0C1C2C;
+    font-size: 14px;
+}
+
+.qc-planning-cell-view-cigarettes {
+    text-align: center;
+    font-weight: 500;
+    color: #059669;
+    font-size: 14px;
+}
+
+/* ================== Input Styles ================== */
+.qc-planning-input-week,
+.qc-planning-input-cigarettes {
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    transition: border-color 0.2s ease;
+}
+
+.qc-planning-input-week:focus,
+.qc-planning-input-cigarettes:focus {
+    border-color: #0C1C2C;
+    box-shadow: 0 0 0 2px rgba(12, 28, 44, 0.1);
+    outline: none;
+}
+
+.qc-planning-input-week::placeholder,
+.qc-planning-input-cigarettes::placeholder {
+    color: #9ca3af;
+}
+
+/* ================== Button Styles ================== */
+.qc-planning-btn-add-row {
+    background: #0C1C2C;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.qc-planning-btn-add-row:hover {
+    background: #1a2332;
+    color: white;
+}
+
+.qc-planning-btn-delete-stage,
+.qc-planning-btn-delete-row {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.qc-planning-btn-delete-stage:hover,
+.qc-planning-btn-delete-row:hover {
+    background: #dc2626;
+    color: white;
+}
+
+.qc-planning-btn-add-stage {
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.qc-planning-btn-add-stage:hover {
+    background: #059669;
+    color: white;
+}
+
+.qc-planning-btn-save,
+.qc-planning-btn-save-edit {
+    background: #0C1C2C;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.qc-planning-btn-save:hover,
+.qc-planning-btn-save-edit:hover {
+    background: #1a2332;
+    color: white;
+}
+
+.qc-planning-btn-edit {
+    background: #f59e0b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.qc-planning-btn-edit:hover {
+    background: #d97706;
+    color: white;
+}
+
+.qc-planning-btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.qc-planning-btn-cancel:hover {
+    background: #e2e8f0;
+    border-color: #9ca3af;
+    color: #374151;
+}
+
+/* ================== Controls Section ================== */
+.qc-planning-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+/* ================== Modal Styles ================== */
+.qc-planning-modal .ant-modal-content {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.qc-planning-modal .ant-modal-header {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 20px;
+    border-radius: 12px 12px 0 0;
+}
+
+.qc-planning-modal .ant-modal-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #0C1C2C;
+}
+
+.qc-planning-modal .ant-modal-body {
+    padding: 24px 20px;
+}
+
+.qc-planning-modal-content {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #475569;
+    margin: 0;
+}
+
+.qc-planning-modal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.qc-planning-btn-modal-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.qc-planning-btn-modal-cancel:hover {
+    background: #e2e8f0;
+    border-color: #9ca3af;
+    color: #374151;
+}
+
+.qc-planning-btn-modal-confirm {
+    background: #0C1C2C;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.qc-planning-btn-modal-confirm:hover {
+    background: #1a2332;
+    color: white;
+}
+
+/* ================== Date Info Styles ================== */
+.qc-planning-date-info {
+  margin-bottom: 24px;
+}
+
+.qc-planning-date-card {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+.qc-planning-date-card h3 {
+  color: #0369a1;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.qc-planning-date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(186, 230, 253, 0.5);
+  font-size: 14px;
+}
+
+.qc-planning-date-row:last-child {
+  border-bottom: none;
+}
+
+.qc-planning-date-row span {
+  color: #374151;
+}
+
+.qc-planning-date-row strong {
+  color: #0369a1;
+  font-weight: 600;
+}
+
+/* ================== Stage Dates ================== */
+.qc-planning-stage-dates {
+  margin-top: 4px;
+}
+
+.qc-planning-stage-dates small {
+  color: #6b7280;
+  font-size: 12px;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* ================== Completion Badge ================== */
+.qc-planning-completion-badge {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #059669;
+  background: #d1fae5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* ================== Mark Completed Button ================== */
+.qc-planning-btn-mark-completed {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
+  font-size: 12px;
+  padding: 4px 8px;
+  height: auto;
+}
+
+.qc-planning-btn-mark-completed:hover {
+  background: #059669;
+  border-color: #059669;
+  color: white;
+}
+
+/* ================== Responsive Design ================== */
+@media (max-width: 768px) {
+    .qc-planning-banner-container {
+        margin-top: 65px;
+    }
+
+    .qc-planning-main-container {
+        padding: 20px 16px;
+    }
+
+    .qc-planning-main-title {
+        font-size: 2rem;
+        margin-bottom: 24px;
+    }
+
+    .qc-planning-stage-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .qc-planning-stage-actions {
+        width: 100%;
+    }
+
+    .qc-planning-stage-card {
+        padding: 16px;
+    }
+
+    .qc-planning-guide-card {
+        padding: 16px;
+    }
+
+    .qc-planning-stage-table .ant-table-thead>tr>th,
+    .qc-planning-stage-table .ant-table-tbody>tr>td {
+        padding: 8px 6px;
+        font-size: 13px;
+    }
+
+    .qc-planning-controls {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .qc-planning-modal-footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .qc-planning-date-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .qc-planning-stage-dates {
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+    .qc-planning-main-container {
+        padding: 16px 12px;
+    }
+
+    .qc-planning-main-title {
+        font-size: 1.75rem;
+    }
+
+    .qc-planning-stage-card {
+        padding: 12px;
+    }
+
+    .qc-planning-guide-card {
+        padding: 12px;
+    }
+
+    .qc-planning-input-week,
+    .qc-planning-input-cigarettes {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+    .qc-planning-btn-add-row,
+    .qc-planning-btn-delete-stage,
+    .qc-planning-btn-delete-row {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .qc-planning-btn-add-stage,
+    .qc-planning-btn-save,
+    .qc-planning-btn-save-edit,
+    .qc-planning-btn-edit,
+    .qc-planning-btn-cancel {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
 }
 
 /* ================== Focus States ================== */
-.ant-btn:focus,
-.ant-input:focus {
-    outline: 3px solid rgba(59, 130, 246, 0.3) !important;
-    outline-offset: 2px !important;
+.qc-planning-btn-add-row:focus,
+.qc-planning-btn-delete-stage:focus,
+.qc-planning-btn-delete-row:focus,
+.qc-planning-btn-add-stage:focus,
+.qc-planning-btn-save:focus,
+.qc-planning-btn-save-edit:focus,
+.qc-planning-btn-edit:focus,
+.qc-planning-btn-cancel:focus,
+.qc-planning-btn-modal-cancel:focus,
+.qc-planning-btn-modal-confirm:focus,
+.qc-planning-input-week:focus,
+.qc-planning-input-cigarettes:focus {
+    outline: 2px solid #0C1C2C;
+    outline-offset: 2px;
 }
 
-/* ================== Smooth Scrolling ================== */
-html {
-    scroll-behavior: smooth;
+/* ✅ CSS cho validation errors */
+
+.qc-planning-input-week.error,
+.qc-planning-input-cigarettes.error {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2) !important;
 }
 
-/* ================== Text Colors ================== */
-.text-green-600 {
-    color: #059669 !important;
-    font-weight: 600 !important;
+.qc-planning-guide-list li {
+  margin-bottom: 8px;
 }
 
-.font-medium {
-    font-weight: 600 !important;
+.qc-planning-guide-list li strong {
+  color: #1890ff;
 }
 
-.text-blue-700 {
-    color: #1d4ed8 !important;
-    font-weight: 600 !important; }
+/* ✅ Highlight cho ví dụ đúng */
+.qc-planning-guide-list li[style*="color: #52c41a"] {
+  font-family: 'Courier New', monospace;
+  background-color: #f6ffed;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border-left: 3px solid #52c41a;
+}

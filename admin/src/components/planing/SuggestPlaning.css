@@ -158,14 +158,16 @@
   color: #52c41a;
 }
 
-@media (max-width: 600px) {
-  .suggest-buttons {
-    flex-direction: column;
-    gap: 12px;
-  }
 
-  .suggest-buttons .ant-btn {
-    min-width: 140px;
-    font-size: 15px;
-  }
+/* ✅ CSS cho cột số điếu thuốc - màu xanh dương */
+.suggest-table tbody td:nth-child(5) {
+  color: #1890ff !important;
+  font-weight: 700 !important;
 }
+
+/* ✅ CSS cho giai đoạn hoàn toàn cai - màu xanh lá */
+.suggest-table tbody td:nth-child(5) span {
+  color: #52c41a !important;
+  font-weight: 700 !important;
+}
+
