@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import api from "../../configs/axios";
@@ -13,23 +13,82 @@ const Booking = () => {
   const [availableSlots, setAvailableSlots] = useState({}); // key: coachId, value: list of slots
   const [selectedDates, setSelectedDates] = useState({});
   const [selectedSlots, setSelectedSlots] = useState({});
+  const [disabledSlots, setDisabledSlots] = useState(() => {
+    // Load disabled slots from localStorage
+    const saved = localStorage.getItem("disabledSlots");
+    return saved ? JSON.parse(saved) : {};
+  }); // Track disabled slots per coach
+  const [loading, setLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true); // Track initial load only
+  const [defaultDatesSet, setDefaultDatesSet] = useState(false); // Track if default dates are set
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const from = currentMonth.startOf("month").format("YYYY-MM-DD");
   const to = currentMonth.endOf("month").format("YYYY-MM-DD");
 
-  // Load danh sách coach
+  // Load slot theo coach
+  const fetchAvailableSlots = useCallback(
+    async (coach) => {
+      console.log("Đang fetch slot cho", coach.fullName);
+      try {
+        const res = await api.get("/session/available-slots", {
+          params: {
+            coachId: coach.id,
+            from,
+            to,
+          },
+        });
+
+        // Format lại slot thành object theo từng ngày
+        const rawSlots = res.data || [];
+        const slotByDate = {};
+
+        rawSlots.forEach((slot) => {
+          // Lưu tất cả slot (cả available và unavailable)
+          if (!slotByDate[slot.date]) {
+            slotByDate[slot.date] = [];
+          }
+          slotByDate[slot.date].push({
+            label: slot.label,
+            available: slot.available,
+            start: slot.start,
+            end: slot.end,
+          });
+        });
+
+        // Lưu vào state - sử dụng callback để tránh race condition
+        setAvailableSlots((prev) => ({
+          ...prev,
+          [coach.id]: slotByDate,
+        }));
+
+        console.log("✅ Slot của", coach.fullName, ":", slotByDate);
+        return slotByDate; // Return để có thể await
+      } catch (err) {
+        console.error("❌ Lỗi khi lấy slot của", coach.fullName, ":", err);
+        return {};
+      }
+    },
+    [from, to]
+  ); // Only re-create when from/to changes
+
+  // Load danh sách coach (chỉ chạy 1 lần)
   useEffect(() => {
     const fetchCoaches = async () => {
       try {
         const res = await api.get("/session/coaches");
-        setCoaches(res.data || []);
+        const coachesData = res.data || [];
+        setCoaches(coachesData);
 
-        // Sau khi có danh sách coach, fetch slot khả dụng
-        res.data.forEach((coach) => {
-          fetchAvailableSlots(coach);
-        });
+        // Fetch slots cho tất cả coaches
+        const slotPromises = coachesData.map((coach) =>
+          fetchAvailableSlots(coach)
+        );
+        await Promise.all(slotPromises);
+
+        // Chỉ set initial load sau khi tất cả slots đã load xong
+        setInitialLoad(false);
       } catch (err) {
         console.error("Lỗi khi lấy danh sách coach:", err);
         message.error("Không thể tải danh sách huấn luyện viên.");
@@ -37,55 +96,30 @@ const Booking = () => {
     };
 
     fetchCoaches();
-  }, []);
+  }, []); // KHÔNG có dependency để tránh re-run
+
+  // Set default dates (chỉ chạy sau khi initial load hoàn tất)
   useEffect(() => {
-    coaches.forEach((coach) => {
-      const coachSlots = availableSlots[coach.id] || {};
+    if (initialLoad || defaultDatesSet) return;
+
+    // Lấy snapshot của data hiện tại để tránh closure issue
+    const currentCoaches = coaches;
+    const currentAvailableSlots = availableSlots;
+    const currentSelectedDates = selectedDates;
+
+    currentCoaches.forEach((coach) => {
+      const coachSlots = currentAvailableSlots[coach.id] || {};
       const defaultDate = Object.keys(coachSlots)[0];
-  
+
       // Nếu chưa chọn ngày thì gán mặc định ngày đầu tiên có slot
-      if (defaultDate && !selectedDates[coach.id]) {
+      if (defaultDate && !currentSelectedDates[coach.id]) {
         setSelectedDates((prev) => ({ ...prev, [coach.id]: defaultDate }));
         setSelectedSlots((prev) => ({ ...prev, [coach.id]: "" }));
       }
     });
-  }, [coaches, availableSlots]);
-  // Load slot theo coach
-  const fetchAvailableSlots = async (coach) => {
-    console.log("Đang fetch slot cho", coach.fullName);
-    try {
-      const res = await api.get("/session/available-slots", {
-        params: {
-          coachId: coach.id,
-          from,
-          to,
-        },
-      });
 
-      // Format lại slot thành object theo từng ngày
-      const rawSlots = res.data || [];
-      const slotByDate = {};
-
-      rawSlots.forEach((slot) => {
-        if (slot.available) {
-          if (!slotByDate[slot.date]) {
-            slotByDate[slot.date] = [];
-          }
-          slotByDate[slot.date].push(slot.label); // hoặc `slot.label` tuỳ bạn
-        }
-      });
-
-      // Lưu vào state
-      setAvailableSlots((prev) => ({
-        ...prev,
-        [coach.id]: slotByDate,
-      }));
-
-      console.log("✅ Slot của", coach.fullName, ":", slotByDate);
-    } catch (err) {
-      console.error("❌ Lỗi khi lấy slot của", coach.fullName, ":", err);
-    }
-  };
+    setDefaultDatesSet(true); // Đánh dấu đã set default dates
+  }, [initialLoad]); // CHỈ depend vào initialLoad
 
   const handleDateChange = (coachId, value) => {
     setSelectedDates((prev) => ({
@@ -98,43 +132,110 @@ const Booking = () => {
     }));
   };
 
-const handleSlotSelect = (coachId, slot) => {
-  setSelectedSlots((prev) => ({
-    ...prev,
-    [coachId]: slot,
-  }));
-};
+  const handleSlotSelect = (coachId, slot) => {
+    const slotLabel = typeof slot === "string" ? slot : slot.label;
+    const selectedDate = selectedDates[coachId];
+    const slotKey = `${coachId}-${selectedDate}-${slotLabel}`;
+
+    // Kiểm tra slot có bị disabled không
+    if (disabledSlots[slotKey]) {
+      return; // Không cho chọn slot đã disabled
+    }
+
+    setSelectedSlots((prev) => ({
+      ...prev,
+      [coachId]: slotLabel,
+    }));
+  };
 
   const handleBooking = async (coach, coachName) => {
-  const date = selectedDates[coach.id];
-  const slot = selectedSlots[coach.id];
+    const date = selectedDates[coach.id];
+    const slot = selectedSlots[coach.id];
 
-  console.log("✅ Slot của", coach.fullName, ":", slot);
-  console.log("✅ dateSlot của", coach.fullName, ":", date);
-  console.log("✅ ID", coach.fullName, ":", coach.id);
-  if (!date || !slot) {
-    message.warning("Vui lòng chọn ngày và khung giờ.");
-    return;
-  }
+    console.log("✅ Booking data:", { coachId: coach.id, date, slot });
 
-  try {
-    const res = await api.post("/booking", {
-      coachId: coach.id,
-      appointmentDate: typeof date === "string" ? date : dayjs(date).format("YYYY-MM-DD"),
-      start: dayjs(slot, "HH:mm").format("HH:mm:ss"),
-    });
+    if (!date || !slot) {
+      message.warning("Vui lòng chọn ngày và khung giờ.");
+      return;
+    }
 
-    console.log("Booking response:", res.data);
-    message.success(`✅ Đã đặt lịch thành công cho ${coachName}`);
-    setTimeout(() => navigate("/view-advise"), 1500);
-  } catch (err) {
-    console.log(err.response?.data);
-    console.error("Lỗi đặt lịch:", err);
-    message.error("❌ Đặt lịch thất bại. Vui lòng thử lại sau.");
-  }
-};
+    const slotKey = `${coach.id}-${date}-${slot}`;
 
-  
+    // Ngăn không cho đặt lịch nếu slot đã disabled
+    if (disabledSlots[slotKey]) {
+      message.warning("Slot này đã được đặt!");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await api.post("/booking", {
+        coachId: coach.id,
+        appointmentDate:
+          typeof date === "string" ? date : dayjs(date).format("YYYY-MM-DD"),
+        start: slot,
+      });
+
+      console.log("Booking response:", res.data);
+      message.success(`✅ Đã đặt lịch thành công cho ${coachName}`);
+
+      // Disable slot đã đặt - KHÔNG fetch lại slots
+      const newDisabledSlots = {
+        ...disabledSlots,
+        [slotKey]: true,
+      };
+      setDisabledSlots(newDisabledSlots);
+
+      // Save to localStorage
+      localStorage.setItem("disabledSlots", JSON.stringify(newDisabledSlots));
+
+      // Clear selection nhưng KHÔNG fetch lại slots
+      setSelectedSlots((prev) => ({
+        ...prev,
+        [coach.id]: "",
+      }));
+
+      // Redirect after 1.5 seconds
+      setTimeout(() => navigate("/viewadvise"), 1500);
+    } catch (err) {
+      console.log(err.response?.data);
+      console.error("Lỗi đặt lịch:", err);
+
+      if (err.response?.status === 400) {
+        message.error(
+          "❌ Dữ liệu đặt lịch không hợp lệ. Vui lòng kiểm tra lại."
+        );
+      } else if (err.response?.status === 409) {
+        message.error("❌ Lịch này đã được đặt bởi người khác.");
+        // Disable slot nếu đã được đặt - KHÔNG fetch lại slots
+        const newDisabledSlots = {
+          ...disabledSlots,
+          [slotKey]: true,
+        };
+        setDisabledSlots(newDisabledSlots);
+
+        // Save to localStorage
+        localStorage.setItem("disabledSlots", JSON.stringify(newDisabledSlots));
+      } else {
+        message.error("❌ Đặt lịch thất bại. Vui lòng thử lại sau.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isSlotDisabled = (coachId, slot, selectedDate) => {
+    const slotLabel = typeof slot === "string" ? slot : slot.label;
+    const slotKey = `${coachId}-${selectedDate}-${slotLabel}`;
+
+    // Kiểm tra nếu slot đã disabled locally
+    if (disabledSlots[slotKey]) return true;
+
+    // Kiểm tra nếu slot không available từ server
+    if (typeof slot === "object" && slot.available === false) return true;
+
+    return false;
+  };
 
   return (
     <div className="booking-bg">
@@ -187,25 +288,59 @@ const handleSlotSelect = (coachId, slot) => {
               </div>
 
               <div className="booking-times">
-                {slotList.map((slot, i) => (
-                  <button
-                    key={i}
-                    className={`booking-slot ${
-                      selectedSlots[coach.id] === slot ? "active" : ""
-                    }`}
-                    onClick={() => handleSlotSelect(coach.id, slot)}
-                  >
-                    {slot}
-                  </button>
-                ))}
+                {slotList.map((slot, i) => {
+                  const slotLabel =
+                    typeof slot === "string" ? slot : slot.label;
+                  const isDisabled = isSlotDisabled(
+                    coach.id,
+                    slot,
+                    selectedDate
+                  );
+                  const isSelected = selectedSlots[coach.id] === slotLabel;
+
+                  return (
+                    <button
+                      key={i}
+                      className={`booking-slot ${isSelected ? "active" : ""} ${
+                        isDisabled ? "disabled" : ""
+                      }`}
+                      onClick={() =>
+                        !isDisabled && handleSlotSelect(coach.id, slot)
+                      }
+                      disabled={isDisabled}
+                      style={{
+                        opacity: isDisabled ? 0.5 : 1,
+                        cursor: isDisabled ? "not-allowed" : "pointer",
+                        backgroundColor: isDisabled ? "#666" : undefined,
+                      }}
+                    >
+                      {slotLabel}
+                      {isDisabled && (
+                        <span
+                          style={{
+                            fontSize: "10px",
+                            display: "block",
+                            marginTop: "2px",
+                            color: "#ff6b6b",
+                          }}
+                        >
+                          Đã đặt
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
 
               <div className="booking-actions">
                 <button
-                  className="booking-btn booking-btn-primary"
+                  className={`booking-btn booking-btn-primary ${
+                    loading ? "loading" : ""
+                  }`}
                   onClick={() => handleBooking(coach, coach.fullName)}
+                  disabled={loading}
                 >
-                  Đặt Lịch
+                  {loading ? "Đang đặt..." : "Đặt Lịch"}
                 </button>
                 <button
                   className="booking-btn booking-btn-secondary"
