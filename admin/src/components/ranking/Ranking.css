@@ -1,5 +1,5 @@
 .ranking-container {
-    background     : url('/rank.png') no-repeat center/cover fixed;
+    background     : url("/rank.png") no-repeat center/cover fixed;
     min-height     : 100vh;
     position       : relative;
     z-index        : 1;
@@ -55,19 +55,15 @@
     background: #2980b9;
 }
 
-.current-user {
-    background: linear-gradient(135deg, #fff9e6, #fff3cd);
-    border    : 2px solid #f39c12;
-    animation : glow 2s infinite alternate;
-}
+/* Xóa hoặc comment out @keyframes glow */
 
 @keyframes glow {
     from {
-        box-shadow: 0 0 5px #f39c12;
+        box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
     }
 
     to {
-        box-shadow: 0 0 15px #f39c12;
+        box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
     }
 }
 
@@ -140,7 +136,7 @@
 
 .podium-item p {
     margin     : 5px 0;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     color      : #fff;
     font-size  : 18px;
@@ -165,7 +161,7 @@
     width        : 80px;
     border-radius: 8px 8px 0 0;
     color        : #fff;
-    font-family  : 'Inter', sans-serif;
+    font-family  : "Inter", sans-serif;
     font-weight  : 800;
     line-height  : 40px;
     margin-top   : 10px;
@@ -229,13 +225,15 @@
     display        : flex;
     align-items    : center;
     justify-content: space-between;
-    background     : linear-gradient(90deg, rgba(12, 28, 44, 0.9), rgba(30, 50, 80, 0.8));
-    color          : #fff;
-    padding        : 10px 15px;
-    border-radius  : 10px;
-    margin-bottom  : 10px;
-    box-shadow     : 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition     : transform 0.3s ease, box-shadow 0.3s ease;
+    background     : linear-gradient(90deg,
+            rgba(12, 28, 44, 0.9),
+            rgba(30, 50, 80, 0.8));
+    color        : #fff;
+    padding      : 10px 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow   : 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition   : transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .rank-row:hover {
@@ -244,7 +242,7 @@
 }
 
 .rank-number {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 700;
     font-size  : 18px;
     color      : #ffeb3b;
@@ -260,7 +258,7 @@
 }
 
 .rank-name {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 500;
     font-size  : 16px;
     margin-left: 10px;
@@ -268,7 +266,7 @@
 }
 
 .rank-score {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 700;
     font-size  : 16px;
     color      : #ff4081;
@@ -317,4 +315,23 @@
     padding      : 12px;
     border-radius: 4px;
     margin-bottom: 12px;
+}
+
+.auto-refresh-indicator {
+    color     : #666;
+    font-size : 14px;
+    font-style: italic;
+    animation : pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }

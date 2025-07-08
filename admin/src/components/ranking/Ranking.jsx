@@ -3,6 +3,8 @@ import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import "./Ranking.css";
 import Confetti from "react-confetti";
+import { message } from "antd";
+import api from "../../configs/axios";
 
 function Ranking() {
   const [users, setUsers] = useState([]);
@@ -11,36 +13,44 @@ function Ranking() {
   const currentUserId = localStorage.getItem("accountId");
 
   useEffect(() => {
-    loadRankingFromLocalStorage();
-    const interval = setInterval(loadRankingFromLocalStorage, 5000);
+    loadRankingFromAPI();
+    // Tự động refresh ranking mỗi 5 giây
+    const interval = setInterval(loadRankingFromAPI, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  const loadRankingFromLocalStorage = () => {
+  const loadRankingFromAPI = async () => {
     try {
-      const userRankings = [];
+      setLoading(true);
+      console.log("🔍 Đang tải bảng xếp hạng từ API...");
 
-      Object.keys(localStorage).forEach((key) => {
-        if (key.startsWith("user-total-points-")) {
-          const userId = key.replace("user-total-points-", "");
-          const totalPoints = parseInt(localStorage.getItem(key) || "0");
-          const userName =
-            localStorage.getItem(`user-name-${userId}`) || `User ${userId}`;
+      const response = await api.get("/auth/ranking");
+      console.log("📊 Dữ liệu ranking từ API:", response.data);
 
-          if (totalPoints > 0) {
-            userRankings.push({
-              id: userId,
-              name: userName,
-              score: totalPoints,
-              avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${userId}`,
-              isCurrentUser: userId === currentUserId,
-            });
-          }
-        }
-      });
+      if (!response.data || response.data.length === 0) {
+        setUsers([]);
+        setLoading(false);
+        console.log("ℹ️ Không có dữ liệu ranking");
+        return;
+      }
 
-      userRankings.sort((a, b) => b.score - a.score);
-      const rankedUsers = userRankings.map((user, index) => ({
+      // Xử lý dữ liệu từ API - SỬA LẠI LOGIC
+      const processedUsers = response.data.map((user, index) => ({
+        id: user.userId,
+        name: user.fullName || user.username || `User ${user.userId}`,
+        score: user.totalPoint || 0, // Lấy từ totalPoint
+        avatar:
+          user.avatar ||
+          `https://api.dicebear.com/7.x/adventurer/svg?seed=${user.userId}`,
+        isCurrentUser: user.userId?.toString() === currentUserId,
+        rank: index + 1,
+      }));
+
+      // Sắp xếp theo điểm cao nhất (API có thể đã sắp xếp rồi nhưng đảm bảo)
+      const sortedUsers = processedUsers.sort((a, b) => b.score - a.score);
+
+      // Cập nhật rank sau khi sắp xếp
+      const rankedUsers = sortedUsers.map((user, index) => ({
         ...user,
         rank: index + 1,
       }));
@@ -48,20 +58,24 @@ function Ranking() {
       setUsers(rankedUsers);
       setLoading(false);
 
-      if (rankedUsers.length > 0) {
+      console.log("✅ Đã tải xong bảng xếp hạng:", rankedUsers);
+
+      // Hiệu ứng confetti nếu có dữ liệu (chỉ lần đầu)
+      if (rankedUsers.length > 0 && users.length === 0) {
         setTimeout(() => {
           setShowConfetti(true);
           setTimeout(() => setShowConfetti(false), 3000);
         }, 500);
       }
     } catch (error) {
-      console.error("Error loading ranking:", error);
+      console.error("❌ Lỗi tải bảng xếp hạng:", error);
+      message.error("Không thể tải bảng xếp hạng");
       setUsers([]);
       setLoading(false);
     }
   };
 
-  if (loading) {
+  if (loading && users.length === 0) {
     return (
       <div className="ranking-container">
         <Navbar />
@@ -87,14 +101,10 @@ function Ranking() {
       <div className="ranking-content">
         <div className="ranking-header">
           <h2 className="ranking-title">🏆 Bảng Xếp Hạng Cai Thuốc</h2>
-
-          {/* <button
-            className="refresh-button"
-            onClick={loadRankingFromLocalStorage}
-            title="Làm mới bảng xếp hạng"
-          >
-            🔄 Làm mới
-          </button> */}
+          {/* Đã bỏ nút refresh */}
+          {loading && (
+            <span className="auto-refresh-indicator">🔄 Đang cập nhật...</span>
+          )}
         </div>
 
         {users.length >= 3 && (
@@ -106,7 +116,14 @@ function Ranking() {
                   user.isCurrentUser ? "current-user" : ""
                 }`}
               >
-                <img className="avatar" src={user.avatar} alt={user.name} />
+                <img
+                  className="avatar"
+                  src={user.avatar}
+                  alt={user.name}
+                  onError={(e) => {
+                    e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${user.id}`;
+                  }}
+                />
                 <p>
                   {user.name} {user.isCurrentUser ? "(Bạn)" : ""}
                 </p>
@@ -133,12 +150,15 @@ function Ranking() {
                   className="avatar small"
                   src={user.avatar}
                   alt={user.name}
+                  onError={(e) => {
+                    e.target.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${user.id}`;
+                  }}
                 />
                 <span className="rank-name">
                   {user.name} {user.isCurrentUser ? "(Bạn)" : ""}
                 </span>
                 <span className="rank-score">
-                  {user.score.toLocaleString()} điểm
+                  🏆 {user.score.toLocaleString()} điểm
                 </span>
               </div>
             ))}
@@ -147,35 +167,12 @@ function Ranking() {
 
         {users.length === 0 && (
           <div className="empty-ranking">
-            <p>🎯 Chưa có ai có điểm</p>
+            <p>🎯 Chưa có dữ liệu xếp hạng</p>
             <p>
               Hãy bắt đầu theo dõi tiến trình cai thuốc để tham gia xếp hạng!
             </p>
           </div>
         )}
-
-        {/* {currentUserId && (
-          <div className="current-user-stats">
-            <h3>📊 Thống kê của bạn</h3>
-            <p>
-              Tên:{" "}
-              {localStorage.getItem(`user-name-${currentUserId}`) ||
-                "Chưa có tên"}
-            </p>
-            <p>
-              Tổng điểm:{" "}
-              {localStorage.getItem(`user-total-points-${currentUserId}`) ||
-                "0"}{" "}
-              điểm
-            </p>
-            {users.find((u) => u.isCurrentUser) && (
-              <p>
-                Xếp hạng: #{users.find((u) => u.isCurrentUser).rank} /{" "}
-                {users.length}
-              </p>
-            )}
-          </div>
-        )} */}
       </div>
       <Footer />
     </div>

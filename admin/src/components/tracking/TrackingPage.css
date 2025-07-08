@@ -1,10 +1,11 @@
 /* QuitCare Tracking Page Styles */
 .quit-tracking-main-container {
-    max-width  : 1200px;
-    margin     : 0 auto;
-    padding    : 20px;
-    min-height : 100vh;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width       : 1200px;
+    margin          : 0 auto;
+    padding         : 20px;
+    min-height      : 100vh;
+    font-family     : -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f5f4f4;
 }
 
 .quit-tracking-page-header {
@@ -658,6 +659,211 @@
     background: linear-gradient(135deg, #ff4d4f 0%, #d9363e 100%);
     transform : translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 77, 79, 0.3);
+}
+
+/* Modal hoàn thành - PHIÊN BẢN COMPACT */
+.quit-completion-modal .ant-modal-content {
+    background   : linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    overflow     : hidden;
+}
+
+.quit-completion-modal .ant-modal-body {
+    padding: 0;
+    color  : white;
+}
+
+.quit-completion-modal .ant-modal-footer {
+    background: rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    padding   : 15px 20px;
+}
+
+.quit-completion-content {
+    padding   : 30px 25px;
+    /* Giảm padding */
+    text-align: center;
+}
+
+.quit-completion-header {
+    margin-bottom: 25px;
+    /* Giảm margin */
+}
+
+.quit-completion-trophy {
+    font-size    : 60px;
+    /* Giảm từ 80px */
+    margin-bottom: 15px;
+    animation    : bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-15px);
+        /* Giảm bounce */
+    }
+
+    60% {
+        transform: translateY(-8px);
+    }
+}
+
+.quit-completion-title {
+    font-size  : 24px;
+    /* Giảm từ 28px */
+    font-weight: bold;
+    margin     : 0 0 8px 0;
+    color      : #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.quit-completion-subtitle {
+    font-size  : 16px;
+    /* Giảm từ 18px */
+    margin     : 0 0 8px 0;
+    color      : #f0f0f0;
+    font-weight: normal;
+}
+
+.quit-completion-date-range {
+    font-size: 14px;
+    /* Giảm từ 16px */
+    color    : #e0e0e0;
+    margin   : 0;
+}
+
+.quit-completion-stats {
+    background     : rgba(255, 255, 255, 0.1);
+    border-radius  : 12px;
+    padding        : 20px;
+    /* Giảm từ 30px */
+    margin-bottom  : 20px;
+    /* Giảm từ 30px */
+    backdrop-filter: blur(10px);
+}
+
+.quit-completion-stat-item {
+    text-align: center;
+    padding   : 10px;
+    /* Giảm từ 15px */
+}
+
+.quit-completion-stat-number {
+    font-size    : 28px;
+    /* Giảm từ 32px */
+    font-weight  : bold;
+    color        : #fff;
+    margin-bottom: 6px;
+    text-shadow  : 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.quit-completion-stat-label {
+    font-size    : 13px;
+    /* Giảm từ 14px */
+    color        : #e0e0e0;
+    margin-bottom: 8px;
+}
+
+.quit-completion-saved-money {
+    font-size  : 14px;
+    color      : #ffd700;
+    font-weight: bold;
+    margin-top : 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.quit-completion-motivation {
+    background     : rgba(255, 255, 255, 0.1);
+    border-radius  : 12px;
+    padding        : 20px;
+    /* Giảm từ 25px */
+    backdrop-filter: blur(10px);
+}
+
+.quit-completion-quote h3 {
+    color        : #fff;
+    font-size    : 18px;
+    /* Giảm từ 22px */
+    margin-bottom: 12px;
+    text-shadow  : 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.quit-completion-quote p {
+    color      : #f0f0f0;
+    font-size  : 15px;
+    /* Giảm từ 16px */
+    line-height: 1.5;
+    margin     : 0;
+}
+
+/* Responsive cho modal nhỏ */
+@media (max-width: 768px) {
+    .quit-completion-modal .ant-modal-content {
+        margin: 20px;
+    }
+
+    .quit-completion-content {
+        padding: 25px 20px;
+    }
+
+    .quit-completion-title {
+        font-size: 20px;
+    }
+
+    .quit-completion-trophy {
+        font-size: 50px;
+    }
+
+    .quit-completion-stat-number {
+        font-size: 24px;
+    }
+
+    .quit-completion-quote h3 {
+        font-size: 16px;
+    }
+
+    .quit-completion-quote p {
+        font-size: 14px;
+    }
+}
+
+/* Xóa các CSS class không dùng nữa */
+/* .quit-completion-achievements - DELETED */
+/* .quit-completion-achievement-grid - DELETED */
+/* .quit-completion-achievement-item - DELETED */
+/* .quit-completion-achievement-icon - DELETED */
+
+/* Responsive */
+@media (max-width: 768px) {
+    .quit-completion-content {
+        padding: 30px 20px;
+    }
+
+    .quit-completion-title {
+        font-size: 24px;
+    }
+
+    .quit-completion-trophy {
+        font-size: 60px;
+    }
+
+    .quit-completion-stat-number {
+        font-size: 24px;
+    }
+
+    .quit-completion-achievement-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Responsive cho calendar */

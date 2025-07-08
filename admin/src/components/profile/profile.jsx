@@ -77,12 +77,12 @@ const Profile = () => {
               )}&background=4f46e5&color=ffffff&size=120&rounded=true`}
               className="profile-avatar"
             />
-            <div className="avatar-info">
+            {/* <div className="avatar-info">
               <Title level={4} className="mb-1">
                 {user?.fullName || "Người dùng"}
               </Title>
               <Text type="secondary">{user?.email}</Text>
-            </div>
+            </div> */}
           </div>
         </Col>
 
