@@ -28,12 +28,13 @@ import Tracking from "./pages/Tracking";
 import NotificationPage from "./components/notificate/NotificationPage";
 import ForgotPasswordForm from "./components/forgot-password/forgot-pasword";
 import PaymentPage from "./components/payment/submitOrder";
-import PaymentResult from "./pages/payment-result/PaymentResult";
+import PaymentResult from "./components/payment/PaymentResult";
 
 import CoachDashboard from "./components/dashboard/coach-dashboard";
 import WorkScheduleManagement from "./pages/dashboard-coach/register/management-schedule";
 import AdviseUser from "./pages/dashboard-coach/calendar/advise-user";
 import ViewAdvise from "./components/view-advise/ViewAdvise";
+import HistoryPayment from "./components/payment/PaymentHistory";
 
 function App() {
   const AppLayout = ({ children }) => (
@@ -150,6 +151,10 @@ function App() {
     {
       path: "/create-planning",
       element: <CreatePlanning />,
+    },
+    {
+      path: "/history-transactions",
+      element: <HistoryPayment />,
     },
     {
       path: "/forgot-password",

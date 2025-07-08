@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import api from "../../configs/axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import "./PaymentPage.css";
 import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+
 
 const PaymentPage = () => {
-  const location = useLocation();
+
   const navigate = useNavigate();
-  const { membershipPlanId } = location.state || {}; // Lấy từ router
+  const [searchParams] = useSearchParams();
+  const membershipPlanId = searchParams.get("membershipPlanId");
 
   const [pkg, setPkg] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -64,9 +67,7 @@ const PaymentPage = () => {
       console.log("📦 ID gói:", pkg?.id);
       console.log("👤 ID người dùng:", accountId);
 
-      const res = await api.post(
-        `/v1/payments/initiate/${pkg.id}/by-account/${accountId}`
-      );
+      const res = await api.post(`/v1/payments/buy/${membershipPlanId}`);
       const paymentData = res.data;
 
       console.log("✅ Kết quả trả về:", paymentData);

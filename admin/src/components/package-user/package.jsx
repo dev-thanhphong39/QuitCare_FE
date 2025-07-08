@@ -59,7 +59,7 @@ const Package = () => {
               <button
   className={`btn ${pkg.name.toLowerCase() === "basic" ? "btn-basic" : "btn-premium"}`}
   onClick={() => {
-    navigate("/payment", { state: { membershipPlanId: pkg.id } });
+    navigate(`/payment?membershipPlanId=${pkg.id}`);
   }}
 >
   Mua gói
