@@ -1,0 +1,396 @@
+/* ✅ Container chính - Độc nhất */
+.revenue-simple {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ✅ Header riêng biệt */
+.revenue-simple .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.revenue-simple .header h2 {
+  margin: 0;
+  color: #0c1c2c;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.revenue-simple .header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* ✅ Statistics Cards riêng */
+.revenue-simple .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.revenue-simple .ant-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.revenue-simple .ant-card .ant-card-body {
+  padding: 20px;
+}
+
+/* ✅ Statistic styling độc nhất */
+.revenue-simple .ant-statistic {
+  text-align: center;
+}
+
+.revenue-simple .ant-statistic-title {
+  color: #8c8c8c;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.revenue-simple .ant-statistic-content {
+  color: #0c1c2c;
+}
+
+.revenue-simple .ant-statistic-content-value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.revenue-simple .ant-statistic-content-suffix {
+  font-size: 16px;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+/* ✅ Table styling riêng */
+.revenue-simple .ant-table {
+  background: transparent;
+}
+
+.revenue-simple .ant-table-thead > tr > th {
+  background: #fafafa;
+  color: #0c1c2c;
+  font-weight: 600;
+  border-bottom: 2px solid #f0f0f0;
+  font-size: 13px;
+  padding: 12px 16px;
+}
+
+.revenue-simple .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f5f5f5;
+  padding: 12px 16px;
+  vertical-align: middle;
+}
+
+.revenue-simple .ant-table-tbody > tr:hover > td {
+  background: #f0f9ff;
+}
+
+.revenue-simple .ant-table-tbody > tr > td:first-child {
+  color: #0c1c2c;
+  font-weight: 500;
+}
+
+/* ✅ Card titles riêng */
+.revenue-simple .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 20px;
+}
+
+.revenue-simple .ant-card-head-title {
+  color: #0c1c2c;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 16px 0;
+}
+
+/* ✅ Summary cards styling */
+.revenue-simple .summary-content {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.revenue-simple .summary-content h3 {
+  margin: 0 0 4px 0;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.revenue-simple .summary-content p {
+  margin: 0;
+  color: #8c8c8c;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ✅ Button styling độc nhất */
+.revenue-simple .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.revenue-simple .ant-btn-primary {
+  background: #0c1c2c;
+  border-color: #0c1c2c;
+}
+
+.revenue-simple .ant-btn-primary:hover {
+  background: #1a2f42;
+  border-color: #1a2f42;
+}
+
+.revenue-simple .ant-btn-primary:focus {
+  background: #0c1c2c;
+  border-color: #0c1c2c;
+  box-shadow: 0 0 0 2px rgba(12, 28, 44, 0.2);
+}
+
+/* ✅ Select styling độc nhất */
+.revenue-simple .ant-select {
+  border-radius: 6px;
+}
+
+.revenue-simple .ant-select-selector {
+  border-radius: 6px;
+  border-color: #d9d9d9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.revenue-simple .ant-select-focused .ant-select-selector {
+  border-color: #0c1c2c;
+  box-shadow: 0 0 0 2px rgba(12, 28, 44, 0.2);
+}
+
+/* ✅ Responsive riêng cho component này */
+@media (max-width: 768px) {
+  .revenue-simple {
+    padding: 16px;
+  }
+  
+  .revenue-simple .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    text-align: center;
+  }
+  
+  .revenue-simple .header h2 {
+    font-size: 24px;
+  }
+  
+  .revenue-simple .header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .revenue-simple .ant-statistic-content-value {
+    font-size: 28px;
+  }
+  
+  .revenue-simple .summary-content h3 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .revenue-simple {
+    padding: 12px;
+  }
+  
+  .revenue-simple .header {
+    padding: 12px;
+  }
+  
+  .revenue-simple .header h2 {
+    font-size: 20px;
+  }
+  
+  .revenue-simple .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .revenue-simple .ant-card .ant-card-body {
+    padding: 16px;
+  }
+  
+  .revenue-simple .ant-statistic-content-value {
+    font-size: 24px;
+  }
+  
+  .revenue-simple .ant-table-thead > tr > th,
+  .revenue-simple .ant-table-tbody > tr > td {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .revenue-simple .summary-content h3 {
+    font-size: 18px;
+  }
+  
+  .revenue-simple .summary-content p {
+    font-size: 12px;
+  }
+}
+
+/* ✅ Print styles riêng */
+@media print {
+  .revenue-simple {
+    background: white;
+    padding: 20px;
+  }
+  
+  .revenue-simple .header {
+    background: white;
+    box-shadow: none;
+    border-bottom: 2px solid #000;
+    margin-bottom: 20px;
+  }
+  
+  .revenue-simple .header h2 {
+    color: #000;
+  }
+  
+  .revenue-simple .header-actions {
+    display: none;
+  }
+  
+  .revenue-simple .ant-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+    margin-bottom: 20px;
+  }
+  
+  .revenue-simple .ant-table {
+    font-size: 12px;
+  }
+  
+  .revenue-simple .ant-table-thead > tr > th {
+    background: #f0f0f0 !important;
+    color: #000 !important;
+  }
+}
+
+/* ✅ Focus states riêng */
+.revenue-simple .ant-card:focus-within {
+  outline: 2px solid #0c1c2c;
+  outline-offset: 2px;
+}
+
+.revenue-simple .ant-table-row:focus-within {
+  background: #e6f7ff;
+}
+
+/* ✅ Loading states riêng */
+.revenue-simple .ant-spin-container {
+  border-radius: 8px;
+}
+
+.revenue-simple .ant-spin-dot {
+  color: #0c1c2c;
+}
+
+/* ✅ Custom scrollbar cho component này */
+.revenue-simple::-webkit-scrollbar {
+  width: 6px;
+}
+
+.revenue-simple::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.revenue-simple::-webkit-scrollbar-thumb {
+  background: rgba(12, 28, 44, 0.3);
+  border-radius: 3px;
+}
+
+.revenue-simple::-webkit-scrollbar-thumb:hover {
+  background: rgba(12, 28, 44, 0.5);
+}
+
+/* ✅ Animation riêng cho component */
+@keyframes revenueCardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.revenue-simple .ant-card {
+  animation: revenueCardSlideIn 0.5s ease-out;
+}
+
+.revenue-simple .ant-card:nth-child(1) { animation-delay: 0.1s; }
+.revenue-simple .ant-card:nth-child(2) { animation-delay: 0.2s; }
+.revenue-simple .ant-card:nth-child(3) { animation-delay: 0.3s; }
+.revenue-simple .ant-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* ✅ Utility classes riêng cho component */
+.revenue-simple .text-success {
+  color: #52c41a;
+}
+
+.revenue-simple .text-primary {
+  color: #0c1c2c;
+}
+
+.revenue-simple .text-warning {
+  color: #faad14;
+}
+
+.revenue-simple .text-danger {
+  color: #ff4d4f;
+}
+
+.revenue-simple .text-secondary {
+  color: #8c8c8c;
+}
+
+/* ✅ Hover effects riêng */
+.revenue-simple .ant-table-tbody > tr:hover {
+  box-shadow: 0 2px 8px rgba(12, 28, 44, 0.1);
+}
+
+.revenue-simple .summary-content:hover h3 {
+  color: #0c1c2c;
+  transition: color 0.2s ease;
+}
+
+/* ✅ Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .revenue-simple[data-theme="dark"] {
+    background: #141414;
+    color: #fff;
+  }
+  
+  .revenue-simple[data-theme="dark"] .header {
+    background: #1f1f1f;
+    color: #fff;
+  }
+  
+  .revenue-simple[data-theme="dark"] .ant-card {
+    background: #1f1f1f;
+    border-color: #434343;
+  }
+}

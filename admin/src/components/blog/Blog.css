@@ -3,6 +3,7 @@
     min-height: 100vh;
     background: #f8fafc;
     padding: 20px 0;
+    margin-top: 70px;
 }
 
 .blog-page {
@@ -10,7 +11,6 @@
     margin: 0 auto;
     padding: 0 20px;
     font-family: 'Inter', 'Segoe UI', sans-serif;
-    margin-top: 80px;
 }
 
 /* Navigation */

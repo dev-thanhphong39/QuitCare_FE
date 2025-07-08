@@ -19,6 +19,7 @@ function SuggestPlaning() {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [showConfirmedMessage, setShowConfirmedMessage] = useState(false);
   const [justConfirmed, setJustConfirmed] = useState(false);
+  const [countdown, setCountdown] = useState(10);
   const navigate = useNavigate();
 
   // ✅ Sửa lại hàm tính toán ngày bắt đầu và kết thúc
@@ -52,12 +53,24 @@ function SuggestPlaning() {
   useEffect(() => {
     if (justConfirmed) {
       setShowConfirmedMessage(true);
-      const timer = setTimeout(() => {
-        setShowConfirmedMessage(false);
-        setJustConfirmed(false);
-      }, 10000);
+      setCountdown(10); // Reset countdown về 10
 
-      return () => clearTimeout(timer);
+      // ✅ Tạo interval để đếm ngược mỗi giây
+      const countdownInterval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            // Khi đếm về 0, ẩn thông báo
+            setShowConfirmedMessage(false);
+            setJustConfirmed(false);
+            clearInterval(countdownInterval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // Cleanup interval khi component unmount hoặc dependency thay đổi
+      return () => clearInterval(countdownInterval);
     }
   }, [justConfirmed]);
 
@@ -430,7 +443,10 @@ function SuggestPlaning() {
                   }}
                 >
                   <button
-                    onClick={() => setShowConfirmedMessage(false)}
+                    onClick={() => {
+                      setShowConfirmedMessage(false);
+                      setJustConfirmed(false);
+                    }}
                     style={{
                       position: "absolute",
                       right: "12px",
@@ -441,6 +457,7 @@ function SuggestPlaning() {
                       cursor: "pointer",
                       color: "#52c41a",
                     }}
+                    title="Đóng thông báo"
                   >
                     ×
                   </button>
@@ -458,14 +475,39 @@ function SuggestPlaning() {
                     trình cai thuốc. Chúc bạn thành công!
                   </p>
 
+                  {/* ✅ Thông báo đếm ngược - đã xóa progress bar */}
                   <div
                     style={{
-                      fontSize: "12px",
-                      color: "#999",
-                      marginTop: "8px",
+                      fontSize: "14px",
+                      color: "#52c41a",
+                      marginTop: "12px",
+                      fontWeight: "500",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
                     }}
                   >
-                    Thông báo sẽ tự động ẩn sau 10 giây
+                    <span>Thông báo sẽ tự động ẩn sau</span>
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "24px",
+                        height: "24px",
+                        backgroundColor: "#52c41a",
+                        color: "#fff",
+                        borderRadius: "50%",
+                        fontSize: "12px",
+                        fontWeight: "bold",
+                        animation:
+                          countdown <= 3 ? "pulse 0.5s infinite" : "none",
+                      }}
+                    >
+                      {countdown}
+                    </span>
+                    <span>giây</span>
                   </div>
                 </div>
               </div>
