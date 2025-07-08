@@ -79,15 +79,32 @@ const Booking = () => {
       try {
         const res = await api.get("/session/coaches");
         const coachesData = res.data || [];
-        setCoaches(coachesData);
 
-        // Fetch slots cho tất cả coaches
-        const slotPromises = coachesData.map((coach) =>
+        const descriptions = [
+          "Huấn luyện viên tận tâm với kiến thức sâu rộng về hành vi nghiện và kỹ thuật cai thuốc hiệu quả.",
+          "Chuyên gia đồng hành cùng bạn vượt qua quá trình cai thuốc bằng phương pháp cá nhân hóa và động lực tích cực.",
+          "Giàu kinh nghiệm tư vấn cai nghiện nicotine với lộ trình phù hợp từng cá nhân và cam kết theo sát tiến trình của bạn.",
+        ];
+
+        const avatarMap = {
+          1: "https://htmediagroup.vn/wp-content/uploads/2023/03/Anh-bac-si-nam-4-min.jpg",
+          2: "https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2023/12/25/1-17035025379211648167770.png",
+          7: "https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/06/anh-bac-si-27.jpg",
+        };
+
+        const updatedCoaches = coachesData.map((coach, index) => ({
+          ...coach,
+          description: descriptions[index % descriptions.length], // Mỗi coach 1 description khác nhau
+          fixedAvatar: avatarMap[coach.id] || "/default-avatar.png",
+        }));
+
+        setCoaches(updatedCoaches);
+
+        const slotPromises = updatedCoaches.map((coach) =>
           fetchAvailableSlots(coach)
         );
         await Promise.all(slotPromises);
 
-        // Chỉ set initial load sau khi tất cả slots đã load xong
         setInitialLoad(false);
       } catch (err) {
         console.error("Lỗi khi lấy danh sách coach:", err);
@@ -96,30 +113,40 @@ const Booking = () => {
     };
 
     fetchCoaches();
-  }, []); // KHÔNG có dependency để tránh re-run
+  }, []);
 
   // Set default dates (chỉ chạy sau khi initial load hoàn tất)
+  // Set default dates (ưu tiên hôm nay nếu có slot)
   useEffect(() => {
     if (initialLoad || defaultDatesSet) return;
 
-    // Lấy snapshot của data hiện tại để tránh closure issue
     const currentCoaches = coaches;
     const currentAvailableSlots = availableSlots;
     const currentSelectedDates = selectedDates;
+    const todayStr = dayjs().format("YYYY-MM-DD");
 
     currentCoaches.forEach((coach) => {
       const coachSlots = currentAvailableSlots[coach.id] || {};
-      const defaultDate = Object.keys(coachSlots)[0];
+      const allDates = Object.keys(coachSlots).sort(); // đảm bảo đúng thứ tự
 
-      // Nếu chưa chọn ngày thì gán mặc định ngày đầu tiên có slot
+      let defaultDate = "";
+
+      // Ưu tiên chọn hôm nay nếu có slot
+      if (allDates.includes(todayStr)) {
+        defaultDate = todayStr;
+      } else if (allDates.length > 0) {
+        defaultDate = allDates[0];
+      }
+
+      // Gán ngày mặc định nếu chưa có
       if (defaultDate && !currentSelectedDates[coach.id]) {
         setSelectedDates((prev) => ({ ...prev, [coach.id]: defaultDate }));
         setSelectedSlots((prev) => ({ ...prev, [coach.id]: "" }));
       }
     });
 
-    setDefaultDatesSet(true); // Đánh dấu đã set default dates
-  }, [initialLoad]); // CHỈ depend vào initialLoad
+    setDefaultDatesSet(true);
+  }, [initialLoad]);
 
   const handleDateChange = (coachId, value) => {
     setSelectedDates((prev) => ({
@@ -242,7 +269,9 @@ const Booking = () => {
       <h1 className="booking-title">ĐẶT LỊCH TƯ VẤN</h1>
       {coaches.map((coach) => {
         const coachSlots = availableSlots[coach.id] || {};
-        const datesWithSlots = Object.keys(coachSlots);
+        const datesWithSlots = Object.entries(coachSlots)
+  .filter(([date, slots]) => slots.some((s) => s.available)) // chỉ giữ ngày có slot khả dụng
+  .map(([date]) => date);
         const selectedDate = selectedDates[coach.id] || datesWithSlots[0] || "";
         const slotList = coachSlots[selectedDate] || [];
 
@@ -251,40 +280,48 @@ const Booking = () => {
             <div style={{ flex: 1 }}>
               <div className="booking-left">
                 <img
-                  src={coach.avatar || "/default-avatar.png"}
+                  src={
+                    coach.fixedAvatar || coach.avatar || "/default-avatar.png"
+                  }
                   alt={coach.fullName}
                   className="booking-img"
                 />
                 <div className="booking-info">
                   <div className="booking-brand">QUITCARE</div>
                   <div className="booking-name">{coach.fullName}</div>
-                  <div className="booking-hotline">Email: {coach.email}</div>
+                  {/* <div className="booking-hotline">Email: {coach.email}</div> */}
                 </div>
               </div>
-              <div className="booking-desc">
-                Huấn luyện viên chuyên hỗ trợ tư vấn cai thuốc lá.
-              </div>
+              <div className="booking-desc">{coach.description}</div>
             </div>
 
             <div className="booking-right">
               <div className="booking-date">
                 Chọn ngày:
                 <DatePicker
-                  value={selectedDate ? dayjs(selectedDate) : null}
-                  onChange={(date) => {
-                    if (date)
-                      handleDateChange(coach.id, date.format("YYYY-MM-DD"));
-                  }}
-                  disabledDate={(current) => {
-                    // Chỉ cho chọn các ngày nằm trong datesWithSlots
-                    const validDates = datesWithSlots.map((d) =>
-                      dayjs(d).format("YYYY-MM-DD")
-                    );
-                    return !validDates.includes(current.format("YYYY-MM-DD"));
-                  }}
-                  format="YYYY-MM-DD"
-                  popupClassName="custom-datepicker-popup"
-                />
+  value={selectedDate ? dayjs(selectedDate) : null}
+  onChange={(date) => {
+    if (date)
+      handleDateChange(coach.id, date.format("YYYY-MM-DD"));
+  }}
+  disabledDate={(current) => {
+    const today = dayjs().startOf("day");
+    const currentStr = current.format("YYYY-MM-DD");
+
+    // Lấy các ngày có ít nhất 1 slot available
+    const validDatesSet = new Set(
+      Object.entries(coachSlots)
+        .filter(([, slots]) => slots.some((s) => s.available))
+        .map(([d]) => d)
+    );
+
+    // Disable nếu: ngày nằm trước hôm nay OR không nằm trong validDatesSet
+    return current.isBefore(today) || !validDatesSet.has(currentStr);
+  }}
+  format="YYYY-MM-DD"
+  popupClassName="custom-datepicker-popup"
+/>
+
               </div>
 
               <div className="booking-times">

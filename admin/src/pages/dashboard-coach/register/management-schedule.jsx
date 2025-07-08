@@ -250,7 +250,7 @@ const WorkScheduleManagement = () => {
 
         <Alert
           message="Lịch làm việc cố định"
-          description="Mặc định: 8:00-17:00 (8 tiếng/ngày). Tick vào ngày nếu muốn nghỉ."
+          description="Mặc định: 07:00-17:00 giờ . Tick vào ngày bạn muốn nghỉ."
           type="info"
           showIcon
           className="schedule-info"
