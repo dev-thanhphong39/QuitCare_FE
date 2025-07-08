@@ -1,22 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { format } from "date-fns";
-import {
-  message,
-  Spin,
-  Empty,
-  Card,
-  Tag,
-  Button,
-  Statistic,
-  Row,
-  Col,
-} from "antd";
+import { message, Spin, Empty, Card, Button, Statistic, Row, Col } from "antd";
 import {
   BellOutlined,
   ReloadOutlined,
   TrophyOutlined,
   DollarOutlined,
-  FireOutlined, // Thay thế SmokingOutlined
 } from "@ant-design/icons";
 import "./NotificationPage.css";
 import Navbar from "../navbar/Navbar";
@@ -31,123 +20,155 @@ function NotificationPage() {
   const [totalStats, setTotalStats] = useState({
     totalPoints: 0,
     totalMoneySaved: 0,
-    totalCigarettesSmoked: 0,
+    totalCigarettesSmoked: 0, // Thêm cột này
     totalNotifications: 0,
   });
 
-  // Mapping cho messageStatus
-  const messageStatusMapping = {
-    NORMAL: "Bình thường",
-    URGENT: "Khẩn cấp",
-    INFO: "Thông tin",
-  };
+  // Thêm ref để track API call
+  const isLoadingRef = useRef(false);
+  const hasFetchedRef = useRef(false);
 
-  // Lấy danh sách thông báo và thông tin progress
-  // Phiên bản đơn giản hơn - chỉ lấy thông báo cho progress mới nhất
-  const fetchNotifications = async () => {
+  // Sử dụng useCallback để tránh tạo lại function
+  const fetchNotifications = useCallback(async () => {
+    // Tránh gọi API nhiều lần
+    if (isLoadingRef.current) {
+      console.log("⚠️ API đang được gọi, bỏ qua request trùng lặp");
+      return;
+    }
+
     try {
+      isLoadingRef.current = true;
       setLoading(true);
 
       console.log("🔍 AccountId hiện tại:", accountId);
 
-      // Lấy tất cả progress và sắp xếp theo ngày mới nhất
-      const progressResponse = await api.get("/quit-progress");
-      console.log("📋 Tất cả progress:", progressResponse.data);
+      // Gọi API đúng - /message-notifications (BE tự filter theo account)
+      const notificationResponse = await api.get("/message-notifications");
+      console.log("📨 Thông báo từ API:", notificationResponse.data);
 
-      if (!progressResponse.data || progressResponse.data.length === 0) {
+      if (
+        !notificationResponse.data ||
+        notificationResponse.data.length === 0
+      ) {
         setNotifications([]);
         setTotalStats({
           totalPoints: 0,
           totalMoneySaved: 0,
-          totalCigarettesSmoked: 0,
+          totalCigarettesSmoked: 0, // Reset về 0
           totalNotifications: 0,
         });
+        console.log("ℹ️ Không có thông báo nào");
         return;
       }
 
-      // Sắp xếp progress theo ngày mới nhất
-      const sortedProgress = progressResponse.data.sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
+      // Lấy danh sách unique progressId để tránh gọi API trùng lặp
+      const uniqueProgressIds = [
+        ...new Set(notificationResponse.data.map((n) => n.quitProgressId)),
+      ];
+      console.log("📋 Unique Progress IDs:", uniqueProgressIds);
+
+      // Lấy thông tin progress cho các notification để có stats
+      const progressMap = new Map();
+      let totalPoints = 0;
+      let totalMoneySaved = 0;
+      let totalCigarettesSmoked = 0; // Thêm biến này
+
+      // Sử dụng Promise.all để tối ưu performance
+      const progressPromises = uniqueProgressIds.map(async (progressId) => {
+        try {
+          const progressResponse = await api.get(
+            `/quit-progress/${progressId}`
+          );
+          const progressData = progressResponse.data;
+
+          progressMap.set(progressId, progressData);
+
+          // Cộng dồn stats (chỉ cộng 1 lần cho mỗi progress)
+          totalPoints += progressData.point || 0;
+          totalMoneySaved += progressData.money_saved || 0;
+          totalCigarettesSmoked += progressData.cigarettes_smoked || 0; // Thêm dòng này
+
+          console.log(`✅ Progress ${progressId}:`, progressData);
+          return { progressId, data: progressData };
+        } catch (error) {
+          console.error(`❌ Lỗi lấy progress ${progressId}:`, error);
+          const defaultData = {
+            date: null,
+            cigarettes_smoked: 0,
+            money_saved: 0,
+            point: 0,
+          };
+          progressMap.set(progressId, defaultData);
+          return { progressId, data: defaultData };
+        }
+      });
+
+      // Đợi tất cả API calls hoàn thành
+      await Promise.all(progressPromises);
+
+      // Format dữ liệu thông báo với thông tin progress
+      const formattedNotifications = notificationResponse.data.map(
+        (notification) => {
+          const progressData = progressMap.get(notification.quitProgressId);
+
+          return {
+            id: notification.id,
+            content: notification.content,
+            messageStatus: notification.messageStatus,
+            quitProgressId: notification.quitProgressId,
+            displayDate: progressData?.date || notification.sendAt,
+            cigarettes_smoked: progressData?.cigarettes_smoked || 0,
+            money_saved: progressData?.money_saved || 0,
+            point: progressData?.point || 0,
+            progressData: progressData,
+          };
+        }
       );
 
-      // Lấy progress mới nhất
-      const latestProgress = sortedProgress[0];
-      console.log("📋 Progress mới nhất:", latestProgress);
+      // Loại bỏ thông báo trùng lặp dựa trên ID
+      const uniqueNotifications = formattedNotifications.filter(
+        (notification, index, self) =>
+          index === self.findIndex((n) => n.id === notification.id)
+      );
 
-      // Lấy thông báo cho progress mới nhất
-      try {
-        const notificationResponse = await api.get(
-          `/message-notifications/by-progress/${latestProgress.id}`
-        );
+      // Sắp xếp theo ngày mới nhất
+      const sortedNotifications = uniqueNotifications.sort(
+        (a, b) => new Date(b.displayDate) - new Date(a.displayDate)
+      );
 
-        console.log("📨 Thông báo:", notificationResponse.data);
+      // Cập nhật state với tổng số điếu
+      setNotifications(sortedNotifications);
+      setTotalStats({
+        totalPoints,
+        totalMoneySaved,
+        totalCigarettesSmoked, // Thêm vào state
+        totalNotifications: sortedNotifications.length,
+      });
 
-        let formattedNotifications = [];
-        if (notificationResponse.data && notificationResponse.data.length > 0) {
-          formattedNotifications = notificationResponse.data.map(
-            (notification) => ({
-              id: notification.id,
-              content: notification.content,
-              messageStatus: notification.messageStatus,
-              quitProgressId: notification.quitProgressId,
-              displayDate: latestProgress.date,
-              cigarettes_smoked: latestProgress.cigarettes_smoked || 0,
-              money_saved: latestProgress.money_saved || 0,
-              point: latestProgress.point || 0,
-            })
-          );
-        }
+      console.log("🔔 Danh sách thông báo cuối cùng:", sortedNotifications);
+      console.log("📊 Tổng kết:", {
+        totalPoints,
+        totalMoneySaved,
+        totalCigarettesSmoked,
+      });
 
-        // Cập nhật state
-        setNotifications(formattedNotifications);
-        setTotalStats({
-          totalPoints: latestProgress.point || 0,
-          totalMoneySaved: latestProgress.money_saved || 0,
-          totalCigarettesSmoked: latestProgress.cigarettes_smoked || 0,
-          totalNotifications: formattedNotifications.length,
-        });
-
-        console.log("🔔 Kết quả cuối cùng:", formattedNotifications);
-      } catch (error) {
-        console.error("❌ Lỗi lấy thông báo:", error);
-
-        // Nếu không có thông báo, vẫn hiển thị stats từ progress
-        setNotifications([]);
-        setTotalStats({
-          totalPoints: latestProgress.point || 0,
-          totalMoneySaved: latestProgress.money_saved || 0,
-          totalCigarettesSmoked: latestProgress.cigarettes_smoked || 0,
-          totalNotifications: 0,
-        });
-      }
+      hasFetchedRef.current = true;
     } catch (error) {
-      console.error("❌ Lỗi lấy progress:", error);
-      message.error("Không thể tải dữ liệu");
+      console.error("❌ Lỗi lấy thông báo:", error);
+      message.error("Không thể tải danh sách thông báo");
     } finally {
       setLoading(false);
+      isLoadingRef.current = false;
     }
-  };
+  }, [accountId]);
 
   // Làm mới danh sách thông báo
   const handleRefresh = async () => {
     setRefreshing(true);
+    hasFetchedRef.current = false; // Reset để cho phép fetch lại
     await fetchNotifications();
     setRefreshing(false);
     message.success("Đã cập nhật thông báo!");
-  };
-
-  // Lấy màu sắc cho trạng thái
-  const getStatusColor = (messageStatus) => {
-    switch (messageStatus) {
-      case "URGENT":
-        return "red";
-      case "INFO":
-        return "blue";
-      case "NORMAL":
-        return "green";
-      default:
-        return "default";
-    }
   };
 
   // Format ngày
@@ -175,9 +196,7 @@ function NotificationPage() {
         <div className="notification-date">
           📅 {formatDate(notification.displayDate)}
         </div>
-        <Tag color={getStatusColor(notification.messageStatus)}>
-          {messageStatusMapping[notification.messageStatus] || "Bình thường"}
-        </Tag>
+        {/* Xóa Tag messageStatus */}
       </div>
 
       <div className="notification-content">{notification.content}</div>
@@ -185,20 +204,25 @@ function NotificationPage() {
       {/* Hiển thị stats chi tiết */}
       <div className="notification-stats">
         <Row gutter={16}>
-          <Col span={8}>
+          <Col span={6}>
             <div className="stat-item">
               🚬 Số điếu: <strong>{notification.cigarettes_smoked}</strong>
             </div>
           </Col>
-          <Col span={8}>
+          <Col span={6}>
             <div className="stat-item">
               💰 Tiết kiệm:{" "}
               <strong>{notification.money_saved?.toLocaleString()}</strong> VND
             </div>
           </Col>
-          <Col span={8}>
+          <Col span={6}>
             <div className="stat-item">
               🏆 Điểm: <strong>{notification.point}</strong>
+            </div>
+          </Col>
+          <Col span={6}>
+            <div className="stat-item">
+              📅 Ngày: <strong>{formatDate(notification.displayDate)}</strong>
             </div>
           </Col>
         </Row>
@@ -206,14 +230,23 @@ function NotificationPage() {
     </Card>
   );
 
+  // Tối ưu useEffect để tránh gọi nhiều lần
   useEffect(() => {
-    if (accountId) {
+    if (accountId && !hasFetchedRef.current && !isLoadingRef.current) {
       fetchNotifications();
-    } else {
+    } else if (!accountId) {
       message.error("Vui lòng đăng nhập để xem thông báo.");
       setLoading(false);
     }
-  }, [accountId]);
+  }, [accountId, fetchNotifications]);
+
+  // Cleanup khi component unmount
+  useEffect(() => {
+    return () => {
+      isLoadingRef.current = false;
+      hasFetchedRef.current = false;
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -248,7 +281,7 @@ function NotificationPage() {
           </Button>
         </div>
 
-        {/* Tổng kết thống kê */}
+        {/* Tổng kết thống kê - Đã thêm cột Tổng Số Điếu */}
         <Card className="stats-summary" style={{ marginBottom: 24 }}>
           <h3>📊 Tổng Kết Theo Dõi</h3>
           <Row gutter={16}>
@@ -279,9 +312,10 @@ function NotificationPage() {
             </Col>
             <Col span={6}>
               <Statistic
-                title="Tổng Điếu Hút"
+                title="Tổng Số Điếu"
                 value={totalStats.totalCigarettesSmoked}
-                prefix={<FireOutlined />}
+                prefix="🚬"
+                suffix="điếu"
                 valueStyle={{ color: "#f5222d" }}
               />
             </Col>
