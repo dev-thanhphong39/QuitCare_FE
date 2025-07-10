@@ -87,7 +87,7 @@ const RevenueManagement = () => {
   const stats = [
     {
       title: "Tổng người dùng",
-      value: 2847, // Có thể thay bằng API khác
+      value: 2847,
       icon: <UserOutlined />,
       color: "#1890ff",
     },
@@ -112,20 +112,9 @@ const RevenueManagement = () => {
     },
   ];
 
-  // ✅ Top gói bán chạy từ dữ liệu thực
-  const topPackages = plans
-    .map((plan) => ({
-      key: plan.id,
-      name: plan.name,
-      price: plan.price,
-      sold: getPaymentsByPlan(plan.id).length,
-      revenue: (getRevenueByPlan(plan.id) / 1000000).toFixed(2),
-    }))
-    .sort((a, b) => b.sold - a.sold);
-
   // ✅ Đơn hàng gần đây từ API
   const recentOrders = payments
-    .slice(-4)
+    .slice(-8) // Tăng lên 8 đơn hàng để hiển thị đầy đủ hơn
     .reverse()
     .map((payment) => {
       const plan = plans.find((p) => p.price === payment.amountPaid);
@@ -140,49 +129,7 @@ const RevenueManagement = () => {
       };
     });
 
-  // ✅ Columns cho bảng
-  const packageColumns = [
-    {
-      title: "Tên gói",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Giá",
-      dataIndex: "price",
-      key: "price",
-      render: (value) => `${value.toLocaleString("vi-VN")} VND`,
-    },
-    {
-      title: "Đã bán",
-      dataIndex: "sold",
-      key: "sold",
-      render: (value) => `${value} gói`,
-    },
-    {
-      title: "Doanh thu",
-      dataIndex: "revenue",
-      key: "revenue",
-      render: (value) => `${value}M VND`,
-    },
-    {
-      title: "Thao tác",
-      key: "action",
-      render: (_, record) => (
-        <Button
-          type="link"
-          size="small"
-          icon={<EyeOutlined />}
-          onClick={() =>
-            showPlanDetails(plans.find((p) => p.id === record.key))
-          }
-        >
-          Chi tiết
-        </Button>
-      ),
-    },
-  ];
-
+  // ✅ Columns cho bảng đơn hàng
   const orderColumns = [
     {
       title: "Ngày",
@@ -256,9 +203,6 @@ const RevenueManagement = () => {
       </div>
     );
   }
-
-  // ✅ Gói bán chạy nhất
-  const bestSellingPackage = topPackages[0];
 
   return (
     <div className="revenue-simple">
@@ -367,34 +311,23 @@ const RevenueManagement = () => {
         </Col>
       </Row>
 
-      {/* ✅ Bảng phân tích */}
+      {/* ✅ Bảng đơn hàng gần đây - Mở rộng full width */}
       <Row gutter={[16, 16]}>
-        <Col xs={24} lg={12}>
-          <Card title="🏆 Top gói bán chạy">
-            <Table
-              columns={packageColumns}
-              dataSource={topPackages}
-              pagination={false}
-              size="small"
-            />
-          </Card>
-        </Col>
-
-        <Col xs={24} lg={12}>
+        <Col xs={24}>
           <Card title="🛍️ Đơn hàng gần đây">
             <Table
               columns={orderColumns}
               dataSource={recentOrders}
-              pagination={false}
+              pagination={{ pageSize: 10 }}
               size="small"
             />
           </Card>
         </Col>
       </Row>
 
-      {/* ✅ Tóm tắt nhanh */}
+      {/* ✅ Tóm tắt doanh thu đơn giản */}
       <Row gutter={[16, 16]} style={{ marginTop: 24 }}>
-        <Col xs={24} lg={8}>
+        <Col xs={24} lg={12}>
           <Card title="💰 Tóm tắt doanh thu">
             <div style={{ textAlign: "center" }}>
               <h3 style={{ color: "#52c41a", margin: 0 }}>
@@ -405,24 +338,11 @@ const RevenueManagement = () => {
           </Card>
         </Col>
 
-        <Col xs={24} lg={8}>
-          <Card title="📦 Gói bán chạy nhất">
-            <div style={{ textAlign: "center" }}>
-              <h3 style={{ color: "#1890ff", margin: 0 }}>
-                {bestSellingPackage?.name || "Chưa có dữ liệu"}
-              </h3>
-              <p style={{ margin: 0, color: "#8c8c8c" }}>
-                {bestSellingPackage?.sold || 0} gói đã bán
-              </p>
-            </div>
-          </Card>
-        </Col>
-
-        <Col xs={24} lg={8}>
-          <Card title="👥 Khách hàng">
+        <Col xs={24} lg={12}>
+          <Card title="📈 Tổng giao dịch">
             <div style={{ textAlign: "center" }}>
               <h3 style={{ color: "#722ed1", margin: 0 }}>{payments.length}</h3>
-              <p style={{ margin: 0, color: "#8c8c8c" }}>Tổng giao dịch</p>
+              <p style={{ margin: 0, color: "#8c8c8c" }}>Đơn hàng đã xử lý</p>
             </div>
           </Card>
         </Col>
