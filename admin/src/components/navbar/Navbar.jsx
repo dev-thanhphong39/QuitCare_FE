@@ -12,8 +12,6 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  const toggleDropdown = () => setShowDropdown(!showDropdown);
-
   const handleLogout = () => {
     dispatch(logout());
     setShowDropdown(false);
@@ -122,65 +120,72 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Avatar */}
-          <button onClick={toggleDropdown} className="qc-navbar-user-button">
-            <img
-              src={
-                user.avatar?.trim() ||
-                `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                  user.fullName?.trim() || "User"
-                )}&background=ececec&color=555&size=64&rounded=true`
-              }
-              alt={user.fullName?.trim() || "User"}
-              className="qc-navbar-avatar"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src =
-                  "https://ui-avatars.com/api/?name=User&background=ececec&color=555&size=64&rounded=true";
-              }}
-            />
-          </button>
-          <span className="qc-navbar-fullname">
-            {user.fullName?.trim() || "Guest"}
-          </span>
-          {showDropdown && (
-            <div className="qc-navbar-dropdown">
-              <Link
-                to="/profile"
-                onClick={() => setShowDropdown(false)}
-                className="qc-dropdown-item"
-              >
-                Hồ sơ
-              </Link>
-              <Link
-                to="/viewadvise"
-                onClick={() => setShowDropdown(false)}
-                className="qc-dropdown-item"
-              >
-                Lịch tư vấn
-              </Link>
-              <Link
-                to="/history-transactions"
-                onClick={() => setShowDropdown(false)}
-                className="qc-dropdown-item"
-              >
-                Lịch sử giao dịch
-              </Link>
-              <Link
-                to="/viewsurvey"
-                onClick={() => setShowDropdown(false)}
-                className="qc-dropdown-item"
-              >
-                Khảo sát
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="qc-dropdown-item qc-logout-btn"
-              >
-                Đăng xuất
-              </button>
+          {/* Avatar - CẬP NHẬT HOVER DROPDOWN */}
+          <div
+            className="qc-navbar-user-container"
+            onMouseEnter={() => setShowDropdown(true)}
+            onMouseLeave={() => setShowDropdown(false)}
+          >
+            <div className="qc-navbar-user-button">
+              <img
+                src={
+                  user.avatar?.trim() ||
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    user.fullName?.trim() || "User"
+                  )}&background=ececec&color=555&size=64&rounded=true`
+                }
+                alt={user.fullName?.trim() || "User"}
+                className="qc-navbar-avatar"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://ui-avatars.com/api/?name=User&background=ececec&color=555&size=64&rounded=true";
+                }}
+              />
+              <span className="qc-navbar-fullname">
+                {user.fullName?.trim() || "Guest"}
+              </span>
             </div>
-          )}
+
+            {showDropdown && (
+              <div className="qc-navbar-dropdown">
+                <Link
+                  to="/profile"
+                  onClick={() => setShowDropdown(false)}
+                  className="qc-dropdown-item"
+                >
+                  Hồ sơ
+                </Link>
+                <Link
+                  to="/viewadvise"
+                  onClick={() => setShowDropdown(false)}
+                  className="qc-dropdown-item"
+                >
+                  Lịch tư vấn
+                </Link>
+                <Link
+                  to="/history-transactions"
+                  onClick={() => setShowDropdown(false)}
+                  className="qc-dropdown-item"
+                >
+                  Lịch sử giao dịch
+                </Link>
+                <Link
+                  to="/viewsurvey"
+                  onClick={() => setShowDropdown(false)}
+                  className="qc-dropdown-item"
+                >
+                  Khảo sát
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="qc-dropdown-item qc-logout-btn"
+                >
+                  Đăng xuất
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       ) : (
         <div className="qc-navbar-buttons">

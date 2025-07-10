@@ -84,6 +84,15 @@ function Footer() {
                 <i className="fab fa-instagram"></i> Instagram
               </a>
             </li>
+            <li>
+              <a
+                href="https://www.tiktok.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="fab fa-tiktok"></i> TikTok
+              </a>
+            </li>
           </ul>
         </div>
       </div>

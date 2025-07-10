@@ -82,7 +82,6 @@ const TrackingPage = () => {
   const [stats, setStats] = useState({
     totalDays: 0,
     completedDays: 0,
-    totalPoints: 0,
     averageProgress: 0,
   });
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -364,20 +363,6 @@ const TrackingPage = () => {
     }
   };
 
-  // Tính điểm
-  const calculatePoints = (smoked, target) => {
-    const basePoints = 10;
-    const smokedCount = parseInt(smoked) || 0;
-
-    if (smokedCount <= target) {
-      const savedCigs = target - smokedCount;
-      return basePoints + 50 + savedCigs * 5;
-    } else {
-      const excessCigs = smokedCount - target;
-      return Math.max(5, basePoints - excessCigs * 3);
-    }
-  };
-
   // Kiểm tra triệu chứng thường xuyên
   const checkFrequentSymptoms = (dayKey, smoked, targetCigs) => {
     const symptomsToday = todayData.symptoms || [];
@@ -439,13 +424,7 @@ const TrackingPage = () => {
   };
 
   // Hiển thị popup thành công
-  const showSuccessPopup = (
-    smoked,
-    target,
-    points,
-    totalPoints,
-    isTestData = false
-  ) => {
+  const showSuccessPopup = (smoked, target, isTestData = false) => {
     const savedCigs = Math.max(0, target - smoked);
     const savedMoney = savedCigs * 1000;
 
@@ -455,7 +434,7 @@ const TrackingPage = () => {
       content += `
         <div class="quit-tracking-test-notice">
           <h4>🔧 Chế độ Test - Dữ liệu mẫu</h4>
-          <p>Dữ liệu này chỉ để test giao diện, không ảnh hưởng đến điểm thật.</p>
+          <p>Dữ liệu này chỉ để test giao diện, không ảnh hưởng đến kết quả thật.</p>
         </div>
       `;
     }
@@ -466,6 +445,7 @@ const TrackingPage = () => {
           <h3>🎉 Chúc mừng! Bạn đã hoàn thành mục tiêu ${
             isTestData ? "mẫu" : "hôm nay"
           }!</h3>
+          <p>Bạn đã tiết kiệm được ${savedCigs} điếu thuốc và ${savedMoney.toLocaleString()} VNĐ!</p>
         </div>
       `;
     } else {
@@ -561,10 +541,6 @@ const TrackingPage = () => {
     }
 
     const cigarettes_smoked = parseInt(todayData.cigarettes_smoked) || 0;
-    const points = calculatePoints(
-      cigarettes_smoked,
-      currentStage.targetCigarettes
-    );
     const mainSymptom =
       todayData.symptoms.length > 0 ? todayData.symptoms[0] : "SYMPTOM1";
 
@@ -599,7 +575,6 @@ const TrackingPage = () => {
         ...todayData,
         cigarettes_smoked,
         target: currentStage.targetCigarettes,
-        points,
         submitted: true,
         submittedAt: new Date().toISOString(),
         stageId: currentStage.id,
@@ -618,13 +593,6 @@ const TrackingPage = () => {
       setTrackingData(newTrackingData);
       calculateStats(newTrackingData);
 
-      // Cập nhật điểm
-      const currentTotal = parseInt(
-        localStorage.getItem(`total_points_${accountId}`) || "0"
-      );
-      const newTotal = currentTotal + points;
-      localStorage.setItem(`total_points_${accountId}`, newTotal.toString());
-
       // Kiểm tra xem có phải ngày cuối cùng không
       if (isLastDayOfPlan(selectedDate)) {
         // Đợi một chút để modal thành công hiển thị trước
@@ -636,8 +604,6 @@ const TrackingPage = () => {
         showSuccessPopup(
           cigarettes_smoked,
           currentStage.targetCigarettes,
-          points,
-          0,
           false
         );
       }
@@ -689,7 +655,6 @@ const TrackingPage = () => {
       completedDays: realDataEntries.length,
       completionRate: Math.round(completionRate),
       successRate: Math.round(successRate),
-      totalPoints: stats.totalPoints,
       savedCigarettes: totalSavedCigarettes,
       savedMoney: totalSavedMoney,
       planType: plan.systemPlan ? "Kế hoạch hệ thống" : "Kế hoạch tự tạo",
@@ -784,11 +749,6 @@ const TrackingPage = () => {
       ([_, value]) => value.submitted
     ).length;
 
-    const totalPoints = realDataEntries.reduce(
-      (sum, [_, value]) => sum + (value.points || 0),
-      0
-    );
-
     const averageProgress =
       completedDays > 0
         ? realDataEntries.reduce((sum, [_, value]) => {
@@ -809,7 +769,6 @@ const TrackingPage = () => {
     setStats({
       totalDays: realDataEntries.length,
       completedDays,
-      totalPoints,
       averageProgress: Math.round(averageProgress),
     });
   };
@@ -885,23 +844,28 @@ const TrackingPage = () => {
       return (
         <div className="quit-tracking-submitted-data">
           <h4>✅ Dữ liệu đã lưu:</h4>
-          <p>
-            <strong>Số điếu đã hút:</strong> {selectedData.cigarettes_smoked}
-          </p>
-          <p>
-            <strong>Mục tiêu:</strong> {selectedData.target} điếu
-          </p>
-          <p>
-            <strong>Điểm:</strong> {selectedData.points}
-          </p>
+          <div className="quit-tracking-data-item">
+            <span className="quit-tracking-data-label">Số điếu đã hút:</span>
+            <span className="quit-tracking-data-value">
+              {selectedData.cigarettes_smoked}
+            </span>
+          </div>
+          <div className="quit-tracking-data-item">
+            <span className="quit-tracking-data-label">Mục tiêu:</span>
+            <span className="quit-tracking-data-value">
+              {selectedData.target} điếu
+            </span>
+          </div>
           {selectedData.symptoms && selectedData.symptoms.length > 0 && (
-            <div>
-              <strong>Triệu chứng:</strong>
-              {selectedData.symptoms.map((symptom) => (
-                <Tag key={symptom} color="orange">
-                  {SYMPTOMS[symptom]}
-                </Tag>
-              ))}
+            <div className="quit-tracking-data-item">
+              <span className="quit-tracking-data-label">Triệu chứng:</span>
+              <div className="quit-tracking-symptoms-list">
+                {selectedData.symptoms.map((symptom) => (
+                  <span key={symptom} className="quit-tracking-symptom-tag">
+                    {SYMPTOMS[symptom]}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
           {dayStatus.canEdit && (
@@ -987,40 +951,6 @@ const TrackingPage = () => {
       </div>
     );
   };
-
-  // Debug log
-  useEffect(() => {
-    if (plan) {
-      const startDate = startOfDay(new Date(plan.localDateTime));
-      const endDate = getPlanEndDate();
-      const today = startOfDay(new Date());
-
-      console.log("📅 Debug ngày:");
-      console.log("  Plan start:", format(startDate, "dd/MM/yyyy HH:mm:ss"));
-      console.log(
-        "  Plan end:",
-        endDate ? format(endDate, "dd/MM/yyyy HH:mm:ss") : "null"
-      );
-      console.log("  Today:", format(today, "dd/MM/yyyy HH:mm:ss"));
-      console.log(
-        "  Selected:",
-        format(startOfDay(selectedDate), "dd/MM/yyyy HH:mm:ss")
-      );
-
-      // Test isDateInPlan
-      console.log("  isDateInPlan(today):", isDateInPlan(today));
-      console.log("  isDateInPlan(selected):", isDateInPlan(selectedDate));
-      console.log("  isDateInPlan(startDate):", isDateInPlan(startDate));
-
-      // Test getCurrentStage
-      console.log("  getCurrentStage(today):", getCurrentStage(today));
-      console.log(
-        "  getCurrentStage(selected):",
-        getCurrentStage(selectedDate)
-      );
-      console.log("  getCurrentStage(startDate):", getCurrentStage(startDate));
-    }
-  }, [plan, selectedDate]);
 
   // Render Calendar
   const renderCalendar = () => {
@@ -1230,7 +1160,7 @@ const TrackingPage = () => {
 
         {/* Giữ nguyên stats */}
         <Row gutter={[16, 16]} className="quit-tracking-stats-row">
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} sm={12} md={8}>
             <Card className="quit-tracking-stats-card">
               <Statistic
                 title="Tổng số ngày"
@@ -1239,7 +1169,7 @@ const TrackingPage = () => {
               />
             </Card>
           </Col>
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} sm={12} md={8}>
             <Card className="quit-tracking-stats-card">
               <Statistic
                 title="Ngày hoàn thành"
@@ -1248,16 +1178,7 @@ const TrackingPage = () => {
               />
             </Card>
           </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Card className="quit-tracking-stats-card">
-              <Statistic
-                title="Tổng điểm"
-                value={stats.totalPoints}
-                prefix={<TrophyOutlined />}
-              />
-            </Card>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} sm={12} md={8}>
             <Card className="quit-tracking-stats-card">
               <Statistic
                 title="Tiến độ trung bình"
@@ -1271,7 +1192,6 @@ const TrackingPage = () => {
 
         {renderCalendar()}
 
-        {/* Sửa phần form nhập liệu - khai báo currentStage ở đây */}
         <Card
           className="quit-tracking-form-card"
           title={`📝 Nhập dữ liệu ngày ${format(selectedDate, "dd/MM/yyyy")}`}
@@ -1337,7 +1257,7 @@ const TrackingPage = () => {
               🎯 Đóng
             </Button>,
           ]}
-          width={600} // ✅ Giảm từ 800 xuống 600
+          width={600}
           centered
           closable={false}
           className="quit-completion-modal"
