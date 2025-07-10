@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-
 import { HomeOutlined, HistoryOutlined } from "@ant-design/icons";
 import useGetParams from "../../hook/useGetParam";
 import { useNavigate } from "react-router-dom";
 import { Result, Button, Descriptions, Spin, Card } from "antd";
+import "./PaymentResult.css";
+
 const PaymentResult = () => {
   const getParam = useGetParams();
   const navigate = useNavigate();
@@ -42,15 +43,18 @@ const PaymentResult = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="payment-result-loading">
         <Spin size="large" />
+        <div className="payment-result-loading-text">
+          Đang xử lý kết quả thanh toán...
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-2xl bg-white rounded-lg shadow p-6">
+    <div className="payment-result-main-container">
+      <div className="payment-result-wrapper">
         <Result
           status={status}
           title={
@@ -82,41 +86,42 @@ const PaymentResult = () => {
           ]}
         />
         {status === "success" && (
-  <Card
-    title="Chi tiết giao dịch"
-    bordered={false}
-    style={{
-      backgroundColor: "#f6ffed",
-      border: "1px solid #b7eb8f",
-      borderRadius: "12px",
-      padding: "1.5rem",
-      maxWidth: "600px",
-      margin: "0 auto",
-      marginTop: "2rem",
-      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-    }}
-    headStyle={{ fontWeight: "600", fontSize: "18px", color: "#389e0d" }}
-  >
-    <Descriptions column={1} layout="horizontal" labelStyle={{ fontWeight: 500 }}>
-      <Descriptions.Item label="Mã giao dịch">
-        {paymentDetails.transactionNo}
-      </Descriptions.Item>
-      <Descriptions.Item label="Số tiền">
-        {paymentDetails.amount.toLocaleString("vi-VN")} VND
-      </Descriptions.Item>
-      <Descriptions.Item label="Ngân hàng">
-        {paymentDetails.bank}
-      </Descriptions.Item>
-      <Descriptions.Item label="Loại thẻ">
-        {paymentDetails.cardType}
-      </Descriptions.Item>
-      <Descriptions.Item label="Thời gian thanh toán">
-        {formatVNPayDate(paymentDetails.payDate)}
-      </Descriptions.Item>
-    </Descriptions>
-  </Card>
-)}
-
+          <Card
+            title="Chi tiết giao dịch"
+            bordered={false}
+            className="payment-transaction-card"
+          >
+            <Descriptions
+              column={1}
+              layout="horizontal"
+              labelStyle={{ fontWeight: 500 }}
+            >
+              <Descriptions.Item label="Mã giao dịch">
+                <span className="payment-transaction-no">
+                  {paymentDetails.transactionNo}
+                </span>
+              </Descriptions.Item>
+              <Descriptions.Item label="Số tiền">
+                <span className="payment-amount">
+                  {paymentDetails.amount.toLocaleString("vi-VN")} VND
+                </span>
+              </Descriptions.Item>
+              <Descriptions.Item label="Ngân hàng">
+                <span className="payment-bank">{paymentDetails.bank}</span>
+              </Descriptions.Item>
+              <Descriptions.Item label="Loại thẻ">
+                <span className="payment-card-type">
+                  {paymentDetails.cardType}
+                </span>
+              </Descriptions.Item>
+              <Descriptions.Item label="Thời gian thanh toán">
+                <span className="payment-datetime">
+                  {formatVNPayDate(paymentDetails.payDate)}
+                </span>
+              </Descriptions.Item>
+            </Descriptions>
+          </Card>
+        )}
       </div>
     </div>
   );

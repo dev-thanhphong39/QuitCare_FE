@@ -38,9 +38,7 @@ import HistoryPayment from "./components/payment/PaymentHistory";
 
 function App() {
   const AppLayout = ({ children }) => (
-    <div style={{ minHeight: "100vh", overflowY: "auto" }}>
-      {children}
-    </div>
+    <div style={{ minHeight: "100vh", overflowY: "auto" }}>{children}</div>
   );
   const router = createBrowserRouter([
     {
@@ -83,10 +81,7 @@ function App() {
       path: "/blog/:id",
       element: <BlogDetail />,
     },
-    {
-      path: "/payment-result",
-      element: <PaymentResult />,
-    },
+
     {
       path: "/profile",
       element: <Profile />,
@@ -167,7 +162,7 @@ function App() {
 
     {
       path: "/payment-result",
-      element: <PaymentResult />, 
+      element: <PaymentResult />,
     },
 
     {
@@ -175,9 +170,9 @@ function App() {
       element: <PaymentResult />,
     },
 
-    { 
-      path: "/payment-fail", 
-      element: <PaymentResult />
+    {
+      path: "/payment-fail",
+      element: <PaymentResult />,
     },
   ]);
   return (

@@ -335,67 +335,81 @@
     border-radius  : 20px;
 }
 
-/* Daily Data Input Form Styles */
+/* Daily Data Input Form Styles - CLEAN & MODERN */
 .quit-tracking-form-card {
     background   : white;
-    border-radius: 16px;
-    box-shadow   : 0 8px 32px rgba(0, 0, 0, 0.08);
-    border       : 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 20px;
+    box-shadow   : 0 10px 30px rgba(0, 0, 0, 0.06);
+    border       : 1px solid #e8f4f8;
     margin-bottom: 30px;
     overflow     : hidden;
 }
 
 .quit-tracking-form-card .ant-card-head {
-    background   : linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    background   : linear-gradient(135deg, #3498db 0%, #2980b9 100%);
     border-bottom: none;
     text-align   : center;
-    padding      : 20px 24px;
+    padding      : 24px;
+    position     : relative;
+}
+
+.quit-tracking-form-card .ant-card-head::before {
+    content       : '';
+    position      : absolute;
+    top           : 0;
+    left          : 0;
+    right         : 0;
+    bottom        : 0;
+    background    : radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 .quit-tracking-form-card .ant-card-head-title {
-    color      : white;
-    font-size  : 1.2rem;
-    font-weight: 600;
-    margin     : 0;
+    color      : white !important;
+    font-size  : 1.3rem !important;
+    font-weight: 600 !important;
+    margin     : 0 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position   : relative;
+    z-index    : 1;
 }
 
 .quit-tracking-form-card .ant-card-body {
-    padding: 24px;
+    padding   : 0;
+    background: #ffffff;
 }
 
 .quit-tracking-stage-info {
-    background   : linear-gradient(135deg, #f0f8ff 0%, #e6f7ff 100%);
-    border       : 1px solid #91d5ff;
-    border-radius: 12px;
-    padding      : 16px;
-    margin-bottom: 24px;
+    background   : linear-gradient(135deg, #f8fbff 0%, #e8f4f8 100%);
+    border       : 1px solid rgba(52, 152, 219, 0.15);
+    border-radius: 0;
+    padding      : 20px;
+    margin       : 0;
     text-align   : center;
+    border-bottom: 1px solid rgba(52, 152, 219, 0.1);
 }
 
-.quit-tracking-stage-info h3 {
-    color      : #1890ff;
-    margin     : 0 0 8px 0;
-    font-size  : 1.1rem;
-    font-weight: 600;
-}
-
-.quit-tracking-stage-info p {
-    color    : #666;
-    margin   : 0;
-    font-size: 14px;
+.quit-tracking-stage-info .ant-tag {
+    font-size    : 12px;
+    padding      : 4px 12px;
+    border-radius: 16px;
+    font-weight  : 500;
+    margin       : 0 6px;
+    border       : none;
 }
 
 .quit-tracking-submitted-data {
-    background   : #f6ffed;
-    border       : 1px solid #b7eb8f;
-    border-radius: 12px;
-    padding      : 20px;
-    margin-bottom: 24px;
+    background   : linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border       : none;
+    border-radius: 0;
+    padding      : 28px;
+    margin       : 0;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.1);
 }
 
 .quit-tracking-submitted-data h4 {
-    color      : #52c41a;
-    margin     : 0 0 16px 0;
+    color      : #059669;
+    margin     : 0 0 20px 0;
     font-size  : 1.1rem;
     font-weight: 600;
     display    : flex;
@@ -407,8 +421,8 @@
     display        : flex;
     justify-content: space-between;
     align-items    : center;
-    padding        : 8px 0;
-    border-bottom  : 1px solid #d9f7be;
+    padding        : 12px 0;
+    border-bottom  : 1px solid rgba(34, 197, 94, 0.1);
 }
 
 .quit-tracking-data-item:last-child {
@@ -417,605 +431,354 @@
 
 .quit-tracking-data-label {
     font-weight: 500;
-    color      : #595959;
+    color      : #374151;
+    font-size  : 14px;
 }
 
 .quit-tracking-data-value {
-    color      : #262626;
+    color      : #059669;
     font-weight: 600;
+    font-size  : 15px;
 }
 
 .quit-tracking-symptoms-list {
     display   : flex;
     flex-wrap : wrap;
-    gap       : 6px;
-    margin-top: 4px;
+    gap       : 8px;
+    margin-top: 10px;
 }
 
 .quit-tracking-symptom-tag {
-    background   : #fff2e8;
-    color        : #fa8c16;
-    padding      : 2px 8px;
+    background   : #fef3c7;
+    color        : #d97706;
+    padding      : 4px 10px;
     border-radius: 12px;
-    font-size    : 12px;
-    border       : 1px solid #ffd591;
+    font-size    : 11px;
+    border       : 1px solid #fde68a;
+    font-weight  : 500;
 }
 
 .quit-tracking-input-form {
-    background   : #fafafa;
-    border-radius: 12px;
-    padding      : 24px;
-    margin-bottom: 20px;
+    background   : #ffffff;
+    border-radius: 0;
+    padding      : 32px;
+    box-shadow   : none;
+    border       : none;
 }
 
 .quit-tracking-form-group {
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
 .quit-tracking-form-group label {
     display      : block;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-weight  : 600;
-    color        : #262626;
-    font-size    : 14px;
+    color        : #374151;
+    font-size    : 15px;
+    position     : relative;
+    padding-left : 0;
+}
+
+.quit-tracking-form-group label::before {
+    display: none;
 }
 
 .quit-tracking-form-input {
     width        : 100%;
-    padding      : 12px 16px;
-    border       : 2px solid #d9d9d9;
-    border-radius: 8px;
-    font-size    : 16px;
-    transition   : all 0.2s ease;
-    background   : white;
-    color        : #262626;
+    padding      : 14px 16px;
+    border       : 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size    : 15px;
+    transition   : all 0.3s ease;
+    background   : #ffffff;
+    color        : #374151;
+    font-weight  : 500;
 }
 
 .quit-tracking-form-input:focus {
     outline     : none;
-    border-color: #1890ff;
-    box-shadow  : 0 0 0 3px rgba(24, 144, 255, 0.1);
+    border-color: #3498db;
+    box-shadow  : 0 0 0 3px rgba(52, 152, 219, 0.1);
+    background  : #f8fbff;
 }
 
 .quit-tracking-form-input:hover {
-    border-color: #40a9ff;
+    border-color: #94a3b8;
 }
 
 .quit-tracking-form-textarea {
     width        : 100%;
     min-height   : 100px;
-    padding      : 12px 16px;
-    border       : 2px solid #d9d9d9;
-    border-radius: 8px;
+    padding      : 14px 16px;
+    border       : 2px solid #e5e7eb;
+    border-radius: 12px;
     font-size    : 14px;
     font-family  : inherit;
     resize       : vertical;
-    transition   : all 0.2s ease;
-    background   : white;
-    color        : #262626;
+    transition   : all 0.3s ease;
+    background   : #ffffff;
+    color        : #374151;
+    line-height  : 1.5;
+    font-weight  : 500;
 }
 
 .quit-tracking-form-textarea:focus {
     outline     : none;
-    border-color: #1890ff;
-    box-shadow  : 0 0 0 3px rgba(24, 144, 255, 0.1);
+    border-color: #3498db;
+    box-shadow  : 0 0 0 3px rgba(52, 152, 219, 0.1);
+    background  : #f8fbff;
 }
 
 .quit-tracking-form-textarea:hover {
-    border-color: #40a9ff;
+    border-color: #94a3b8;
 }
 
+/* SYMPTOMS GRID - FIXED ALIGNMENT */
 .quit-tracking-symptoms-grid {
     display              : grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap                  : 12px;
-    margin-top           : 8px;
+    margin-top           : 16px;
 }
 
 .quit-tracking-symptom-checkbox {
     display      : flex;
     align-items  : center;
-    gap          : 8px;
-    padding      : 12px;
-    background   : white;
-    border       : 2px solid #f0f0f0;
-    border-radius: 8px;
+    gap          : 12px;
+    padding      : 16px;
+    background   : #f8fafc;
+    border       : 2px solid #e2e8f0;
+    border-radius: 12px;
     cursor       : pointer;
-    transition   : all 0.2s ease;
+    transition   : all 0.3s ease;
     font-size    : 14px;
-    color        : #262626;
+    color        : #475569;
     font-weight  : 500;
+    min-height   : 56px;
+    position     : relative;
 }
 
 .quit-tracking-symptom-checkbox:hover {
-    border-color: #1890ff;
-    background  : #f0f8ff;
+    border-color: #3498db;
+    background  : #f1f8ff;
+    transform   : translateY(-1px);
+    box-shadow  : 0 4px 12px rgba(52, 152, 219, 0.1);
 }
 
 .quit-tracking-symptom-checkbox input[type="checkbox"] {
-    width       : 18px;
-    height      : 18px;
-    accent-color: #1890ff;
-    cursor      : pointer;
+    width        : 20px;
+    height       : 20px;
+    accent-color : #3498db;
+    cursor       : pointer;
+    border-radius: 4px;
+    margin       : 0;
+    flex-shrink  : 0;
+    position     : relative;
+    top          : 0;
 }
 
 .quit-tracking-symptom-checkbox input[type="checkbox"]:checked {
-    background: #1890ff;
+    transform: scale(1.05);
 }
 
 .quit-tracking-symptom-checkbox:has(input:checked) {
-    border-color: #1890ff;
-    background  : #e6f7ff;
-    color       : #1890ff;
+    border-color: #3498db;
+    background  : linear-gradient(135deg, #e8f4f8 0%, #d6eaf8 100%);
+    color       : #2980b9;
+    box-shadow  : 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+.quit-tracking-symptom-checkbox label {
+    cursor     : pointer;
+    margin     : 0 !important;
+    padding    : 0 !important;
+    font-weight: 500 !important;
+    font-size  : 14px !important;
+    color      : inherit !important;
+    line-height: 1.4;
+    flex       : 1;
+    display    : flex;
+    align-items: center;
+}
+
+.quit-tracking-symptom-checkbox:has(input:checked) label {
+    font-weight: 600 !important;
 }
 
 .quit-tracking-form-actions {
     display        : flex;
     justify-content: center;
-    gap            : 12px;
-    margin-top     : 24px;
+    gap            : 16px;
+    margin-top     : 32px;
+    padding        : 28px 32px;
+    background     : #f8fafc;
+    border-top     : 1px solid #e2e8f0;
 }
 
 .quit-tracking-form-actions .ant-btn {
-    height       : 48px;
-    padding      : 0 32px;
-    font-size    : 16px;
-    font-weight  : 600;
-    border-radius: 24px;
-    display      : flex;
-    align-items  : center;
-    gap          : 8px;
-    box-shadow   : 0 4px 12px rgba(24, 144, 255, 0.2);
-    transition   : all 0.2s ease;
+    height        : 48px;
+    padding       : 0 32px;
+    font-size     : 15px;
+    font-weight   : 600;
+    border-radius : 24px;
+    display       : flex;
+    align-items   : center;
+    gap           : 8px;
+    transition    : all 0.3s ease;
+    border        : none;
+    box-shadow    : 0 4px 12px rgba(52, 152, 219, 0.2);
+    background    : linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color         : white;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-size     : 13px;
 }
 
 .quit-tracking-form-actions .ant-btn:hover {
     transform : translateY(-2px);
-    box-shadow: 0 6px 20px rgba(24, 144, 255, 0.3);
+    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3);
+    background: linear-gradient(135deg, #2980b9 0%, #1f5582 100%);
+}
+
+.quit-tracking-form-actions .ant-btn:active {
+    transform: translateY(0);
+}
+
+.quit-tracking-form-actions .ant-btn[disabled] {
+    opacity   : 0.6;
+    cursor    : not-allowed;
+    transform : none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .quit-tracking-cannot-edit {
     text-align   : center;
-    padding      : 40px 20px;
-    background   : #fafafa;
-    border-radius: 12px;
-    color        : #666;
+    padding      : 48px 32px;
+    background   : linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 0;
+    margin       : 0;
 }
 
 .quit-tracking-cannot-edit p {
     margin   : 8px 0;
     font-size: 14px;
+    color    : #64748b;
 }
 
 .quit-tracking-cannot-edit p:first-child {
-    font-size  : 16px;
-    font-weight: 600;
-    color      : #fa8c16;
+    font-size    : 18px;
+    font-weight  : 600;
+    color        : #334155;
+    margin-bottom: 12px;
 }
 
-/* Booking Alert Styles trong popup */
-.quit-tracking-booking-alert {
-    background   : linear-gradient(135deg, #fff2f0 0%, #ffebe8 100%);
-    border       : 2px solid #ff7875;
-    border-radius: 12px;
-    padding      : 20px;
-    margin       : 20px 0;
-    box-shadow   : 0 4px 12px rgba(255, 77, 79, 0.1);
+.quit-tracking-out-of-plan {
+    text-align   : center;
+    padding      : 48px 32px;
+    background   : linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border       : 1px solid #f59e0b;
+    border-radius: 0;
+    margin       : 0;
 }
 
-.quit-tracking-booking-alert h4 {
-    color        : #ff4d4f;
-    margin-bottom: 15px;
+.quit-tracking-out-of-plan p {
+    margin   : 8px 0;
+    font-size: 14px;
+    color    : #92400e;
+}
+
+.quit-tracking-out-of-plan p:first-child {
     font-size    : 16px;
     font-weight  : 600;
-    display      : flex;
-    align-items  : center;
-    gap          : 8px;
-}
-
-.quit-tracking-frequent-symptoms-list {
-    background   : white;
-    border-radius: 8px;
-    padding      : 15px 20px;
-    margin       : 15px 0;
-    border-left  : 4px solid #ff7875;
-    box-shadow   : 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.quit-tracking-frequent-symptoms-list li {
-    margin     : 8px 0;
-    color      : #d46b08;
-    font-size  : 14px;
-    font-weight: 500;
-}
-
-.quit-tracking-booking-recommendation {
-    background   : #e6f7ff;
-    border-radius: 8px;
-    padding      : 15px;
-    border-left  : 4px solid #1890ff;
-    margin-top   : 15px;
-}
-
-.quit-tracking-booking-recommendation p {
-    margin     : 0;
-    color      : #0958d9;
-    font-size  : 14px;
-    line-height: 1.6;
-}
-
-/* Styling cho booking button trong modal footer */
-.quit-tracking-result-modal .ant-modal-footer .ant-btn-primary.ant-btn-dangerous {
-    background   : linear-gradient(135deg, #ff7875 0%, #ff4d4f 100%);
-    border       : none;
-    font-weight  : 600;
-    height       : 40px;
-    padding      : 0 20px;
-    border-radius: 8px;
-    transition   : all 0.3s ease;
-}
-
-.quit-tracking-result-modal .ant-modal-footer .ant-btn-primary.ant-btn-dangerous:hover {
-    background: linear-gradient(135deg, #ff4d4f 0%, #d9363e 100%);
-    transform : translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 77, 79, 0.3);
-}
-
-/* Modal hoàn thành - PHIÊN BẢN COMPACT */
-.quit-completion-modal .ant-modal-content {
-    background   : linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 15px;
-    overflow     : hidden;
-}
-
-.quit-completion-modal .ant-modal-body {
-    padding: 0;
-    color  : white;
-}
-
-.quit-completion-modal .ant-modal-footer {
-    background: rgba(255, 255, 255, 0.1);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    text-align: center;
-    padding   : 15px 20px;
-}
-
-.quit-completion-content {
-    padding   : 30px 25px;
-    /* Giảm padding */
-    text-align: center;
-}
-
-.quit-completion-header {
-    margin-bottom: 25px;
-    /* Giảm margin */
-}
-
-.quit-completion-trophy {
-    font-size    : 60px;
-    /* Giảm từ 80px */
-    margin-bottom: 15px;
-    animation    : bounce 2s infinite;
-}
-
-@keyframes bounce {
-
-    0%,
-    20%,
-    50%,
-    80%,
-    100% {
-        transform: translateY(0);
-    }
-
-    40% {
-        transform: translateY(-15px);
-        /* Giảm bounce */
-    }
-
-    60% {
-        transform: translateY(-8px);
-    }
-}
-
-.quit-completion-title {
-    font-size  : 24px;
-    /* Giảm từ 28px */
-    font-weight: bold;
-    margin     : 0 0 8px 0;
-    color      : #fff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.quit-completion-subtitle {
-    font-size  : 16px;
-    /* Giảm từ 18px */
-    margin     : 0 0 8px 0;
-    color      : #f0f0f0;
-    font-weight: normal;
-}
-
-.quit-completion-date-range {
-    font-size: 14px;
-    /* Giảm từ 16px */
-    color    : #e0e0e0;
-    margin   : 0;
-}
-
-.quit-completion-stats {
-    background     : rgba(255, 255, 255, 0.1);
-    border-radius  : 12px;
-    padding        : 20px;
-    /* Giảm từ 30px */
-    margin-bottom  : 20px;
-    /* Giảm từ 30px */
-    backdrop-filter: blur(10px);
-}
-
-.quit-completion-stat-item {
-    text-align: center;
-    padding   : 10px;
-    /* Giảm từ 15px */
-}
-
-.quit-completion-stat-number {
-    font-size    : 28px;
-    /* Giảm từ 32px */
-    font-weight  : bold;
-    color        : #fff;
-    margin-bottom: 6px;
-    text-shadow  : 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.quit-completion-stat-label {
-    font-size    : 13px;
-    /* Giảm từ 14px */
-    color        : #e0e0e0;
-    margin-bottom: 8px;
-}
-
-.quit-completion-saved-money {
-    font-size  : 14px;
-    color      : #ffd700;
-    font-weight: bold;
-    margin-top : 5px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.quit-completion-motivation {
-    background     : rgba(255, 255, 255, 0.1);
-    border-radius  : 12px;
-    padding        : 20px;
-    /* Giảm từ 25px */
-    backdrop-filter: blur(10px);
-}
-
-.quit-completion-quote h3 {
-    color        : #fff;
-    font-size    : 18px;
-    /* Giảm từ 22px */
+    color        : #78350f;
     margin-bottom: 12px;
-    text-shadow  : 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-.quit-completion-quote p {
-    color      : #f0f0f0;
-    font-size  : 15px;
-    /* Giảm từ 16px */
-    line-height: 1.5;
-    margin     : 0;
-}
-
-/* Responsive cho modal nhỏ */
+/* Responsive cho form */
 @media (max-width: 768px) {
-    .quit-completion-modal .ant-modal-content {
-        margin: 20px;
+    .quit-tracking-form-card .ant-card-body {
+        padding: 0;
     }
 
-    .quit-completion-content {
-        padding: 25px 20px;
+    .quit-tracking-input-form {
+        padding: 20px;
     }
 
-    .quit-completion-title {
-        font-size: 20px;
+    .quit-tracking-form-group {
+        margin-bottom: 20px;
     }
 
-    .quit-completion-trophy {
-        font-size: 50px;
+    .quit-tracking-form-group label {
+        font-size    : 14px;
+        margin-bottom: 8px;
     }
 
-    .quit-completion-stat-number {
-        font-size: 24px;
-    }
-
-    .quit-completion-quote h3 {
-        font-size: 16px;
-    }
-
-    .quit-completion-quote p {
+    .quit-tracking-form-input,
+    .quit-tracking-form-textarea {
+        padding  : 12px 14px;
         font-size: 14px;
     }
-}
 
-/* Xóa các CSS class không dùng nữa */
-/* .quit-completion-achievements - DELETED */
-/* .quit-completion-achievement-grid - DELETED */
-/* .quit-completion-achievement-item - DELETED */
-/* .quit-completion-achievement-icon - DELETED */
-
-/* Responsive */
-@media (max-width: 768px) {
-    .quit-completion-content {
-        padding: 30px 20px;
-    }
-
-    .quit-completion-title {
-        font-size: 24px;
-    }
-
-    .quit-completion-trophy {
-        font-size: 60px;
-    }
-
-    .quit-completion-stat-number {
-        font-size: 24px;
-    }
-
-    .quit-completion-achievement-grid {
+    .quit-tracking-symptoms-grid {
         grid-template-columns: 1fr;
-    }
-}
-
-/* Responsive cho calendar */
-@media (max-width: 768px) {
-    .quit-tracking-calendar-cell {
-        min-height: 60px;
-        padding   : 6px;
+        gap                  : 10px;
     }
 
-    .quit-tracking-cell-number {
-        font-size: 12px;
+    .quit-tracking-symptom-checkbox {
+        padding   : 12px;
+        font-size : 13px;
+        min-height: 48px;
     }
 
-    .quit-tracking-calendar-nav h3 {
-        font-size: 1.1rem;
-        min-width: 150px;
+    .quit-tracking-form-actions {
+        padding: 20px;
+        gap    : 12px;
     }
 
-    .quit-tracking-plan-summary {
-        font-size: 12px;
+    .quit-tracking-form-actions .ant-btn {
+        height   : 44px;
+        padding  : 0 24px;
+        font-size: 13px;
+        width    : 100%;
     }
 
-    .quit-tracking-calendar-header {
+    .quit-tracking-form-actions {
         flex-direction: column;
-        gap           : 8px;
     }
 }
 
 @media (max-width: 480px) {
-    .quit-tracking-calendar-cell {
-        min-height: 50px;
-        padding   : 4px;
+    .quit-tracking-form-card .ant-card-head {
+        padding: 20px;
     }
 
-    .quit-tracking-cell-number {
-        font-size: 11px;
+    .quit-tracking-form-card .ant-card-head-title {
+        font-size: 1.1rem !important;
     }
 
-    .quit-tracking-weekday-header {
-        padding  : 6px 2px;
-        font-size: 10px;
+    .quit-tracking-input-form {
+        padding: 16px;
     }
 
-    .quit-tracking-cell-stage {
-        font-size: 8px;
-        padding  : 1px 2px;
+    .quit-tracking-stage-info,
+    .quit-tracking-submitted-data {
+        padding: 16px;
     }
 
-    .quit-tracking-calendar-legend {
-        gap: 6px;
+    .quit-tracking-cannot-edit,
+    .quit-tracking-out-of-plan {
+        padding: 32px 16px;
     }
 
-    .quit-tracking-legend-today,
-    .quit-tracking-legend-success,
-    .quit-tracking-legend-warning,
-    .quit-tracking-legend-out-plan,
-    .quit-tracking-legend-test {
-        font-size: 10px;
-        padding  : 2px 6px;
-    }
-}
-
-/* Thêm vào file TrackingPage.css */
-
-/* Style cho ngày bắt đầu giai đoạn mới */
-.quit-tracking-cell-new-stage {
-    position  : relative;
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    border    : 2px solid #2196f3;
-    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
-}
-
-.quit-tracking-cell-new-stage.quit-tracking-cell-selected {
-    border-color: #1976d2;
-    box-shadow  : 0 4px 12px rgba(25, 118, 210, 0.4);
-}
-
-/* Badge hiển thị giai đoạn mới */
-.quit-tracking-new-stage-badge {
-    position     : absolute;
-    top          : -8px;
-    left         : -8px;
-    right        : -8px;
-    background   : linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-    color        : white;
-    padding      : 4px 2px;
-    border-radius: 8px;
-    font-size    : 10px;
-    font-weight  : bold;
-    text-align   : center;
-    box-shadow   : 0 2px 4px rgba(0, 0, 0, 0.2);
-    z-index      : 10;
-}
-
-.quit-tracking-stage-label {
-    font-size    : 9px;
-    line-height  : 1.2;
-    margin-bottom: 1px;
-}
-
-.quit-tracking-stage-target {
-    font-size  : 8px;
-    opacity    : 0.9;
-    line-height: 1;
-}
-
-/* Style cho legend giai đoạn mới */
-.quit-tracking-legend-new-stage {
-    background   : linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-    color        : white;
-    padding      : 4px 8px;
-    border-radius: 12px;
-    font-size    : 11px;
-    font-weight  : bold;
-    margin       : 0 4px;
-    box-shadow   : 0 2px 4px rgba(33, 150, 243, 0.3);
-}
-
-/* Điều chỉnh cell để có đủ chỗ cho badge */
-.quit-tracking-cell-new-stage .quit-tracking-cell-number {
-    margin-top : 16px;
-    font-weight: bold;
-    color      : #1976d2;
-}
-
-/* Style cho trạng thái hoàn thành trên ngày giai đoạn mới */
-.quit-tracking-cell-new-stage .quit-tracking-cell-status {
-    bottom    : 2px;
-    right     : 2px;
-    background: rgba(255, 255, 255, 0.9);
-    border    : 1px solid #2196f3;
-}
-
-/* Responsive cho mobile */
-@media (max-width: 768px) {
-    .quit-tracking-new-stage-badge {
-        top    : -6px;
-        left   : -6px;
-        right  : -6px;
-        padding: 2px 1px;
+    .quit-tracking-symptom-checkbox {
+        padding: 10px;
+        gap    : 10px;
     }
 
-    .quit-tracking-stage-label {
-        font-size: 8px;
-    }
-
-    .quit-tracking-stage-target {
-        font-size: 7px;
-    }
-
-    .quit-tracking-cell-new-stage .quit-tracking-cell-number {
-        margin-top: 12px;
+    .quit-tracking-symptom-checkbox input[type="checkbox"] {
+        width : 18px;
+        height: 18px;
     }
 }
 

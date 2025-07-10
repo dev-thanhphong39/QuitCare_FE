@@ -1,33 +1,306 @@
-.payment-result-container {
-    max-width: 500px;
-    margin: 80px auto;
-    text-align: center;
-    padding: 24px;
-    border: 1px solid #f0f0f0;
-    border-radius: 12px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+/* Payment Result Modern Styles */
+.payment-result-main-container {
+  min-height     : 100vh;
+  background     : linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  position       : relative;
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
+  padding        : 20px;
+}
+
+/* Background overlay effects */
+.payment-result-main-container::before {
+  content : '';
+  position: absolute;
+  top     : 0;
+  left    : 0;
+  right   : 0;
+  bottom  : 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(52, 152, 219, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(116, 185, 255, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index       : 0;
+}
+
+/* Main content wrapper */
+.payment-result-wrapper {
+  position       : relative;
+  z-index        : 1;
+  width          : 100%;
+  max-width      : 600px;
+  background     : rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius  : 24px;
+  padding        : 40px;
+  box-shadow     : 0 20px 60px rgba(0, 0, 0, 0.1);
+  border         : 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Loading state */
+.payment-result-loading {
+  display        : flex;
+  flex-direction : column;
+  align-items    : center;
+  justify-content: center;
+  min-height     : 100vh;
+  background     : linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.payment-result-loading .ant-spin {
+  font-size: 24px;
+}
+
+.payment-result-loading-text {
+  margin-top: 20px;
+  color     : #6b7280;
+  font-size : 16px;
+}
+
+/* Result customization */
+.payment-result-wrapper .ant-result {
+  padding: 0;
+}
+
+.payment-result-wrapper .ant-result-title {
+  color        : #374151 !important;
+  font-size    : 2rem !important;
+  font-weight  : 700 !important;
+  margin-bottom: 16px !important;
+}
+
+.payment-result-wrapper .ant-result-subtitle {
+  color        : #6b7280 !important;
+  font-size    : 1.1rem !important;
+  margin-bottom: 32px !important;
+}
+
+/* Success icon styling */
+.payment-result-wrapper .ant-result-success .ant-result-icon>.anticon {
+  color    : #10b981;
+  font-size: 80px;
+}
+
+/* Error icon styling */
+.payment-result-wrapper .ant-result-error .ant-result-icon>.anticon {
+  color    : #ef4444;
+  font-size: 80px;
+}
+
+/* Button styling */
+.payment-result-wrapper .ant-result-extra {
+  margin-top: 32px;
+}
+
+.payment-result-wrapper .ant-btn {
+  height       : 48px;
+  border-radius: 12px;
+  font-size    : 16px;
+  font-weight  : 500;
+  padding      : 0 24px;
+  margin       : 0 8px;
+  transition   : all 0.3s ease;
+}
+
+.payment-result-wrapper .ant-btn-primary {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  border    : none;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.payment-result-wrapper .ant-btn-primary:hover {
+  transform : translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.payment-result-wrapper .ant-btn-default {
+  background: rgba(255, 255, 255, 0.9);
+  border    : 1px solid #d1d5db;
+  color     : #374151;
+}
+
+.payment-result-wrapper .ant-btn-default:hover {
+  background  : #f8f9fa;
+  border-color: #3498db;
+  color       : #3498db;
+  transform   : translateY(-1px);
+}
+
+/* Transaction details card */
+.payment-transaction-card {
+  background   : rgba(16, 185, 129, 0.05) !important;
+  border       : 1px solid rgba(16, 185, 129, 0.2) !important;
+  border-radius: 16px !important;
+  padding      : 24px !important;
+  margin-top   : 32px !important;
+  box-shadow   : 0 4px 20px rgba(16, 185, 129, 0.1) !important;
+}
+
+.payment-transaction-card .ant-card-head {
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2) !important;
+  padding      : 0 0 16px 0 !important;
+}
+
+.payment-transaction-card .ant-card-head-title {
+  font-weight: 600 !important;
+  font-size  : 18px !important;
+  color      : #059669 !important;
+}
+
+.payment-transaction-card .ant-card-body {
+  padding: 16px 0 0 0 !important;
+}
+
+/* Descriptions styling */
+.payment-transaction-card .ant-descriptions-item-label {
+  font-weight: 500 !important;
+  color      : #374151 !important;
+  width      : 40% !important;
+}
+
+.payment-transaction-card .ant-descriptions-item-content {
+  font-weight: 600 !important;
+  color      : #1f2937 !important;
+}
+
+.payment-transaction-card .ant-descriptions-row {
+  border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+  padding      : 12px 0;
+}
+
+.payment-transaction-card .ant-descriptions-row:last-child {
+  border-bottom: none;
+}
+
+/* Transaction details styling */
+.payment-transaction-no {
+  font-family  : 'Courier New', monospace;
+  background   : rgba(16, 185, 129, 0.1);
+  padding      : 4px 8px;
+  border-radius: 6px;
+  font-size    : 14px;
+  color        : #047857;
+}
+
+.payment-amount {
+  font-size  : 18px;
+  font-weight: 700;
+  color      : #059669;
+}
+
+.payment-bank {
+  text-transform: uppercase;
+  font-weight   : 600;
+  color         : #374151;
+}
+
+.payment-card-type {
+  background    : rgba(52, 152, 219, 0.1);
+  padding       : 2px 8px;
+  border-radius : 12px;
+  font-size     : 12px;
+  color         : #2980b9;
+  text-transform: uppercase;
+}
+
+.payment-datetime {
+  font-weight: 500;
+  color      : #6b7280;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .payment-result-wrapper {
+    padding      : 24px 20px;
+    border-radius: 16px;
+    margin       : 10px;
   }
-  
-  .payment-result-container h2 {
-    margin-top: 16px;
-    font-size: 24px;
+
+  .payment-result-wrapper .ant-result-title {
+    font-size: 1.5rem !important;
   }
-  
-  .payment-result-container p {
-    margin: 6px 0;
+
+  .payment-result-wrapper .ant-result-subtitle {
+    font-size: 1rem !important;
+  }
+
+  .payment-result-wrapper .ant-btn {
+    height   : 44px;
+    font-size: 14px;
+    margin   : 4px;
+    width    : 100%;
+  }
+
+  .payment-transaction-card {
+    padding   : 16px !important;
+    margin-top: 24px !important;
+  }
+
+  .payment-transaction-card .ant-descriptions-item-label {
+    width    : 50% !important;
+    font-size: 14px !important;
+  }
+
+  .payment-transaction-card .ant-descriptions-item-content {
+    font-size: 14px !important;
+  }
+
+  .payment-amount {
     font-size: 16px;
   }
-  
-  .loading {
-    color: #888;
+}
+
+@media (max-width: 480px) {
+  .payment-result-wrapper {
+    padding: 20px 16px;
   }
-  
-  .success {
-    color: #2ecc71;
+
+  .payment-result-wrapper .ant-result-title {
+    font-size: 1.3rem !important;
   }
-  
-  .fail {
-    color: #e74c3c;
+
+  .payment-result-wrapper .ant-result-subtitle {
+    font-size: 0.9rem !important;
   }
-  
+
+  .payment-result-wrapper .ant-result-icon>.anticon {
+    font-size: 60px !important;
+  }
+
+  .payment-transaction-card {
+    padding: 12px !important;
+  }
+
+  .payment-transaction-card .ant-descriptions-item-label {
+    width        : 100% !important;
+    margin-bottom: 4px;
+  }
+
+  .payment-transaction-card .ant-descriptions-item-content {
+    width        : 100% !important;
+    margin-bottom: 12px;
+  }
+}
+
+/* Animation effects */
+@keyframes fadeInUp {
+  from {
+    opacity  : 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity  : 1;
+    transform: translateY(0);
+  }
+}
+
+.payment-result-wrapper {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.payment-transaction-card {
+  animation: fadeInUp 0.8s ease-out;
+}
