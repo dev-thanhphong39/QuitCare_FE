@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom"; // Thêm Outlet
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
@@ -36,143 +36,160 @@ import AdviseUser from "./pages/dashboard-coach/calendar/advise-user";
 import ViewAdvise from "./components/view-advise/ViewAdvise";
 import HistoryPayment from "./components/payment/PaymentHistory";
 
-function App() {
-  const AppLayout = ({ children }) => (
-    <div style={{ minHeight: "100vh", overflowY: "auto" }}>{children}</div>
+// Import các component cần thiết
+import Navbar from "./components/navbar/Navbar";
+import Footer from "./components/footer/Footer";
+import ScrollToTop from "./components/scrollToTop/ScrollToTop";
+
+// Tạo Layout chung
+const AppLayout = () => {
+  return (
+    <div
+      style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
+    >
+      <ScrollToTop />
+      <main style={{ flex: 1 }}>
+        <Outlet />
+      </main>
+    </div>
   );
+};
+
+function App() {
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: <HomePage />,
-    },
-    {
-      path: "/login",
-      element: <LoginPage />,
-    },
-    {
-      path: "/register",
-      element: <RegisterPage />,
-    },
-    {
-      path: "/blog",
-      element: <BlogPage />,
-    },
-    {
-      path: "/ranking",
-      element: <RankingPage />,
-    },
-    {
-      path: "/planning",
-      element: <PlanPage />,
-    },
-    {
-      path: "/booking",
-      element: <BookingPage />,
-    },
-    {
-      path: "/tracking",
-      element: <Tracking />,
-    },
-    {
-      path: "/noti",
-      element: <NotificationPage />,
-    },
-    {
-      path: "/blog/:id",
-      element: <BlogDetail />,
-    },
-
-    {
-      path: "/profile",
-      element: <Profile />,
-    },
-    {
-      path: "/viewsurvey",
-      element: <ViewSurvey />,
-    },
-    {
-      path: "/viewadvise",
-      element: <ViewAdvise />,
-    },
-    {
-      path: "/dashboard",
-      element: <Dashboard />,
+      element: <AppLayout />, // <-- Sử dụng Layout chung làm route cha
       children: [
+        // <-- Tất cả các trang đều là con của AppLayout
         {
-          path: "users",
-          element: <UserManagement />,
+          path: "/",
+          element: <HomePage />,
         },
         {
-          path: "comments",
-          element: <CommentManagement />,
-        },
-
-        {
-          path: "revenue",
-          element: <RevenueManagement />,
+          path: "/login",
+          element: <LoginPage />,
         },
         {
-          path: "feedback",
-          element: <FeedbackManagement />,
+          path: "/register",
+          element: <RegisterPage />,
         },
         {
-          path: "packages",
-          element: <PackagesManagement />,
+          path: "/blog",
+          element: <BlogPage />,
         },
         {
-          path: "posts",
-          element: <PostsManagement />,
+          path: "/ranking",
+          element: <RankingPage />,
+        },
+        {
+          path: "/planning",
+          element: <PlanPage />,
+        },
+        {
+          path: "/booking",
+          element: <BookingPage />,
+        },
+        {
+          path: "/tracking",
+          element: <Tracking />,
+        },
+        {
+          path: "/noti",
+          element: <NotificationPage />,
+        },
+        {
+          path: "/blog/:id",
+          element: <BlogDetail />,
+        },
+        {
+          path: "/profile",
+          element: <Profile />,
+        },
+        {
+          path: "/viewsurvey",
+          element: <ViewSurvey />,
+        },
+        {
+          path: "/viewadvise",
+          element: <ViewAdvise />,
+        },
+        {
+          path: "/dashboard",
+          element: <Dashboard />,
+          children: [
+            {
+              path: "users",
+              element: <UserManagement />,
+            },
+            {
+              path: "comments",
+              element: <CommentManagement />,
+            },
+            {
+              path: "revenue",
+              element: <RevenueManagement />,
+            },
+            {
+              path: "feedback",
+              element: <FeedbackManagement />,
+            },
+            {
+              path: "packages",
+              element: <PackagesManagement />,
+            },
+            {
+              path: "posts",
+              element: <PostsManagement />,
+            },
+          ],
+        },
+        {
+          path: "/dashboard-coach",
+          element: <CoachDashboard />,
+          children: [
+            {
+              path: "register",
+              element: <WorkScheduleManagement />,
+            },
+            {
+              path: "calendar",
+              element: <AdviseUser />,
+            },
+          ],
+        },
+        {
+          path: "/suggest-planing",
+          element: <SuggestPlaning />,
+        },
+        {
+          path: "/create-planning",
+          element: <CreatePlanning />,
+        },
+        {
+          path: "/history-transactions",
+          element: <HistoryPayment />,
+        },
+        {
+          path: "/forgot-password",
+          element: <ForgotPasswordForm />,
+        },
+        {
+          path: "/payment",
+          element: <PaymentPage />,
+        },
+        {
+          path: "/payment-result",
+          element: <PaymentResult />,
+        },
+        {
+          path: "/payment-success",
+          element: <PaymentResult />,
+        },
+        {
+          path: "/payment-fail",
+          element: <PaymentResult />,
         },
       ],
-    },
-    {
-      path: "/dashboard-coach",
-      element: <CoachDashboard />,
-      children: [
-        {
-          path: "register",
-          element: <WorkScheduleManagement />,
-        },
-        {
-          path: "calendar",
-          element: <AdviseUser />,
-        },
-      ],
-    },
-    {
-      path: "/suggest-planing",
-      element: <SuggestPlaning />,
-    },
-    {
-      path: "/create-planning",
-      element: <CreatePlanning />,
-    },
-    {
-      path: "/history-transactions",
-      element: <HistoryPayment />,
-    },
-    {
-      path: "/forgot-password",
-      element: <ForgotPasswordForm />,
-    },
-    {
-      path: "/payment",
-      element: <PaymentPage />,
-    },
-
-    {
-      path: "/payment-result",
-      element: <PaymentResult />,
-    },
-
-    {
-      path: "/payment-success",
-      element: <PaymentResult />,
-    },
-
-    {
-      path: "/payment-fail",
-      element: <PaymentResult />,
     },
   ]);
   return (

@@ -16,13 +16,18 @@ const { Title } = Typography;
 const HistoryPayment = () => {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
   const accountId = localStorage.getItem("accountId");
+  const PAGE_SIZE = 8;
 
   useEffect(() => {
     const fetchPayments = async () => {
       try {
         const res = await api.get(`/v1/payments/history/account/${accountId}`);
-        const sortedPayments = res.data.sort((a, b) => a.id - b.id);
+        // Sắp xếp theo thời gian mới nhất trước
+        const sortedPayments = res.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
         setPayments(sortedPayments);
       } catch (err) {
         console.error("Lỗi khi lấy lịch sử thanh toán:", err);
@@ -38,10 +43,13 @@ const HistoryPayment = () => {
 
   const columns = [
     {
-      title: "Mã giao dịch",
-      dataIndex: "id",
-      key: "id",
-      render: (id) => <span className="payment-transaction-id">#{id}</span>,
+      title: "STT",
+      key: "stt",
+      render: (text, record, index) => (
+        <span className="payment-transaction-id">
+          #{(currentPage - 1) * PAGE_SIZE + index + 1}
+        </span>
+      ),
     },
     {
       title: "Số tiền đã thanh toán",
@@ -155,8 +163,10 @@ const HistoryPayment = () => {
                   columns={columns}
                   rowKey="id"
                   pagination={{
-                    pageSize: 8,
+                    current: currentPage,
+                    pageSize: PAGE_SIZE,
                     showSizeChanger: false,
+                    onChange: (page) => setCurrentPage(page),
                     showTotal: (total, range) =>
                       `${range[0]}-${range[1]} của ${total} giao dịch`,
                   }}

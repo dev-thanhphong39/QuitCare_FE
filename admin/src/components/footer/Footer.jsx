@@ -1,4 +1,3 @@
-// admin/src/components/Footer.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Footer.css";
@@ -17,7 +16,7 @@ function Footer() {
             <li>Số điện thoại: 1800 6969</li>
             <li>
               Email:{" "}
-              <a href="mailto:contact@quitcare.com">contact@quitcare.com</a>
+              <a href="mailto:contact@quitcare.com"> contact@quitcare.com</a>
             </li>
           </ul>
         </div>
