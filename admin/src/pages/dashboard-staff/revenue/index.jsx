@@ -50,7 +50,6 @@ const RevenueManagement = () => {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [timeFilter, setTimeFilter] = useState("7days");
   const [users, setUsers] = useState([]); // Thêm state để lưu thông tin users
 
   // ✅ Fetch data từ API
@@ -123,9 +122,14 @@ const RevenueManagement = () => {
 
     averageOrderValue: payments.length > 0 ? totalRevenue / payments.length : 0,
 
-    completedPayments: payments.filter(p => p.status === "COMPLETED").length,
-    pendingPayments: payments.filter(p => p.status !== "COMPLETED").length,
+    completedPayments: payments.filter(p => p.status === "SUCCESS").length,
+    pendingPayments: payments.filter(p => p.status !== "SUCCESS").length,
   };
+
+  // Debug: Log để kiểm tra dữ liệu
+  console.log("Payments data:", payments);
+  console.log("Revenue stats:", revenueStats);
+  console.log("Unique statuses:", [...new Set(payments.map(p => p.status))]);
 
   const showPlanDetails = (plan) => {
     setSelectedPlan(plan);
@@ -336,7 +340,7 @@ const RevenueManagement = () => {
 
   // ✅ Đơn hàng gần đây từ API
   const recentOrders = payments
-    .slice(-8) // Tăng lên 8 đơn hàng để hiển thị đầy đủ hơn
+    .slice(-8)
     .reverse()
     .map((payment) => {
       const plan = plans.find((p) => p.price === payment.amountPaid);
@@ -347,7 +351,7 @@ const RevenueManagement = () => {
         package: plan?.name || "Gói không xác định",
         amount: payment.amountPaid,
         status:
-          payment.status === "COMPLETED" ? "Đã thanh toán" : "Chờ thanh toán",
+          payment.status === "SUCCESS" ? "Đã thanh toán" : "Chờ thanh toán",
       };
     });
 
@@ -432,17 +436,6 @@ const RevenueManagement = () => {
       {/* ✅ Header dashboard */}
       <div className="header">
         <h2>📊 Dashboard Doanh Thu</h2>
-        <div className="header-actions">
-          <Select
-            value={timeFilter}
-            onChange={setTimeFilter}
-            style={{ width: 150 }}
-          >
-            <Option value="7days">7 ngày qua</Option>
-            <Option value="30days">30 ngày qua</Option>
-            <Option value="3months">3 tháng qua</Option>
-          </Select>
-        </div>
       </div>
 
       {/* ✅ Thống kê tổng quan */}

@@ -264,7 +264,7 @@ function UserManagement() {
 
       {/* Thống kê tổng số người dùng */}
       <Row gutter={16} style={{ marginBottom: "16px" }}>
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={8}>
           <Card>
             <Statistic
               title="Tổng số người dùng"
@@ -274,17 +274,7 @@ function UserManagement() {
             />
           </Card>
         </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
-              title="Người dùng đang hoạt động"
-              value={users.filter(user => user.status === "ACTIVE").length}
-              prefix={<UserOutlined />}
-              valueStyle={{ color: "#1890ff" }}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={8}>
           <Card>
             <Statistic
               title="Khách hàng"
@@ -294,7 +284,7 @@ function UserManagement() {
             />
           </Card>
         </Col>
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={8}>
           <Card>
             <Statistic
               title="Huấn luyện viên"
