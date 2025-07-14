@@ -15,12 +15,30 @@ import {
   UserOutlined,
   ShoppingCartOutlined,
   DollarOutlined,
-  TrophyOutlined,
-  DownloadOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title as ChartTitle,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 import api from "../../../configs/axios";
 import "./RevenueManagement.css";
+
+// Đăng ký các component của Chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ChartTitle,
+  Tooltip,
+  Legend
+);
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -33,18 +51,21 @@ const RevenueManagement = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [timeFilter, setTimeFilter] = useState("7days");
+  const [users, setUsers] = useState([]); // Thêm state để lưu thông tin users
 
   // ✅ Fetch data từ API
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [planRes, paymentRes] = await Promise.all([
+        const [planRes, paymentRes, userRes] = await Promise.all([
           api.get("/membership-plans"),
           api.get("/v1/payments/history"),
+          api.get("/admin/user"), // Lấy danh sách users để map username
         ]);
 
         setPlans(planRes.data);
         setPayments(paymentRes.data);
+        setUsers(userRes.data);
       } catch (err) {
         console.error("Error fetching data:", err);
       } finally {
@@ -78,16 +99,223 @@ const RevenueManagement = () => {
     0
   );
 
+  // ✅ Thêm các thống kê chi tiết về doanh thu
+  const revenueStats = {
+    today: payments.filter(p => {
+      const paymentDate = new Date(p.createdAt);
+      const today = new Date();
+      return paymentDate.toDateString() === today.toDateString();
+    }).reduce((acc, p) => acc + p.amountPaid, 0),
+
+    thisWeek: payments.filter(p => {
+      const paymentDate = new Date(p.createdAt);
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      return paymentDate >= weekAgo;
+    }).reduce((acc, p) => acc + p.amountPaid, 0),
+
+    thisMonth: payments.filter(p => {
+      const paymentDate = new Date(p.createdAt);
+      const monthAgo = new Date();
+      monthAgo.setMonth(monthAgo.getMonth() - 1);
+      return paymentDate >= monthAgo;
+    }).reduce((acc, p) => acc + p.amountPaid, 0),
+
+    averageOrderValue: payments.length > 0 ? totalRevenue / payments.length : 0,
+
+    completedPayments: payments.filter(p => p.status === "COMPLETED").length,
+    pendingPayments: payments.filter(p => p.status !== "COMPLETED").length,
+  };
+
   const showPlanDetails = (plan) => {
     setSelectedPlan(plan);
     setModalVisible(true);
+  };
+
+  // ✅ Helper function để lấy username từ accountId
+  const getUsernameById = (accountId) => {
+    const user = users.find(u => u.id === accountId);
+    return user ? user.username : `User #${accountId}`;
+  };
+
+  // ✅ Chuẩn bị dữ liệu cho biểu đồ cột
+  const chartData = {
+    labels: ['Doanh thu hôm nay', 'Doanh thu tuần này', 'Doanh thu tháng này'],
+    datasets: [
+      {
+        label: 'Doanh thu (VND)',
+        data: [
+          revenueStats.today,
+          revenueStats.thisWeek,
+          revenueStats.thisMonth,
+        ],
+        backgroundColor: [
+          'rgba(250, 173, 20, 0.8)',
+          'rgba(82, 196, 26, 0.8)',
+          'rgba(24, 144, 255, 0.8)',
+        ],
+        borderColor: [
+          'rgba(250, 173, 20, 1)',
+          'rgba(82, 196, 26, 1)',
+          'rgba(24, 144, 255, 1)',
+        ],
+        borderWidth: 2,
+        borderRadius: 8,
+        borderSkipped: false,
+      }
+    ]
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          font: {
+            size: 14,
+            weight: 'bold'
+          }
+        }
+      },
+      title: {
+        display: true,
+        text: '📊 Biểu đồ doanh thu chi tiết',
+        font: {
+          size: 18,
+          weight: 'bold'
+        },
+        padding: {
+          top: 10,
+          bottom: 30
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const value = context.parsed.y;
+            return `${context.dataset.label}: ${value >= 1000000
+              ? `${(value / 1000000).toFixed(1)}M`
+              : value.toLocaleString('vi-VN')} VND`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function (value) {
+            return value >= 1000000
+              ? `${(value / 1000000).toFixed(1)}M`
+              : value.toLocaleString('vi-VN');
+          }
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+        }
+      },
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          maxRotation: 45,
+          minRotation: 0
+        }
+      }
+    },
+    animation: {
+      duration: 2000,
+      easing: 'easeInOutQuart'
+    }
+  };
+
+  // ✅ Biểu đồ trạng thái thanh toán
+  const statusChartData = {
+    labels: ['Đã thanh toán', 'Chờ thanh toán'],
+    datasets: [
+      {
+        label: 'Số đơn hàng',
+        data: [revenueStats.completedPayments, revenueStats.pendingPayments],
+        backgroundColor: [
+          'rgba(82, 196, 26, 0.8)',
+          'rgba(250, 173, 20, 0.8)',
+        ],
+        borderColor: [
+          'rgba(82, 196, 26, 1)',
+          'rgba(250, 173, 20, 1)',
+        ],
+        borderWidth: 2,
+        borderRadius: 8,
+        borderSkipped: false,
+      }
+    ]
+  };
+
+  const statusChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          font: {
+            size: 14,
+            weight: 'bold'
+          }
+        }
+      },
+      title: {
+        display: true,
+        text: '💳 Trạng thái đơn hàng',
+        font: {
+          size: 16,
+          weight: 'bold'
+        },
+        padding: {
+          top: 10,
+          bottom: 20
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const total = revenueStats.completedPayments + revenueStats.pendingPayments;
+            const percentage = total > 0 ? ((context.parsed.y / total) * 100).toFixed(1) : 0;
+            return `${context.label}: ${context.parsed.y} đơn (${percentage}%)`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+        }
+      },
+      x: {
+        grid: {
+          display: false,
+        }
+      }
+    },
+    animation: {
+      duration: 1500,
+      easing: 'easeInOutQuart'
+    }
   };
 
   // ✅ Statistics với dữ liệu thực
   const stats = [
     {
       title: "Tổng người dùng",
-      value: 2847,
+      value: users.length,
       icon: <UserOutlined />,
       color: "#1890ff",
     },
@@ -104,12 +332,6 @@ const RevenueManagement = () => {
       icon: <DollarOutlined />,
       color: "#722ed1",
     },
-    {
-      title: "Kế hoạch hoạt động",
-      value: plans.length,
-      icon: <TrophyOutlined />,
-      color: "#faad14",
-    },
   ];
 
   // ✅ Đơn hàng gần đây từ API
@@ -121,7 +343,7 @@ const RevenueManagement = () => {
       return {
         key: payment.id,
         date: new Date(payment.createdAt).toLocaleDateString("vi-VN"),
-        customer: `Khách hàng #${payment.accountId}`,
+        customer: getUsernameById(payment.accountId),
         package: plan?.name || "Gói không xác định",
         amount: payment.amountPaid,
         status:
@@ -174,9 +396,10 @@ const RevenueManagement = () => {
       render: (amount) => `${amount.toLocaleString("vi-VN")} VND`,
     },
     {
-      title: "Người mua (Account ID)",
+      title: "Username",
       dataIndex: "accountId",
       key: "accountId",
+      render: (accountId) => getUsernameById(accountId),
     },
     {
       title: "Trạng thái",
@@ -219,16 +442,13 @@ const RevenueManagement = () => {
             <Option value="30days">30 ngày qua</Option>
             <Option value="3months">3 tháng qua</Option>
           </Select>
-          <Button type="primary" icon={<DownloadOutlined />}>
-            Xuất báo cáo
-          </Button>
         </div>
       </div>
 
       {/* ✅ Thống kê tổng quan */}
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         {stats.map((stat, index) => (
-          <Col xs={24} sm={12} lg={6} key={index}>
+          <Col xs={24} sm={12} lg={8} key={index}>
             <Card>
               <Statistic
                 title={stat.title}
@@ -244,6 +464,24 @@ const RevenueManagement = () => {
             </Card>
           </Col>
         ))}
+      </Row>
+
+      {/* ✅ Biểu đồ doanh thu thay thế cho thống kê chi tiết */}
+      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+        <Col xs={24} lg={16}>
+          <Card>
+            <div style={{ height: '400px' }}>
+              <Bar data={chartData} options={chartOptions} />
+            </div>
+          </Card>
+        </Col>
+        <Col xs={24} lg={8}>
+          <Card>
+            <div style={{ height: '400px' }}>
+              <Bar data={statusChartData} options={statusChartOptions} />
+            </div>
+          </Card>
+        </Col>
       </Row>
 
       {/* ✅ Phần gói dịch vụ chi tiết từ API */}

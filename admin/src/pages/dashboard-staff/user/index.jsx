@@ -12,6 +12,7 @@ import {
   Row,
   Col,
   Card,
+  Statistic,
 } from "antd";
 import {
   EditOutlined,
@@ -19,7 +20,9 @@ import {
   ReloadOutlined,
   SearchOutlined,
   FilterOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
+import { useSelector } from "react-redux";
 import api from "../../../configs/axios";
 import { toast } from "react-toastify";
 
@@ -33,6 +36,9 @@ function UserManagement() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [form] = Form.useForm();
+
+  // Lấy thông tin user hiện tại từ Redux store
+  const currentUser = useSelector((state) => state.user);
 
   // Filter states
   const [searchText, setSearchText] = useState("");
@@ -138,6 +144,9 @@ function UserManagement() {
     fetchUsers();
   }, []);
 
+  // Kiểm tra quyền của user hiện tại
+  const isAdmin = currentUser?.role === "ADMIN";
+
   const columns = [
     {
       title: "ID",
@@ -209,7 +218,8 @@ function UserManagement() {
           <Tag color="red">Không hoạt động</Tag>
         ),
     },
-    {
+    // Chỉ hiển thị cột hành động nếu user là ADMIN
+    ...(isAdmin ? [{
       title: "Hành động",
       key: "actions",
       render: (_, record) => (
@@ -229,7 +239,7 @@ function UserManagement() {
           </Popconfirm>
         </Space>
       ),
-    },
+    }] : []),
   ];
 
   return (
@@ -251,6 +261,50 @@ function UserManagement() {
           Tải lại danh sách
         </Button>
       </div>
+
+      {/* Thống kê tổng số người dùng */}
+      <Row gutter={16} style={{ marginBottom: "16px" }}>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Tổng số người dùng"
+              value={users.length}
+              prefix={<UserOutlined />}
+              valueStyle={{ color: "#3f8600" }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Người dùng đang hoạt động"
+              value={users.filter(user => user.status === "ACTIVE").length}
+              prefix={<UserOutlined />}
+              valueStyle={{ color: "#1890ff" }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Khách hàng"
+              value={users.filter(user => user.role === "CUSTOMER").length}
+              prefix={<UserOutlined />}
+              valueStyle={{ color: "#52c41a" }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Huấn luyện viên"
+              value={users.filter(user => user.role === "COACH").length}
+              prefix={<UserOutlined />}
+              valueStyle={{ color: "#13c2c2" }}
+            />
+          </Card>
+        </Col>
+      </Row>
 
       {/* Filter và Search Section */}
       <Card style={{ marginBottom: "16px" }}>
@@ -325,76 +379,79 @@ function UserManagement() {
         loading={loading}
       />
 
-      <Modal
-        title="Chỉnh sửa người dùng"
-        open={isModalVisible}
-        onOk={handleUpdateUser}
-        onCancel={() => setIsModalVisible(false)}
-        okText="Lưu"
-        cancelText="Huỷ"
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item
-            name="fullName"
-            label="Họ tên"
-            rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[
-              { required: true, message: "Vui lòng nhập email" },
-              { type: "email", message: "Email không hợp lệ" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="username"
-            label="Tên người dùng"
-            rules={[
-              { required: true, message: "Vui lòng nhập tên người dùng" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="gender"
-            label="Giới tính"
-            rules={[{ required: true, message: "Chọn giới tính" }]}
-          >
-            <Select>
-              <Select.Option value="MALE">Nam</Select.Option>
-              <Select.Option value="FEMALE">Nữ</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="role"
-            label="Vai trò"
-            rules={[{ required: true, message: "Chọn vai trò" }]}
-          >
-            <Select>
-              <Select.Option value="ADMIN">ADMIN</Select.Option>
-              <Select.Option value="COACH">COACH</Select.Option>
-              <Select.Option value="STAFF">STAFF</Select.Option>
-              <Select.Option value="CUSTOMER">CUSTOMER</Select.Option>
-              <Select.Option value="GUEST">GUEST</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="status"
-            label="Trạng thái"
-            rules={[{ required: true, message: "Chọn trạng thái" }]}
-          >
-            <Select>
-              <Select.Option value="ACTIVE">Đang hoạt động</Select.Option>
-              <Select.Option value="INACTIVE">Không hoạt động</Select.Option>
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
+      {/* Modal chỉnh sửa chỉ hiển thị cho ADMIN */}
+      {isAdmin && (
+        <Modal
+          title="Chỉnh sửa người dùng"
+          open={isModalVisible}
+          onOk={handleUpdateUser}
+          onCancel={() => setIsModalVisible(false)}
+          okText="Lưu"
+          cancelText="Huỷ"
+        >
+          <Form form={form} layout="vertical">
+            <Form.Item
+              name="fullName"
+              label="Họ tên"
+              rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[
+                { required: true, message: "Vui lòng nhập email" },
+                { type: "email", message: "Email không hợp lệ" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="username"
+              label="Tên người dùng"
+              rules={[
+                { required: true, message: "Vui lòng nhập tên người dùng" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="gender"
+              label="Giới tính"
+              rules={[{ required: true, message: "Chọn giới tính" }]}
+            >
+              <Select>
+                <Select.Option value="MALE">Nam</Select.Option>
+                <Select.Option value="FEMALE">Nữ</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name="role"
+              label="Vai trò"
+              rules={[{ required: true, message: "Chọn vai trò" }]}
+            >
+              <Select>
+                <Select.Option value="ADMIN">ADMIN</Select.Option>
+                <Select.Option value="COACH">COACH</Select.Option>
+                <Select.Option value="STAFF">STAFF</Select.Option>
+                <Select.Option value="CUSTOMER">CUSTOMER</Select.Option>
+                <Select.Option value="GUEST">GUEST</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name="status"
+              label="Trạng thái"
+              rules={[{ required: true, message: "Chọn trạng thái" }]}
+            >
+              <Select>
+                <Select.Option value="ACTIVE">Đang hoạt động</Select.Option>
+                <Select.Option value="INACTIVE">Không hoạt động</Select.Option>
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
+      )}
     </div>
   );
 }

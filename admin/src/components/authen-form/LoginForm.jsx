@@ -27,11 +27,13 @@ const LoginForm = ({ onLogin, errorMessage }) => {
 
       if (user.role === "ADMIN") {
         navigate("/dashboard");
-      } else if (user.role === "GUEST" || user.role === "CUSTOMER") {
+      } else if (user.role === "GUEST" || user.role === "CUSTOMER" || user.role === "STAFF") {
         navigate("/");
+      } else if (user.role === "COACH") {
+        navigate("/dashboard-coach");
       }
     } catch (error) {
-      console.log("login:"+error);
+      console.log("login:" + error);
       toast.error("Đăng nhập không thành công, vui lòng thử lại sau!");
     }
   };
@@ -91,20 +93,20 @@ const LoginForm = ({ onLogin, errorMessage }) => {
           >
             <div className="auth-login-haha">
               <div>
-              <Checkbox className="auth-login-checkbox">
-              Ghi nhớ đăng nhập
-            </Checkbox>
+                <Checkbox className="auth-login-checkbox">
+                  Ghi nhớ đăng nhập
+                </Checkbox>
               </div>
-           
-            <div className="auth-login-forgot-link">
-            
-            <Link to="/forgot-password" className="auth-login-forgot-link-a">
-            Quên mật khẩu?
-            </Link>
-          </div>
+
+              <div className="auth-login-forgot-link">
+
+                <Link to="/forgot-password" className="auth-login-forgot-link-a">
+                  Quên mật khẩu?
+                </Link>
+              </div>
 
             </div>
-           
+
           </Form.Item>
           <Form.Item className="auth-login-form-item">
             <Button
