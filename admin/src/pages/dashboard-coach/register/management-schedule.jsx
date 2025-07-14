@@ -106,51 +106,50 @@ const WorkScheduleManagement = () => {
       )
     );
   };
-  const handleSubmitAll = () => {
+  const handleSubmitAll = async () => {
     console.log("==> Bắt đầu xử lý xác nhận");
-
-    Modal.confirm({
-      title: "Xác nhận cập nhật ngày nghỉ",
-      content: `Bạn có chắc chắn muốn cập nhật danh sách ngày nghỉ đã chọn cho tháng ${currentMonth.format("MM/YYYY")} không?`,
-      okText: "Xác nhận",
-      cancelText: "Hủy",
-      onOk: async () => {
-        setLoading(true);
-        try {
-          const leaveRecords = data.filter(
-            (record) => record.isLeave && serverWorkingDays.includes(record.dateStr)
-          );
   
-          console.log("leaveRecords:", leaveRecords);
+    const confirmed = window.confirm(
+      `Xin lưu ý! Bạn sẽ không thể thay đổi khi đã lưu lịch nghỉ. Bạn có chắc chắn muốn cập nhật danh sách ngày nghỉ đã chọn cho tháng ${currentMonth.format("MM/YYYY")} không?`
+    );
   
-          for (const record of leaveRecords) {
-            console.log(" Gửi xoá ngày:", {
-              accountId,
-              date: record.dateStr,
-            });
+    if (!confirmed) return;
   
-            const res = await api.put("/session/availability-day", {
-              accountId,
-              date: record.dateStr,
-            });
+    setLoading(true);
+    try {
+      const leaveRecords = data.filter(
+        (record) => record.isLeave && serverWorkingDays.includes(record.dateStr)
+      );
   
-            console.log(" Xoá thành công:", res.data);
-          }
+      console.log("leaveRecords:", leaveRecords);
   
-          message.success(
-            `Đã cập nhật ngày nghỉ cho tháng ${currentMonth.format("MM/YYYY")} thành công!`
-          );
+      for (const record of leaveRecords) {
+        console.log("Gửi xoá ngày:", {
+          accountId,
+          date: record.dateStr,
+        });
   
-          await generateMonthSchedule();
-        } catch (error) {
-          message.error("Có lỗi xảy ra khi cập nhật ngày nghỉ.");
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
-      },
-    });
+        const res = await api.put("/session/availability-day", {
+          accountId,
+          date: record.dateStr,
+        });
+  
+        console.log("Xoá thành công:", res.data);
+      }
+  
+      message.success(
+        `Đã cập nhật ngày nghỉ cho tháng ${currentMonth.format("MM/YYYY")} thành công!`
+      );
+  
+      await generateMonthSchedule();
+    } catch (error) {
+      message.error("Có lỗi xảy ra khi cập nhật ngày nghỉ.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
+  
 
   const getDateStatus = (record) => {
     const isPast = dayjs(record.dateStr).isBefore(dayjs(), "day");
