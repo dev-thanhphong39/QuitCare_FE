@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { message } from "antd";
+import { message, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import api from "../../configs/axios";
 import dayjs from "dayjs";
@@ -205,7 +205,12 @@ const Booking = () => {
 
       console.log("Booking response:", res.data);
       message.success(`✅ Đã đặt lịch thành công cho ${coachName}`);
-
+      notification.success({
+        message: "Đặt lịch thành công",
+        description: "Bạn có thể nhấn 'Xem Lịch Tư Vấn' để theo dõi các cuộc hẹn đã đặt.",
+        placement: "topRight",
+        duration: 5,
+      });
       // Disable slot đã đặt - KHÔNG fetch lại slots
       const newDisabledSlots = {
         ...disabledSlots,
@@ -369,22 +374,23 @@ const Booking = () => {
                 })}
               </div>
 
-              <div className="booking-actions">
-                <button
-                  className={`booking-btn booking-btn-primary ${
-                    loading ? "loading" : ""
-                  }`}
-                  onClick={() => handleBooking(coach, coach.fullName)}
-                  disabled={loading}
-                >
-                  {loading ? "Đang đặt..." : "Đặt Lịch"}
-                </button>
-                <button
+                <div className="booking-actions">
+                  <button
+                    className={`booking-btn booking-btn-primary ${
+                      loading ? "loading" : ""
+                    }`}
+                    style={{ width: "120%" }}
+                    onClick={() => handleBooking(coach, coach.fullName)}
+                    disabled={loading}
+                  >
+                    {loading ? "Đang đặt..." : "Đặt Lịch"}
+                  </button>
+                {/* <button
                   className="booking-btn booking-btn-secondary"
                   onClick={() => navigate("/viewadvise")}
                 >
                   Xem Lịch Tư Vấn
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

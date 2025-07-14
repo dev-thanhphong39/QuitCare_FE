@@ -10,6 +10,7 @@ import {
   Col,
   DatePicker,
   Alert,
+  Modal,
 } from "antd";
 import {
   CalendarOutlined,
@@ -82,12 +83,12 @@ const WorkScheduleManagement = () => {
       // monthData.forEach((item) => {
       //   console.log(
       //     `${item.dateStr} - ${item.dayName} - ${
-      //       item.isLeave ? "🚫 Nghỉ" : "💼 Làm"
+      //       item.isLeave ? " Nghỉ" : " Làm"
       //     }`
       //   );
       // });
     } catch (err) {
-      console.error("❌ Error fetching working days:", err);
+      console.error(" Error fetching working days:", err);
       message.error("Lỗi khi tải dữ liệu lịch làm việc!");
     }
   };
@@ -105,40 +106,50 @@ const WorkScheduleManagement = () => {
       )
     );
   };
-  const handleSubmitAll = async () => {
-    setLoading(true);
-    try {
-      const leaveRecords = data.filter(
-        (record) => record.isLeave && serverWorkingDays.includes(record.dateStr)
-      );
-      console.log("📌 leaveRecords:", leaveRecords);
-      console.log("🟡 Các ngày được chọn để nghỉ:", leaveRecords);
-      console.log("👉 Tổng số ngày nghỉ cần xóa:", leaveRecords.length);
+  const handleSubmitAll = () => {
+    console.log("==> Bắt đầu xử lý xác nhận");
 
-      for (const record of leaveRecords) {
-        console.log("🚀 Gửi xoá ngày:", {
-          accountId,
-          date: record.dateStr,
-        });
-        const res = await api.put("/session/availability-day", {
-          accountId,
-          date: record.dateStr,
-        });
-        console.log("🧹 Xoá thành công:", res.data);
-      }
-
-      message.success(
-        `✅ Đã cập nhật ngày nghỉ cho tháng ${currentMonth.format(
-          "MM/YYYY"
-        )} thành công!`
-      );
-      await generateMonthSchedule();
-    } catch (error) {
-      message.error("❌ Có lỗi xảy ra khi cập nhật ngày nghỉ.");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    Modal.confirm({
+      title: "Xác nhận cập nhật ngày nghỉ",
+      content: `Bạn có chắc chắn muốn cập nhật danh sách ngày nghỉ đã chọn cho tháng ${currentMonth.format("MM/YYYY")} không?`,
+      okText: "Xác nhận",
+      cancelText: "Hủy",
+      onOk: async () => {
+        setLoading(true);
+        try {
+          const leaveRecords = data.filter(
+            (record) => record.isLeave && serverWorkingDays.includes(record.dateStr)
+          );
+  
+          console.log("leaveRecords:", leaveRecords);
+  
+          for (const record of leaveRecords) {
+            console.log(" Gửi xoá ngày:", {
+              accountId,
+              date: record.dateStr,
+            });
+  
+            const res = await api.put("/session/availability-day", {
+              accountId,
+              date: record.dateStr,
+            });
+  
+            console.log(" Xoá thành công:", res.data);
+          }
+  
+          message.success(
+            `Đã cập nhật ngày nghỉ cho tháng ${currentMonth.format("MM/YYYY")} thành công!`
+          );
+  
+          await generateMonthSchedule();
+        } catch (error) {
+          message.error("Có lỗi xảy ra khi cập nhật ngày nghỉ.");
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      },
+    });
   };
 
   const getDateStatus = (record) => {

@@ -222,8 +222,9 @@
 }
 
 .booking-actions {
-    display: flex;
+  
     gap    : 16px;
+    width: 200px;
 }
 
 .booking-btn {

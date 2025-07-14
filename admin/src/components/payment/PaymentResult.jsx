@@ -4,6 +4,7 @@ import useGetParams from "../../hook/useGetParam";
 import { useNavigate } from "react-router-dom";
 import { Result, Button, Descriptions, Spin, Card } from "antd";
 import "./PaymentResult.css";
+import api from "../../configs/axios";
 
 const PaymentResult = () => {
   const getParam = useGetParams();
@@ -34,12 +35,48 @@ const PaymentResult = () => {
   };
 
   useEffect(() => {
-    if (transactionStatus !== "00") {
-      setStatus("error");
-    }
-    const timer = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(timer);
-  }, [transactionStatus]);
+    const updatePaymentStatus = async () => {
+      const paymentId = getParam("paymentID");
+          const packageID = getParam("packageID");
+          console.log("payment id la:", paymentId)
+      if (transactionStatus === "00") {
+        try {
+          
+ 
+          await api.post("/v1/payments", {
+            paymentId: Number(paymentId),
+            membershipPlanId:packageID,
+            paymentStatus: "SUCCESS",
+          });
+  
+          setStatus("success");
+        } catch (error) {
+          console.error("Lỗi khi cập nhật trạng thái thanh toán:", error);
+          setStatus("error");
+        }
+      } else {
+        try {
+          await api.post("/v1/payments", {
+            paymentId: Number(paymentId),
+            membershipPlanId:packageID,
+            paymentStatus: "FAILED",
+          });
+  
+         setStatus("error");
+        } catch (error) {
+          console.error("Lỗi khi cập nhật trạng thái thanh toán:", error);
+          setStatus("error");
+        }
+        setStatus("error");
+      }
+  
+      // Cho loading hiển thị ít nhất 500ms trước khi tắt
+      const timer = setTimeout(() => setLoading(false), 800);
+      return () => clearTimeout(timer);
+    };
+  
+    updatePaymentStatus();
+  }, [transactionStatus, getParam]);
 
   if (loading) {
     return (
