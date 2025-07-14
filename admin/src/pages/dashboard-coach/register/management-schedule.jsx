@@ -12,6 +12,7 @@ import {
   Alert,
   Modal,
 } from "antd";
+import Swal from "sweetalert2";
 import {
   CalendarOutlined,
   CloseCircleOutlined,
@@ -106,49 +107,65 @@ const WorkScheduleManagement = () => {
       )
     );
   };
-  const handleSubmitAll = async () => {
-    console.log("==> Bắt đầu xử lý xác nhận");
   
-    const confirmed = window.confirm(
-      `Xin lưu ý! Bạn sẽ không thể thay đổi khi đã lưu lịch nghỉ. Bạn có chắc chắn muốn cập nhật danh sách ngày nghỉ đã chọn cho tháng ${currentMonth.format("MM/YYYY")} không?`
+const handleSubmitAll = async () => {
+  const result = await Swal.fire({
+    title: "Xác nhận cập nhật ngày nghỉ",
+    html: `
+      <p>Bạn có chắc chắn muốn cập nhật danh sách ngày nghỉ đã chọn cho tháng <strong>${currentMonth.format("MM/YYYY")}</strong> không?</p>
+      <p style="color: red; font-weight: bold;">Lưu ý: Những ngày nghỉ đã lưu sẽ <u>không thể thay đổi</u>. Xin hãy cân nhắc kỹ!</p>
+    `,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Xác nhận",
+    cancelButtonText: "Hủy",
+  });
+
+  if (!result.isConfirmed) return;
+
+  setLoading(true);
+
+  try {
+    const leaveRecords = data.filter(
+      (record) => record.isLeave && serverWorkingDays.includes(record.dateStr)
     );
-  
-    if (!confirmed) return;
-  
-    setLoading(true);
-    try {
-      const leaveRecords = data.filter(
-        (record) => record.isLeave && serverWorkingDays.includes(record.dateStr)
-      );
-  
-      console.log("leaveRecords:", leaveRecords);
-  
-      for (const record of leaveRecords) {
-        console.log("Gửi xoá ngày:", {
-          accountId,
-          date: record.dateStr,
-        });
-  
-        const res = await api.put("/session/availability-day", {
-          accountId,
-          date: record.dateStr,
-        });
-  
-        console.log("Xoá thành công:", res.data);
-      }
-  
-      message.success(
-        `Đã cập nhật ngày nghỉ cho tháng ${currentMonth.format("MM/YYYY")} thành công!`
-      );
-  
-      await generateMonthSchedule();
-    } catch (error) {
-      message.error("Có lỗi xảy ra khi cập nhật ngày nghỉ.");
-      console.error(error);
-    } finally {
-      setLoading(false);
+
+    console.log("leaveRecords:", leaveRecords);
+
+    for (const record of leaveRecords) {
+      console.log("Gửi xoá ngày:", {
+        accountId,
+        date: record.dateStr,
+      });
+
+      const res = await api.put("/session/availability-day", {
+        accountId,
+        date: record.dateStr,
+      });
+
+      console.log("Xoá thành công:", res.data);
     }
-  };
+
+    await Swal.fire({
+      icon: "success",
+      title: "Cập nhật thành công!",
+      text: `Đã cập nhật ngày nghỉ cho tháng ${currentMonth.format("MM/YYYY")} thành công!`,
+      confirmButtonText: "OK",
+    });
+
+    await generateMonthSchedule();
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      icon: "error",
+      title: "Lỗi!",
+      text: "Có lỗi xảy ra khi cập nhật ngày nghỉ.",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
   
 
   const getDateStatus = (record) => {
