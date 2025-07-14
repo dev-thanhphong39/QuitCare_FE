@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom"; // Thêm Outlet
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
@@ -14,10 +14,6 @@ import Dashboard from "./components/dashboard/dashboard";
 import SuggestPlaning from "./components/planing/SuggestPlaning";
 import CreatePlanning from "./components/planing/CreatePlanning";
 import ViewSurvey from "./components/viewsurvey/ViewSurvey";
-
-import { Provider } from "react-redux";
-import { persistor, store } from "./redux/store";
-import { PersistGate } from "redux-persist/integration/react";
 import UserManagement from "./pages/dashboard-staff/user";
 import CommentManagement from "./pages/dashboard-staff/comment";
 import RevenueManagement from "./pages/dashboard-staff/revenue";
@@ -29,42 +25,26 @@ import NotificationPage from "./components/notificate/NotificationPage";
 import ForgotPasswordForm from "./components/forgot-password/forgot-pasword";
 import PaymentPage from "./components/payment/submitOrder";
 import PaymentResult from "./components/payment/PaymentResult";
-
 import CoachDashboard from "./components/dashboard/coach-dashboard";
 import WorkScheduleManagement from "./pages/dashboard-coach/register/management-schedule";
 import AdviseUser from "./pages/dashboard-coach/calendar/advise-user";
 import ViewAdvise from "./components/view-advise/ViewAdvise";
 import HistoryPayment from "./components/payment/PaymentHistory";
 
-// Import các component cần thiết
-import Navbar from "./components/navbar/Navbar";
-import Footer from "./components/footer/Footer";
-import ScrollToTop from "./components/scrollToTop/ScrollToTop";
+// Import component bảo vệ route
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import Unauthorized from "./pages/Unauthorized";
 
-// Tạo Layout chung
-const AppLayout = () => {
-  return (
-    <div
-      style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
-    >
-      <ScrollToTop />
-      <main style={{ flex: 1 }}>
-        <Outlet />
-      </main>
-    </div>
-  );
-};
+import { Provider } from "react-redux";
+import { persistor, store } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 function App() {
   const router = createBrowserRouter([
     {
-      element: <AppLayout />, // <-- Sử dụng Layout chung làm route cha
+      path: "/",
       children: [
-        // <-- Tất cả các trang đều là con của AppLayout
-        {
-          path: "/",
-          element: <HomePage />,
-        },
+        // Trang công khai (không cần đăng nhập)
         {
           path: "/login",
           element: <LoginPage />,
@@ -74,48 +54,178 @@ function App() {
           element: <RegisterPage />,
         },
         {
+          path: "/forgot-password",
+          element: <ForgotPasswordForm />,
+        },
+        {
+          path: "/unauthorized",
+          element: <Unauthorized />,
+        },
+
+        // Trang chủ - chỉ cho STAFF, GUEST, CUSTOMER
+        {
+          path: "/",
+          element: (
+            <ProtectedRoute allowedRoles={["STAFF", "GUEST", "CUSTOMER"]}>
+              <HomePage />
+            </ProtectedRoute>
+          ),
+        },
+
+        // Các trang dành cho STAFF, GUEST, CUSTOMER
+        {
           path: "/blog",
-          element: <BlogPage />,
-        },
-        {
-          path: "/ranking",
-          element: <RankingPage />,
-        },
-        {
-          path: "/planning",
-          element: <PlanPage />,
-        },
-        {
-          path: "/booking",
-          element: <BookingPage />,
-        },
-        {
-          path: "/tracking",
-          element: <Tracking />,
-        },
-        {
-          path: "/noti",
-          element: <NotificationPage />,
+          element: (
+            <ProtectedRoute allowedRoles={["STAFF", "GUEST", "CUSTOMER"]}>
+              <BlogPage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/blog/:id",
-          element: <BlogDetail />,
+          element: (
+            <ProtectedRoute allowedRoles={["STAFF", "GUEST", "CUSTOMER"]}>
+              <BlogDetail />
+            </ProtectedRoute>
+          ),
         },
         {
-          path: "/profile",
-          element: <Profile />,
+          path: "/ranking",
+          element: (
+            <ProtectedRoute allowedRoles={["STAFF", "GUEST", "CUSTOMER"]}>
+              <RankingPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/planning",
+          element: (
+            <ProtectedRoute allowedRoles={["STAFF", "GUEST", "CUSTOMER"]}>
+              <PlanPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/booking",
+          element: (
+            <ProtectedRoute allowedRoles={["STAFF", "GUEST", "CUSTOMER"]}>
+              <BookingPage />
+            </ProtectedRoute>
+          ),
+        },
+
+        // Trang dành cho GUEST, CUSTOMER (không có STAFF)
+        {
+          path: "/tracking",
+          element: (
+            <ProtectedRoute allowedRoles={["GUEST", "CUSTOMER"]}>
+              <Tracking />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/viewsurvey",
-          element: <ViewSurvey />,
+          element: (
+            <ProtectedRoute allowedRoles={["GUEST", "CUSTOMER"]}>
+              <ViewSurvey />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/viewadvise",
-          element: <ViewAdvise />,
+          element: (
+            <ProtectedRoute allowedRoles={["GUEST", "CUSTOMER"]}>
+              <ViewAdvise />
+            </ProtectedRoute>
+          ),
         },
         {
+          path: "/history-transactions",
+          element: (
+            <ProtectedRoute allowedRoles={["GUEST", "CUSTOMER"]}>
+              <HistoryPayment />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/payment",
+          element: (
+            <ProtectedRoute allowedRoles={["GUEST", "CUSTOMER"]}>
+              <PaymentPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/payment-result",
+          element: (
+            <ProtectedRoute allowedRoles={["GUEST", "CUSTOMER"]}>
+              <PaymentResult />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/payment-success",
+          element: (
+            <ProtectedRoute allowedRoles={["GUEST", "CUSTOMER"]}>
+              <PaymentResult />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/payment-fail",
+          element: (
+            <ProtectedRoute allowedRoles={["GUEST", "CUSTOMER"]}>
+              <PaymentResult />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/suggest-planing",
+          element: (
+            <ProtectedRoute allowedRoles={["GUEST", "CUSTOMER"]}>
+              <SuggestPlaning />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/create-planning",
+          element: (
+            <ProtectedRoute allowedRoles={["GUEST", "CUSTOMER"]}>
+              <CreatePlanning />
+            </ProtectedRoute>
+          ),
+        },
+
+        // Trang chung cho tất cả role đã đăng nhập
+        {
+          path: "/profile",
+          element: (
+            <ProtectedRoute
+              allowedRoles={["STAFF", "GUEST", "CUSTOMER", "COACH", "ADMIN"]}
+            >
+              <Profile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/noti",
+          element: (
+            <ProtectedRoute
+              allowedRoles={["STAFF", "GUEST", "CUSTOMER", "COACH", "ADMIN"]}
+            >
+              <NotificationPage />
+            </ProtectedRoute>
+          ),
+        },
+
+        // Dashboard - chỉ cho ADMIN, STAFF
+        {
           path: "/dashboard",
-          element: <Dashboard />,
+          element: (
+            <ProtectedRoute allowedRoles={["ADMIN", "STAFF"]}>
+              <Dashboard />
+            </ProtectedRoute>
+          ),
           children: [
             {
               path: "users",
@@ -143,9 +253,15 @@ function App() {
             },
           ],
         },
+
+        // Dashboard Coach - chỉ cho COACH
         {
           path: "/dashboard-coach",
-          element: <CoachDashboard />,
+          element: (
+            <ProtectedRoute allowedRoles={["COACH"]}>
+              <CoachDashboard />
+            </ProtectedRoute>
+          ),
           children: [
             {
               path: "register",
@@ -157,50 +273,17 @@ function App() {
             },
           ],
         },
-        {
-          path: "/suggest-planing",
-          element: <SuggestPlaning />,
-        },
-        {
-          path: "/create-planning",
-          element: <CreatePlanning />,
-        },
-        {
-          path: "/history-transactions",
-          element: <HistoryPayment />,
-        },
-        {
-          path: "/forgot-password",
-          element: <ForgotPasswordForm />,
-        },
-        {
-          path: "/payment",
-          element: <PaymentPage />,
-        },
-        {
-          path: "/payment-result",
-          element: <PaymentResult />,
-        },
-        {
-          path: "/payment-success",
-          element: <PaymentResult />,
-        },
-        {
-          path: "/payment-fail",
-          element: <PaymentResult />,
-        },
       ],
     },
   ]);
+
   return (
-    <>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <RouterProvider router={router} />
-        </PersistGate>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
         <BackToTopButton />
-      </Provider>
-    </>
+      </PersistGate>
+    </Provider>
   );
 }
 

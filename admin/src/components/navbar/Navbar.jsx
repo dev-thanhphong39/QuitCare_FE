@@ -22,6 +22,9 @@ const Navbar = () => {
   const showTracking =
     user && (user.role === "GUEST" || user.role === "CUSTOMER");
 
+  // Kiểm tra role STAFF
+  const isStaff = user?.role === "STAFF";
+
   return (
     <nav className="qc-navbar">
       <div className="qc-navbar-left">
@@ -149,6 +152,7 @@ const Navbar = () => {
 
             {showDropdown && (
               <div className="qc-navbar-dropdown">
+                {/* Hồ sơ - hiển thị cho tất cả */}
                 <Link
                   to="/profile"
                   onClick={() => setShowDropdown(false)}
@@ -156,27 +160,46 @@ const Navbar = () => {
                 >
                   Hồ sơ
                 </Link>
-                <Link
-                  to="/viewadvise"
-                  onClick={() => setShowDropdown(false)}
-                  className="qc-dropdown-item"
-                >
-                  Lịch tư vấn
-                </Link>
-                <Link
-                  to="/history-transactions"
-                  onClick={() => setShowDropdown(false)}
-                  className="qc-dropdown-item"
-                >
-                  Lịch sử giao dịch
-                </Link>
-                <Link
-                  to="/viewsurvey"
-                  onClick={() => setShowDropdown(false)}
-                  className="qc-dropdown-item"
-                >
-                  Khảo sát
-                </Link>
+
+                {/* Hiển thị cho STAFF */}
+                {isStaff && (
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setShowDropdown(false)}
+                    className="qc-dropdown-item"
+                  >
+                    Quản lý
+                  </Link>
+                )}
+
+                {/* Hiển thị cho NON-STAFF (GUEST, CUSTOMER, etc) */}
+                {!isStaff && (
+                  <>
+                    <Link
+                      to="/viewadvise"
+                      onClick={() => setShowDropdown(false)}
+                      className="qc-dropdown-item"
+                    >
+                      Lịch tư vấn
+                    </Link>
+                    <Link
+                      to="/history-transactions"
+                      onClick={() => setShowDropdown(false)}
+                      className="qc-dropdown-item"
+                    >
+                      Lịch sử giao dịch
+                    </Link>
+                    <Link
+                      to="/viewsurvey"
+                      onClick={() => setShowDropdown(false)}
+                      className="qc-dropdown-item"
+                    >
+                      Khảo sát
+                    </Link>
+                  </>
+                )}
+
+                {/* Đăng xuất - hiển thị cho tất cả */}
                 <button
                   onClick={handleLogout}
                   className="qc-dropdown-item qc-logout-btn"
