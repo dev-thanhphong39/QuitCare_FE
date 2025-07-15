@@ -5,13 +5,64 @@ import "./Navbar.css";
 import logo from "../../assets/images/logo.png";
 import { logout } from "../../redux/features/userSlice";
 import { BellOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
+import api from "../../configs/axios";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const [showBooking, setShowBooking] = useState(false);
 
+  useEffect(() => {
+  const fetchMembershipPlan = async () => {
+    try {
+      if (!user?.id) {
+        console.log(" Không có accountId.");
+        return;
+      }
+
+      console.log(" Đang gọi API giao dịch với accountId:", user.id);
+
+      const historyRes = await api.get(`/v1/payments/history/account/${user.id}`);
+      const transactions = historyRes.data || [];
+      console.log(" Danh sách giao dịch:", transactions);
+
+      const successfulTransaction = transactions.find(tx => tx.status === "SUCCESS");
+
+      if (!successfulTransaction) {
+        console.log(" Không tìm thấy giao dịch SUCCESS.");
+        return;
+      }
+
+      const { amountPaid } = successfulTransaction;
+      console.log(" Giao dịch thành công - amountPaid:", amountPaid);
+
+      const planRes = await api.get(`/membership-plans`);
+      const allPlans = planRes.data || [];
+      console.log(" Danh sách các gói:", allPlans);
+
+      const matchedPlan = allPlans.find(plan => plan.price === amountPaid);
+      console.log(" Gói khớp với amountPaid:", matchedPlan);
+
+      if (matchedPlan?.name === "Premium") {
+        console.log(" Gói là Premium → hiển thị ĐẶT LỊCH");
+        setShowBooking(true);
+      } else {
+        console.log(" Gói không phải Premium hoặc không khớp.");
+      }
+
+    } catch (err) {
+      console.error(" Lỗi khi gọi API:", err);
+    }
+  };
+
+  fetchMembershipPlan();
+}, [user?.id]);
+
+  
+  
   const handleLogout = () => {
     dispatch(logout());
     setShowDropdown(false);
@@ -76,16 +127,18 @@ const Navbar = () => {
             KẾ HOẠCH
           </NavLink>
         </li>
-        <li>
-          <NavLink
-            to="/booking"
-            className={({ isActive }) =>
-              isActive ? "qc-nav-link active" : "qc-nav-link"
-            }
-          >
-            ĐẶT LỊCH
-          </NavLink>
-        </li>
+        {showBooking && (
+          <li>
+            <NavLink
+              to="/booking"
+              className={({ isActive }) =>
+                isActive ? "qc-nav-link active" : "qc-nav-link"
+              }
+            >
+              ĐẶT LỊCH
+            </NavLink>
+          </li>
+        )}
         {showTracking && (
           <li>
             <NavLink
