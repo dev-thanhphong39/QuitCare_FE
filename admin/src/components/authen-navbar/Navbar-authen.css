@@ -1,3 +1,10 @@
+:root {
+    --navbar-height: 80px;
+}
+
+/* =========================
+   NAVBAR STYLES
+   ========================= */
 .auth-navbar {
     position       : fixed;
     top            : 0;
@@ -6,7 +13,6 @@
     z-index        : 1000;
     width          : 100vw;
     background     : #0C1C2C;
-    /* Giữ màu này */
     border-bottom  : 1px solid rgba(24, 144, 255, 0.2);
     padding        : 0;
     backdrop-filter: blur(10px);
@@ -48,18 +54,15 @@
 }
 
 .auth-logo-link {
-    display           : flex;
-    align-items       : center;
-    text-decoration   : none;
-    padding           : 12px 20px;
-    border-radius     : 16px;
-    transition        : all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position          : relative;
-    overflow          : hidden;
-    /* background     : rgba(255, 255, 255, 0.08); */
-    /* Điều chỉnh cho phù hợp với background tối */
-    /* border         : 1px solid rgba(24, 144, 255, 0.2); */
-    backdrop-filter   : blur(8px);
+    display        : flex;
+    align-items    : center;
+    text-decoration: none;
+    padding        : 12px 20px;
+    border-radius  : 16px;
+    transition     : all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position       : relative;
+    overflow       : hidden;
+    backdrop-filter: blur(8px);
 }
 
 .auth-logo-link::before {
@@ -110,7 +113,6 @@
 .auth-brand-text>div:first-child {
     font-size    : 20px;
     color        : #40a9ff;
-    /* Sáng hơn để nổi bật trên background tối */
     margin-bottom: 2px;
     text-shadow  : 0 1px 3px rgba(64, 169, 255, 0.3);
     transition   : all 0.3s ease;
@@ -119,20 +121,17 @@
 .auth-brand-text>div:last-child {
     font-size : 20px;
     color     : #ffffff;
-    /* Màu trắng để nổi bật trên background tối */
     transition: all 0.3s ease;
 }
 
 .auth-logo-link:hover .auth-brand-text>div:first-child {
     color      : #69c0ff;
-    /* Sáng hơn khi hover */
     text-shadow: 0 2px 6px rgba(105, 192, 255, 0.4);
     transform  : translateX(2px);
 }
 
 .auth-logo-link:hover .auth-brand-text>div:last-child {
     color    : #f0f8ff;
-    /* Trắng sáng hơn khi hover */
     transform: translateX(2px);
 }
 
@@ -170,8 +169,94 @@
     animation: float 4s ease-in-out infinite;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Glow effect cho brand text */
+.auth-brand-text>div:first-child {
+    text-shadow: 0 0 10px rgba(64, 169, 255, 0.2);
+}
+
+.auth-logo-link:hover .auth-brand-text>div:first-child {
+    text-shadow: 0 0 15px rgba(105, 192, 255, 0.4), 0 2px 6px rgba(105, 192, 255, 0.2);
+}
+
+/* Subtle glow for the entire navbar */
+.auth-navbar {
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Accessibility improvements */
+.auth-logo-link:focus {
+    outline       : 2px solid #40a9ff;
+    outline-offset: 2px;
+    border-radius : 16px;
+}
+
+.auth-logo-link:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+/* Performance optimizations */
+.auth-logo-link {
+    will-change        : transform;
+    backface-visibility: hidden;
+    transform          : translateZ(0);
+}
+
+/* Custom scrollbar if navbar becomes scrollable */
+.auth-navbar::-webkit-scrollbar {
+    height: 4px;
+}
+
+.auth-navbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-navbar::-webkit-scrollbar-thumb {
+    background   : linear-gradient(90deg, #1890ff, #40a9ff);
+    border-radius: 2px;
+}
+
+.auth-navbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #0056b3, #1890ff);
+}
+
+/* =========================
+   RESPONSIVE BREAKPOINTS
+   ========================= */
+/* Mobile: 320px - 767px */
+/* Tablet: 768px - 1023px */
+/* Desktop: 1024px+ */
+
+/* =========================
+   TABLET RESPONSIVE
+   ========================= */
+@media screen and (max-width: 1023px) {
+    .auth-navbar-left {
+        padding: 0 20px;
+        height : 75px;
+    }
+
+    .auth-logo-link {
+        padding      : 10px 18px;
+        border-radius: 14px;
+    }
+
+    .auth-logo {
+        width        : 44px;
+        height       : 44px;
+        margin-right : 14px;
+        border-radius: 10px;
+    }
+
+    .auth-brand-text>div:first-child,
+    .auth-brand-text>div:last-child {
+        font-size: 19px;
+    }
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+   ========================= */
+@media screen and (max-width: 767px) {
     .auth-navbar-left {
         padding: 0 16px;
         height : 70px;
@@ -192,9 +277,25 @@
     .auth-brand-text>div:last-child {
         font-size: 18px;
     }
+
+    .auth-navbar::before {
+        height: 2px;
+    }
+
+    .auth-logo-link:hover {
+        transform : translateY(-1px);
+        box-shadow: 0 6px 20px rgba(24, 144, 255, 0.2);
+    }
+
+    .auth-logo-link:hover .auth-logo {
+        transform: scale(1.03) rotate(3deg);
+    }
 }
 
-@media (max-width: 480px) {
+/* =========================
+   VERY SMALL MOBILE
+   ========================= */
+@media screen and (max-width: 479px) {
     .auth-navbar-left {
         padding: 0 12px;
         height : 65px;
@@ -215,13 +316,87 @@
     .auth-brand-text>div:last-child {
         font-size: 16px;
     }
+
+    .auth-navbar::before {
+        height: 2px;
+    }
+
+    .auth-logo-link:hover {
+        transform : translateY(-1px);
+        box-shadow: 0 4px 15px rgba(24, 144, 255, 0.15);
+    }
+
+    .auth-logo-link:hover .auth-logo {
+        transform: scale(1.02) rotate(2deg);
+    }
+
+    .auth-brand-text {
+        letter-spacing: -0.3px;
+    }
 }
 
-/* Dark mode support - vẫn giữ màu #0C1C2C */
+/* =========================
+   LANDSCAPE MOBILE
+   ========================= */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .auth-navbar-left {
+        height : 60px;
+        padding: 0 16px;
+    }
+
+    .auth-logo-link {
+        padding      : 6px 14px;
+        border-radius: 10px;
+    }
+
+    .auth-logo {
+        width       : 32px;
+        height      : 32px;
+        margin-right: 10px;
+    }
+
+    .auth-brand-text>div:first-child,
+    .auth-brand-text>div:last-child {
+        font-size: 15px;
+    }
+
+    .auth-navbar::before {
+        height: 2px;
+    }
+}
+
+/* =========================
+   EXTRA SMALL DEVICES
+   ========================= */
+@media screen and (max-width: 360px) {
+    .auth-navbar-left {
+        padding: 0 10px;
+        height : 60px;
+    }
+
+    .auth-logo-link {
+        padding      : 5px 10px;
+        border-radius: 8px;
+    }
+
+    .auth-logo {
+        width       : 32px;
+        height      : 32px;
+        margin-right: 8px;
+    }
+
+    .auth-brand-text>div:first-child,
+    .auth-brand-text>div:last-child {
+        font-size: 14px;
+    }
+}
+
+/* =========================
+   DARK MODE SUPPORT
+   ========================= */
 @media (prefers-color-scheme: dark) {
     .auth-navbar {
         background         : #0C1C2C;
-        /* Giữ nguyên màu này */
         border-bottom-color: rgba(24, 144, 255, 0.2);
     }
 
@@ -252,13 +427,9 @@
     }
 }
 
-/* Accessibility improvements */
-.auth-logo-link:focus {
-    outline       : 2px solid #40a9ff;
-    outline-offset: 2px;
-    border-radius : 16px;
-}
-
+/* =========================
+   ACCESSIBILITY & PERFORMANCE
+   ========================= */
 @media (prefers-reduced-motion: reduce) {
 
     .auth-navbar::before,
@@ -277,47 +448,35 @@
     }
 }
 
-/* Performance optimizations */
-.auth-logo-link {
-    will-change        : transform;
-    backface-visibility: hidden;
-    transform          : translateZ(0);
+/* =========================
+   TOUCH DEVICE OPTIMIZATIONS
+   ========================= */
+@media (hover: none) and (pointer: coarse) {
+    .auth-logo-link:hover {
+        transform : none;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .auth-logo-link:hover .auth-logo {
+        transform: none;
+        filter   : drop-shadow(0 2px 8px rgba(24, 144, 255, 0.3));
+    }
+
+    .auth-logo-link:hover .auth-brand-text>div {
+        transform: none;
+    }
 }
 
-/* Additional hover states */
-.auth-logo-link:active {
-    transform: translateY(-1px) scale(0.98);
-}
+/* =========================
+   HIGH DPI SCREENS
+   ========================= */
+@media screen and (-webkit-min-device-pixel-ratio: 2),
+screen and (min-resolution: 192dpi) {
+    .auth-logo {
+        filter: drop-shadow(0 1px 4px rgba(24, 144, 255, 0.3));
+    }
 
-/* Custom scrollbar if navbar becomes scrollable */
-.auth-navbar::-webkit-scrollbar {
-    height: 4px;
-}
-
-.auth-navbar::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.auth-navbar::-webkit-scrollbar-thumb {
-    background   : linear-gradient(90deg, #1890ff, #40a9ff);
-    border-radius: 2px;
-}
-
-.auth-navbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(90deg, #0056b3, #1890ff);
-}
-
-/* Glow effect cho brand text */
-.auth-brand-text>div:first-child {
-    text-shadow: 0 0 10px rgba(64, 169, 255, 0.2);
-}
-
-.auth-logo-link:hover .auth-brand-text>div:first-child {
-    text-shadow: 0 0 15px rgba(105, 192, 255, 0.4), 0 2px 6px rgba(105, 192, 255, 0.2);
-}
-
-/* Subtle glow for the entire navbar */
-.auth-navbar {
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    .auth-logo-link:hover .auth-logo {
+        filter: drop-shadow(0 2px 8px rgba(24, 144, 255, 0.4));
+    }
 }

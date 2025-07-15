@@ -7,58 +7,125 @@ body {
 } */
 
 .authen-template {
-    min-height: 100vh;
-    width: 100vw;
-    position: relative;
+    min-height : 100vh;
+    width      : 100vw;
+    position   : relative;
     padding-top: 72px;
 }
 
 .authen-template__image {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 0;
-    width: 100vw;
-    height: 100%;
-    background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+    position             : fixed;
+    top                  : 0;
+    right                : 0;
+    left                 : 0;
+    bottom               : 0;
+    z-index              : 0;
+    width                : 100vw;
+    height               : 100%;
+    background-image     : url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80');
+    background-repeat    : no-repeat;
+    background-size      : cover;
+    background-position  : center;
     background-attachment: fixed;
 }
 
 .authen-template__form {
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    max-width: 95vw;
+    position        : absolute;
+    top             : 55%;
+    left            : 50%;
+    transform       : translate(-50%, -50%);
+    width           : 400px;
+    max-width       : 95vw;
     background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-    opacity: 0;
-    animation: fadeInScale 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    display         : flex;
+    flex-direction  : column;
+    justify-content : center;
+    align-items     : center;
+    z-index         : 1;
+    box-shadow      : 2px 0 10px rgba(0, 0, 0, 0.1);
+    border-radius   : 20px;
+    opacity         : 0;
+    animation       : fadeInScale 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
 @keyframes fadeInScale {
     to {
-        opacity: 1;
+        opacity  : 1;
         transform: translate(-50%, -50%) scale(1);
     }
 }
 
-/* RESPONSIVE CHO MÀN NHỎ */
-@media (max-width: 768px) {
+/* =========================
+   RESPONSIVE DESIGN NOTE
+   ========================= */
+/* 
+Responsive styles are now handled by global-responsive.css
+This provides consistent spacing and navbar alignment across all pages
+*/
+
+/* =========================
+   TABLET RESPONSIVE
+   ========================= */
+@media screen and (max-width: 1023px) {
     .authen-template__form {
-        width: 95vw;
-        padding: 32px 10px;
+        width    : 450px;
+        max-width: 90vw;
+        top      : 50%;
+    }
+
+    .authen-template__image {
+        background-attachment: scroll;
+    }
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+   ========================= */
+@media screen and (max-width: 767px) {
+    .authen-template__form {
+        width        : 100%;
+        max-width    : 90vw;
+        top          : 50%;
+        border-radius: 16px;
+    }
+
+    .authen-template__image {
+        background-attachment: scroll;
+        background-position  : center;
+    }
+}
+
+/* =========================
+   VERY SMALL MOBILE
+   ========================= */
+@media screen and (max-width: 479px) {
+    .authen-template__form {
+        width        : 100%;
+        max-width    : 95vw;
+        top          : 50%;
+        border-radius: 12px;
+        box-shadow   : 1px 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .authen-template__image {
+        background-attachment: scroll;
+        background-position  : center top;
+    }
+}
+
+/* =========================
+   LANDSCAPE MOBILE
+   ========================= */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .authen-template__form {
+        top          : 50%;
+        width        : 400px;
+        max-width    : 80vw;
+        border-radius: 10px;
+    }
+
+    .authen-template__image {
+        background-attachment: scroll;
+        background-position  : center;
     }
 }

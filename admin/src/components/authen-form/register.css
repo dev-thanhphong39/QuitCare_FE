@@ -1,18 +1,18 @@
 .auth-register-container {
-    display: flex;
+    display        : flex;
     justify-content: center;
-    align-items: center;
-    border-radius: 20px;
-    box-sizing: border-box;
+    align-items    : center;
+    border-radius  : 20px;
+    box-sizing     : border-box;
 }
 
 .auth-register-card {
-    width: 400px;
-    height: auto;
+    width           : 400px;
+    height          : auto;
     background-color: #fff;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    border: none;
+    box-shadow      : 0 12px 28px rgba(0, 0, 0, 0.1);
+    padding         : 16px;
+    border          : none;
 }
 
 .auth-register-form {
@@ -20,10 +20,10 @@
 }
 
 .auth-register-card .ant-card-head-title {
-    font-size: 24px;
+    font-size  : 24px;
     font-weight: bold;
-    color: #1f2937;
-    text-align: center;
+    color      : #1f2937;
+    text-align : center;
 }
 
 .auth-register-form .ant-form-item {
@@ -31,10 +31,10 @@
 }
 
 .auth-register-form input {
-    padding: 10px;
+    padding      : 10px;
     border-radius: 8px;
-    width: 100%;
-    font-size: 14px;
+    width        : 100%;
+    font-size    : 14px;
 }
 
 .auth-register-form .ant-checkbox-wrapper {
@@ -43,33 +43,219 @@
 
 .auth-register-form .ant-btn-primary {
     border-radius: 8px;
-    height: 40px;
+    height       : 40px;
 }
 
 .auth-register-button {
     background-color: #3b82f6;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    height: 40px;
-    transition: background-color 0.3s ease;
+    border          : none;
+    border-radius   : 8px;
+    font-weight     : 600;
+    height          : 40px;
+    transition      : background-color 0.3s ease;
+}
+
+.auth-register-button:hover {
+    background-color: #2563eb;
 }
 
 .auth-register-login-link {
     text-align: center;
     margin-top: 12px;
-    font-size: 14px;
-    color: #4b5563;
+    font-size : 14px;
+    color     : #4b5563;
 }
 
 .auth-register-login-link-a {
-    color: #106cff;
-    font-weight: 500;
+    color          : #106cff;
+    font-weight    : 500;
     text-decoration: none;
-    margin-left: 4px;
+    margin-left    : 4px;
 }
 
 .auth-register-login-link-a:hover {
     text-decoration: underline;
-    color: #2563eb;
+    color          : #2563eb;
+}
+
+/* =========================
+   RESPONSIVE BREAKPOINTS
+   ========================= */
+/* Mobile: 320px - 767px */
+/* Tablet: 768px - 1023px */
+/* Desktop: 1024px+ */
+
+/* =========================
+   TABLET RESPONSIVE
+   ========================= */
+@media screen and (max-width: 1023px) {
+    .auth-register-card {
+        width    : 100%;
+        max-width: 450px;
+        padding  : 20px;
+    }
+
+    .auth-register-card .ant-card-head-title {
+        font-size: 22px;
+    }
+
+    .auth-register-form input {
+        padding  : 12px;
+        font-size: 15px;
+    }
+
+    .auth-register-form .ant-btn-primary {
+        height: 44px;
+    }
+
+    .auth-register-button {
+        height: 44px;
+    }
+
+    .auth-register-form .ant-form-item {
+        margin-bottom: 12px;
+    }
+
+    .auth-register-login-link {
+        margin-top: 14px;
+    }
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+   ========================= */
+@media screen and (max-width: 767px) {
+    .auth-register-card {
+        width     : 100%;
+        max-width : 100%;
+        padding   : 16px;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .auth-register-card .ant-card-head-title {
+        font-size: 20px;
+    }
+
+    .auth-register-form input {
+        padding  : 10px;
+        font-size: 14px;
+    }
+
+    .auth-register-form .ant-btn-primary {
+        height: 40px;
+    }
+
+    .auth-register-button {
+        height: 40px;
+    }
+
+    .auth-register-form .ant-form-item {
+        margin-bottom: 10px;
+    }
+
+    .auth-register-form .ant-checkbox-wrapper {
+        font-size: 13px;
+    }
+
+    .auth-register-login-link {
+        margin-top: 12px;
+        font-size : 13px;
+    }
+}
+
+/* =========================
+   VERY SMALL MOBILE
+   ========================= */
+@media screen and (max-width: 479px) {
+    .auth-register-card {
+        padding: 12px;
+    }
+
+    .auth-register-card .ant-card-head-title {
+        font-size: 18px;
+    }
+
+    .auth-register-form input {
+        padding  : 8px;
+        font-size: 13px;
+    }
+
+    .auth-register-form .ant-btn-primary {
+        height: 36px;
+    }
+
+    .auth-register-button {
+        height: 36px;
+    }
+
+    .auth-register-form .ant-form-item {
+        margin-bottom: 8px;
+    }
+
+    .auth-register-form .ant-checkbox-wrapper {
+        font-size: 12px;
+    }
+
+    .auth-register-login-link {
+        margin-top: 10px;
+        font-size : 12px;
+    }
+}
+
+/* =========================
+   LANDSCAPE MOBILE
+   ========================= */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .auth-register-card {
+        padding: 12px;
+    }
+
+    .auth-register-card .ant-card-head-title {
+        font-size    : 16px;
+        margin-bottom: 8px;
+    }
+
+    .auth-register-form .ant-form-item {
+        margin-bottom: 6px;
+    }
+
+    .auth-register-login-link {
+        margin-top: 8px;
+    }
+
+    .auth-register-form .ant-btn-primary,
+    .auth-register-button {
+        height: 36px;
+    }
+}
+
+/* =========================
+   FORM VALIDATION STYLES
+   ========================= */
+.auth-register-form .ant-form-item-has-error .ant-input {
+    border-color: #ef4444;
+}
+
+.auth-register-form .ant-form-item-has-error .ant-input:focus {
+    border-color: #ef4444;
+    box-shadow  : 0 0 0 2px rgba(239, 68, 68, 0.1);
+}
+
+.auth-register-form .ant-form-item-explain-error {
+    font-size : 13px;
+    color     : #ef4444;
+    margin-top: 4px;
+}
+
+@media screen and (max-width: 767px) {
+    .auth-register-form .ant-form-item-explain-error {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .auth-register-form .ant-form-item-explain-error {
+        font-size: 11px;
+    }
 }
