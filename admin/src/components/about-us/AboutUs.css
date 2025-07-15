@@ -1,3 +1,13 @@
+/* =========================
+   RESPONSIVE BREAKPOINTS 
+   ========================= */
+/* Mobile: 320px - 767px */
+/* Tablet: 768px - 1023px */
+/* Desktop: 1024px+ */
+
+/* =========================
+   BASE STYLES (Desktop First)
+   ========================= */
 .aboutus-container {
     padding         : 60px 40px;
     background-color: #f9fafc;
@@ -97,19 +107,19 @@
 /* Experience section */
 .experience-section {
     background: linear-gradient(135deg, #0a1929 0%, #1a237e 100%);
-    color: white;
-    padding: 120px 40px;
-    position: relative;
-    overflow: hidden;
+    color     : white;
+    padding   : 120px 40px;
+    position  : relative;
+    overflow  : hidden;
 }
 
 .experience-section::before {
-    content: '';
+    content : '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top     : 0;
+    left    : 0;
+    right   : 0;
+    bottom  : 0;
     background:
         radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
@@ -117,13 +127,13 @@
 }
 
 .experience-content {
-    display: grid;
+    display              : grid;
     grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
+    gap                  : 80px;
+    max-width            : 1200px;
+    margin               : 0 auto;
+    position             : relative;
+    z-index              : 1;
 }
 
 .experience-text {
@@ -131,80 +141,80 @@
 }
 
 .experience-title {
-    font-size: 48px;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 32px;
-    background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%);
+    font-size              : 48px;
+    font-weight            : 800;
+    line-height            : 1.1;
+    margin-bottom          : 32px;
+    background             : linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background-clip        : text;
 }
 
 .experience-description {
-    font-size: 18px;
-    line-height: 1.7;
+    font-size    : 18px;
+    line-height  : 1.7;
     margin-bottom: 24px;
-    color: #cbd5e1;
+    color        : #cbd5e1;
 }
 
 .experience-list {
-    list-style: none;
+    list-style   : none;
     margin-bottom: 32px;
 }
 
 .experience-list li {
-    font-size: 16px;
-    line-height: 1.6;
+    font-size    : 16px;
+    line-height  : 1.6;
     margin-bottom: 12px;
-    padding-left: 24px;
-    position: relative;
-    color: #e2e8f0;
+    padding-left : 24px;
+    position     : relative;
+    color        : #e2e8f0;
 }
 
 .experience-list li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: #10b981;
+    content    : '✓';
+    position   : absolute;
+    left       : 0;
+    color      : #10b981;
     font-weight: bold;
-    font-size: 18px;
+    font-size  : 18px;
 }
 
 .experience-callout {
-    font-size: 18px;
+    font-size  : 18px;
     font-weight: 600;
-    color: #fbbf24;
-    margin-top: 24px;
+    color      : #fbbf24;
+    margin-top : 24px;
 }
 
 .experience-form {
-    background: rgba(255, 255, 255, 0.05);
+    background     : rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+    border         : 1px solid rgba(255, 255, 255, 0.1);
+    border-radius  : 24px;
+    padding        : 40px;
+    display        : flex;
+    flex-direction : column;
+    gap            : 24px;
+    box-shadow     : 0 24px 48px rgba(0, 0, 0, 0.2);
 }
 
 .form-input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background   : rgba(255, 255, 255, 0.05);
+    border       : 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
-    padding: 16px 20px;
-    font-size: 16px;
-    color: white;
-    outline: none;
-    transition: all 0.3s ease;
+    padding      : 16px 20px;
+    font-size    : 16px;
+    color        : white;
+    outline      : none;
+    transition   : all 0.3s ease;
 }
 
 .form-input:focus {
     border-color: #3b82f6;
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background  : rgba(255, 255, 255, 0.1);
+    box-shadow  : 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .form-input::placeholder {
@@ -212,27 +222,27 @@
 }
 
 .form-button {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: white;
-    border: none;
-    padding: 18px 24px;
-    font-size: 16px;
-    font-weight: 600;
+    background   : linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color        : white;
+    border       : none;
+    padding      : 18px 24px;
+    font-size    : 16px;
+    font-weight  : 600;
     border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+    cursor       : pointer;
+    transition   : all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position     : relative;
+    overflow     : hidden;
+    box-shadow   : 0 8px 24px rgba(59, 130, 246, 0.25);
 }
 
 .form-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
+    content   : '';
+    position  : absolute;
+    top       : 0;
+    left      : -100%;
+    width     : 100%;
+    height    : 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.5s;
 }
@@ -242,7 +252,7 @@
 }
 
 .form-button:hover {
-    transform: translateY(-2px);
+    transform : translateY(-2px);
     box-shadow: 0 12px 32px rgba(59, 130, 246, 0.35);
 }
 
@@ -250,8 +260,258 @@
     position     : relative;
     z-index      : 5;
     margin-top   : -55px;
-    /* đẩy lên gần phần trên nếu cần */
     margin-bottom: -106px;
-    /* đẩy sát xuống experience */
     overflow     : hidden;
+}
+
+/* =========================
+   TABLET RESPONSIVE
+   ========================= */
+@media screen and (max-width: 1023px) {
+    .aboutus-container {
+        padding: 40px 20px;
+    }
+
+    .aboutus-content {
+        flex-direction: column;
+        gap           : 20px;
+    }
+
+    .aboutus-text,
+    .aboutus-image {
+        max-width: 100%;
+        padding  : 10px;
+    }
+
+    .aboutus-title {
+        font-size : 36px;
+        text-align: center;
+    }
+
+    .aboutus-subtitle {
+        font-size : 20px;
+        text-align: center;
+    }
+
+    .aboutus-highlight p {
+        font-size : 22px;
+        text-align: center;
+    }
+
+    .aboutus-text p {
+        font-size : 17px;
+        text-align: center;
+    }
+
+    .aboutus-section {
+        flex-direction: column;
+        gap           : 30px;
+        margin-bottom : 40px;
+    }
+
+    /* Experience section tablet */
+    .experience-section {
+        padding: 80px 20px;
+    }
+
+    .experience-content {
+        grid-template-columns: 1fr;
+        gap                  : 40px;
+    }
+
+    .experience-title {
+        font-size : 36px;
+        text-align: center;
+    }
+
+    .experience-description {
+        font-size : 16px;
+        text-align: center;
+    }
+
+    .experience-form {
+        padding: 30px;
+    }
+
+    .cross-banner-wrapper {
+        margin-top   : -30px;
+        margin-bottom: -60px;
+    }
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+   ========================= */
+@media screen and (max-width: 767px) {
+    .aboutus-container {
+        padding: 20px 15px;
+    }
+
+    .aboutus-content {
+        gap: 15px;
+    }
+
+    .aboutus-text,
+    .aboutus-image {
+        min-width: 100%;
+        padding  : 5px;
+    }
+
+    .aboutus-title {
+        font-size    : 28px;
+        margin-bottom: 15px;
+    }
+
+    .aboutus-subtitle {
+        font-size    : 18px;
+        margin-bottom: 20px;
+    }
+
+    .aboutus-highlight p {
+        font-size    : 20px;
+        margin-bottom: 20px;
+    }
+
+    .aboutus-text p {
+        font-size    : 16px;
+        margin-bottom: 15px;
+    }
+
+    .aboutus-button {
+        width     : 100%;
+        padding   : 16px 24px;
+        font-size : 16px;
+        margin-top: 10px;
+    }
+
+    .aboutus-section {
+        margin-bottom: 30px;
+    }
+
+    /* Experience section mobile */
+    .experience-section {
+        padding: 60px 15px;
+    }
+
+    .experience-content {
+        gap: 30px;
+    }
+
+    .experience-title {
+        font-size    : 28px;
+        margin-bottom: 24px;
+    }
+
+    .experience-description {
+        font-size    : 15px;
+        margin-bottom: 20px;
+    }
+
+    .experience-list li {
+        font-size    : 14px;
+        margin-bottom: 10px;
+    }
+
+    .experience-callout {
+        font-size : 16px;
+        margin-top: 20px;
+    }
+
+    .experience-form {
+        padding      : 20px;
+        gap          : 20px;
+        border-radius: 16px;
+    }
+
+    .form-input {
+        padding  : 14px 16px;
+        font-size: 14px;
+    }
+
+    .form-button {
+        padding  : 16px 20px;
+        font-size: 14px;
+    }
+
+    .cross-banner-wrapper {
+        margin-top   : -20px;
+        margin-bottom: -40px;
+    }
+}
+
+/* =========================
+   VERY SMALL MOBILE
+   ========================= */
+@media screen and (max-width: 479px) {
+    .aboutus-container {
+        padding: 15px 10px;
+    }
+
+    .aboutus-title {
+        font-size: 24px;
+    }
+
+    .aboutus-subtitle {
+        font-size: 16px;
+    }
+
+    .aboutus-highlight p {
+        font-size: 18px;
+    }
+
+    .aboutus-text p {
+        font-size: 14px;
+    }
+
+    .experience-section {
+        padding: 40px 10px;
+    }
+
+    .experience-title {
+        font-size: 24px;
+    }
+
+    .experience-description {
+        font-size: 14px;
+    }
+
+    .experience-form {
+        padding: 15px;
+    }
+
+    .form-input {
+        padding  : 12px 14px;
+        font-size: 13px;
+    }
+
+    .form-button {
+        padding  : 14px 18px;
+        font-size: 13px;
+    }
+}
+
+/* =========================
+   LANDSCAPE MOBILE
+   ========================= */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .experience-section {
+        padding: 40px 20px;
+    }
+
+    .experience-title {
+        font-size    : 32px;
+        margin-bottom: 16px;
+    }
+
+    .experience-description {
+        margin-bottom: 16px;
+    }
+
+    .experience-list {
+        margin-bottom: 16px;
+    }
+
+    .experience-callout {
+        margin-top: 16px;
+    }
 }

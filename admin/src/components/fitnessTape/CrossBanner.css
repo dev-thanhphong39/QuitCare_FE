@@ -1,10 +1,9 @@
 .fitness-banner-wrapper {
-    position: relative;
-    width   : 100%;
-    height  : 200px;
-    /* đủ để chứa 2 băng chéo */
-    /* hoặc màu của bạn */
-    overflow: hidden;
+    position  : relative;
+    width     : 100%;
+    height    : 200px;
+    overflow  : hidden;
+    background: transparent;
 }
 
 /* Dải chung */
@@ -21,7 +20,8 @@
     color          : #112a5a;
     background     : #007BFF;
     padding        : 7px 0;
-    border-color   : #112a5a;
+    border         : 1px solid #112a5a;
+    box-shadow     : 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Dải trên xoay trái */
@@ -40,6 +40,7 @@
 
 .text-track {
     display: flex;
+    width  : 100%;
 }
 
 .scroll-left {
@@ -51,11 +52,13 @@
 }
 
 .text-slide {
-    display: flex;
+    display    : flex;
+    flex-shrink: 0;
 }
 
 .text-slide span {
     margin-right: 15px;
+    display     : inline-block;
 }
 
 @keyframes scroll-left {
@@ -75,5 +78,323 @@
 
     100% {
         transform: translateX(50%);
+    }
+}
+
+/* =========================
+   RESPONSIVE BREAKPOINTS
+   ========================= */
+/* Mobile: 320px - 767px */
+/* Tablet: 768px - 1023px */
+/* Desktop: 1024px+ */
+
+/* =========================
+   TABLET RESPONSIVE
+   ========================= */
+@media screen and (max-width: 1023px) {
+    .fitness-banner-wrapper {
+        height: 180px;
+    }
+
+    .fitness-text-banner {
+        font-size: 15px;
+        padding  : 6px 0;
+        width    : 280%;
+    }
+
+    .banner-top {
+        top      : 55px;
+        transform: translateX(-50%) rotate(-2deg);
+    }
+
+    .banner-bottom {
+        top      : 55px;
+        transform: translateX(-50%) rotate(2deg);
+    }
+
+    .text-slide span {
+        margin-right: 12px;
+    }
+
+    .scroll-left,
+    .scroll-right {
+        animation-duration: 45s;
+    }
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+   ========================= */
+@media screen and (max-width: 767px) {
+    .fitness-banner-wrapper {
+        height: 160px;
+    }
+
+    .fitness-text-banner {
+        font-size   : 14px;
+        font-weight : 500;
+        padding     : 5px 0;
+        width       : 300%;
+        border-width: 1px;
+    }
+
+    .banner-top {
+        top      : 50px;
+        transform: translateX(-50%) rotate(-1.5deg);
+    }
+
+    .banner-bottom {
+        top      : 50px;
+        transform: translateX(-50%) rotate(1.5deg);
+    }
+
+    .text-slide span {
+        margin-right: 10px;
+        font-size   : 14px;
+    }
+
+    .scroll-left,
+    .scroll-right {
+        animation-duration: 40s;
+    }
+}
+
+/* =========================
+   VERY SMALL MOBILE
+   ========================= */
+@media screen and (max-width: 479px) {
+    .fitness-banner-wrapper {
+        height: 140px;
+    }
+
+    .fitness-text-banner {
+        font-size  : 12px;
+        font-weight: 500;
+        padding    : 4px 0;
+        width      : 320%;
+    }
+
+    .banner-top {
+        top      : 45px;
+        transform: translateX(-50%) rotate(-1deg);
+    }
+
+    .banner-bottom {
+        top      : 45px;
+        transform: translateX(-50%) rotate(1deg);
+    }
+
+    .text-slide span {
+        margin-right: 8px;
+        font-size   : 12px;
+    }
+
+    .scroll-left,
+    .scroll-right {
+        animation-duration: 35s;
+    }
+}
+
+/* =========================
+   LANDSCAPE MOBILE
+   ========================= */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .fitness-banner-wrapper {
+        height: 120px;
+    }
+
+    .fitness-text-banner {
+        font-size: 11px;
+        padding  : 3px 0;
+        width    : 350%;
+    }
+
+    .banner-top {
+        top      : 40px;
+        transform: translateX(-50%) rotate(-0.8deg);
+    }
+
+    .banner-bottom {
+        top      : 40px;
+        transform: translateX(-50%) rotate(0.8deg);
+    }
+
+    .text-slide span {
+        margin-right: 6px;
+        font-size   : 11px;
+    }
+
+    .scroll-left,
+    .scroll-right {
+        animation-duration: 30s;
+    }
+}
+
+/* =========================
+   EXTRA SMALL DEVICES
+   ========================= */
+@media screen and (max-width: 360px) {
+    .fitness-banner-wrapper {
+        height: 120px;
+    }
+
+    .fitness-text-banner {
+        font-size  : 10px;
+        font-weight: 400;
+        padding    : 3px 0;
+        width      : 350%;
+    }
+
+    .banner-top {
+        top      : 40px;
+        transform: translateX(-50%) rotate(-0.5deg);
+    }
+
+    .banner-bottom {
+        top      : 40px;
+        transform: translateX(-50%) rotate(0.5deg);
+    }
+
+    .text-slide span {
+        margin-right: 5px;
+        font-size   : 10px;
+    }
+
+    .scroll-left,
+    .scroll-right {
+        animation-duration: 30s;
+    }
+}
+
+/* =========================
+   ACCESSIBILITY & PERFORMANCE
+   ========================= */
+@media (prefers-reduced-motion: reduce) {
+
+    .scroll-left,
+    .scroll-right {
+        animation: none;
+    }
+
+    .text-track {
+        justify-content: center;
+    }
+}
+
+/* =========================
+   TOUCH DEVICE OPTIMIZATIONS
+   ========================= */
+@media (hover: none) and (pointer: coarse) {
+    .fitness-text-banner {
+        user-select        : none;
+        -webkit-user-select: none;
+        -moz-user-select   : none;
+        -ms-user-select    : none;
+    }
+}
+
+/* =========================
+   HIGH DPI SCREENS
+   ========================= */
+@media screen and (-webkit-min-device-pixel-ratio: 2),
+screen and (min-resolution: 192dpi) {
+    .fitness-text-banner {
+        border-width: 0.5px;
+        box-shadow  : 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* =========================
+   DARK MODE SUPPORT
+   ========================= */
+@media (prefers-color-scheme: dark) {
+    .fitness-text-banner {
+        background  : #0056b3;
+        color       : #e8f4fd;
+        border-color: #004085;
+        box-shadow  : 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* =========================
+   PRINT STYLES
+   ========================= */
+@media print {
+    .fitness-banner-wrapper {
+        display: none;
+    }
+}
+
+/* =========================
+   PERFORMANCE OPTIMIZATIONS
+   ========================= */
+.text-track {
+    will-change        : transform;
+    backface-visibility: hidden;
+    transform          : translateZ(0);
+}
+
+.fitness-text-banner {
+    contain: layout style paint;
+}
+
+/* =========================
+   FALLBACK FOR OLDER BROWSERS
+   ========================= */
+@supports not (contain: layout) {
+    .fitness-text-banner {
+        overflow: hidden;
+    }
+}
+
+/* =========================
+   CUSTOM SCROLL SPEED PER DEVICE
+   ========================= */
+@media screen and (max-width: 1023px) and (min-width: 768px) {
+
+    .scroll-left,
+    .scroll-right {
+        animation-duration: 42s;
+    }
+}
+
+@media screen and (max-width: 767px) and (min-width: 480px) {
+
+    .scroll-left,
+    .scroll-right {
+        animation-duration: 38s;
+    }
+}
+
+@media screen and (max-width: 479px) and (min-width: 361px) {
+
+    .scroll-left,
+    .scroll-right {
+        animation-duration: 33s;
+    }
+}
+
+/* =========================
+   LOADING STATE
+   ========================= */
+.fitness-banner-wrapper.loading .text-track {
+    animation-play-state: paused;
+}
+
+.fitness-banner-wrapper.loading .fitness-text-banner {
+    opacity: 0.5;
+}
+
+/* =========================
+   HOVER EFFECTS (Desktop only)
+   ========================= */
+@media (hover: hover) and (pointer: fine) {
+    .fitness-banner-wrapper:hover .text-track {
+        animation-play-state: paused;
+    }
+
+    .fitness-banner-wrapper:hover .fitness-text-banner {
+        background: #0056b3;
+        transition: background-color 0.3s ease;
     }
 }

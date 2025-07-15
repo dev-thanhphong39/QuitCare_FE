@@ -1,12 +1,12 @@
 .banner-slider {
     position    : relative;
     width       : 100vw;
-    height      : calc(100vh - 64px);
-    margin-top  : 64px;
+    height      : 100%;
     overflow    : hidden;
     user-select : none;
-    touch-action: pan-y;
+    touch-action: pan-x;
     cursor      : grab;
+    background  : #000;
 }
 
 .banner-slider:active {
@@ -25,11 +25,13 @@
 }
 
 .slide {
-    width         : 100vw;
-    height        : 100%;
-    flex-shrink   : 0;
-    object-fit    : cover;
-    pointer-events: none;
+    width          : 100vw;
+    height         : 100%;
+    flex-shrink    : 0;
+    object-fit     : cover;
+    object-position: center center;
+    pointer-events : none;
+    display        : block;
     /* để không chặn thao tác swipe */
 }
 
@@ -51,9 +53,377 @@
     opacity      : 0.5;
     cursor       : pointer;
     border       : 1px solid #333;
+    transition   : all 0.3s ease;
 }
 
 .dot.active {
     opacity   : 1;
     background: #007bff;
+    transform : scale(1.2);
+}
+
+.dot:hover {
+    opacity  : 0.8;
+    transform: scale(1.1);
+}
+
+/* =========================
+   RESPONSIVE BREAKPOINTS
+   ========================= */
+/* Mobile: 320px - 767px */
+/* Tablet: 768px - 1023px */
+/* Desktop: 1024px+ */
+
+/* =========================
+   TABLET RESPONSIVE
+   ========================= */
+@media screen and (max-width: 1023px) {
+    .slide {
+        object-fit     : cover;
+        object-position: center center;
+        width          : 100vw;
+        height         : 100%;
+    }
+
+    .dots {
+        bottom: 25px;
+        gap   : 8px;
+    }
+
+    .dot {
+        width : 14px;
+        height: 14px;
+    }
+
+    .dot.active {
+        transform: scale(1.15);
+    }
+
+    .dot:hover {
+        transform: scale(1.05);
+    }
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+   ========================= */
+@media screen and (max-width: 767px) {
+    .banner-slider {
+        touch-action: pan-x;
+    }
+
+    .slider-track {
+        transition: transform 0.3s ease-out;
+    }
+
+    .slide {
+        object-fit     : cover;
+        object-position: center center;
+        width          : 100vw;
+        height         : 100%;
+        min-height     : 100%;
+    }
+
+    .dots {
+        bottom: 20px;
+        gap   : 6px;
+    }
+
+    .dot {
+        width       : 12px;
+        height      : 12px;
+        border-width: 1px;
+        position    : relative;
+    }
+
+    .dot.active {
+        transform: scale(1.1);
+    }
+
+    .dot:hover {
+        transform: scale(1.02);
+    }
+
+    /* Tăng vùng tap cho mobile */
+    .dot::before {
+        content      : '';
+        position     : absolute;
+        top          : -8px;
+        left         : -8px;
+        right        : -8px;
+        bottom       : -8px;
+        border-radius: 50%;
+    }
+
+    /* Gradient overlay để highlight dots */
+    .banner-slider::after {
+        content       : '';
+        position      : absolute;
+        bottom        : 0;
+        left          : 0;
+        right         : 0;
+        height        : 80px;
+        background    : linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+        pointer-events: none;
+        z-index       : 10;
+    }
+}
+
+/* =========================
+   VERY SMALL MOBILE
+   ========================= */
+@media screen and (max-width: 479px) {
+    .slide {
+        object-fit     : cover;
+        object-position: center center;
+        width          : 100vw;
+        height         : 100%;
+    }
+
+    .dots {
+        bottom: 15px;
+        gap   : 5px;
+    }
+
+    .dot {
+        width       : 10px;
+        height      : 10px;
+        border-width: 1px;
+    }
+
+    .dot.active {
+        transform : scale(1.1);
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
+    }
+
+    .dot:hover {
+        transform: scale(1.01);
+    }
+
+    /* Tăng vùng tap lớn hơn cho điện thoại nhỏ */
+    .dot::before {
+        top   : -10px;
+        left  : -10px;
+        right : -10px;
+        bottom: -10px;
+    }
+}
+
+/* =========================
+   LANDSCAPE MOBILE
+   ========================= */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .slide {
+        object-fit     : cover;
+        object-position: center center;
+        width          : 100vw;
+        height         : 100%;
+    }
+
+    .dots {
+        bottom: 10px;
+        gap   : 4px;
+    }
+
+    .dot {
+        width : 8px;
+        height: 8px;
+    }
+
+    .dot.active {
+        transform: scale(1.2);
+    }
+
+    .dot:hover {
+        transform: scale(1.1);
+    }
+}
+
+/* =========================
+   EXTRA SMALL DEVICES
+   ========================= */
+@media screen and (max-width: 360px) {
+    .slide {
+        object-fit     : cover;
+        object-position: center center;
+        width          : 100vw;
+        height         : 100%;
+    }
+
+    .dots {
+        bottom: 12px;
+        gap   : 4px;
+    }
+
+    .dot {
+        width : 8px;
+        height: 8px;
+    }
+
+    .dot.active {
+        transform : scale(1.15);
+        box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.4);
+    }
+}
+
+/* =========================
+   PORTRAIT MODE OPTIMIZATION
+   ========================= */
+@media screen and (orientation: portrait) {
+    .slide {
+        object-fit     : cover;
+        object-position: center center;
+    }
+}
+
+@media screen and (orientation: portrait) and (max-width: 767px) {
+    .slide {
+        object-position: center top;
+    }
+}
+
+/* =========================
+   LANDSCAPE MODE OPTIMIZATION
+   ========================= */
+@media screen and (orientation: landscape) {
+    .slide {
+        object-fit     : cover;
+        object-position: center center;
+    }
+}
+
+/* =========================
+   TOUCH DEVICE OPTIMIZATIONS
+   ========================= */
+@media (hover: none) and (pointer: coarse) {
+    .banner-slider {
+        cursor: default;
+    }
+
+    .banner-slider:active {
+        cursor: default;
+    }
+
+    .banner-slider.dragging {
+        cursor: default !important;
+    }
+
+    .dot {
+        cursor: pointer;
+    }
+
+    .dot:hover {
+        transform: none;
+        opacity  : 0.5;
+    }
+
+    .dot.active:hover {
+        transform: scale(1.1);
+        opacity  : 1;
+    }
+
+    /* Feedback haptic khi tap */
+    .dot:active {
+        transform : scale(0.9);
+        transition: transform 0.1s ease;
+    }
+}
+
+/* =========================
+   HIGH DPI SCREENS
+   ========================= */
+@media screen and (-webkit-min-device-pixel-ratio: 2),
+screen and (min-resolution: 192dpi) {
+    .slide {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+
+    .dot {
+        border-width: 0.5px;
+    }
+
+    .dot.active {
+        box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.2);
+    }
+}
+
+/* =========================
+   ACCESSIBILITY
+   ========================= */
+@media (prefers-reduced-motion: reduce) {
+    .slider-track {
+        transition: none;
+    }
+
+    .dot {
+        transition: none;
+    }
+
+    .dot.active,
+    .dot:hover {
+        transform: none;
+    }
+}
+
+.dot:focus {
+    outline       : 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+.dot:focus:not(:hover) {
+    transform: scale(1.1);
+}
+
+/* =========================
+   FALLBACK FOR OLD BROWSERS
+   ========================= */
+@supports not (object-fit: cover) {
+    .slide {
+        background-size    : cover !important;
+        background-position: center !important;
+        background-repeat  : no-repeat !important;
+    }
+}
+
+/* =========================
+   LOADING STATE
+   ========================= */
+.banner-slider.loading .slide {
+    background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+        linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+        linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+    background-size    : 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    animation          : loading 1s linear infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+
+    100% {
+        background-position: 20px 20px, 20px 30px, 30px 10px, 10px 20px;
+    }
+}
+
+/* =========================
+   DARK MODE SUPPORT
+   ========================= */
+@media (prefers-color-scheme: dark) {
+    .dot {
+        background  : rgba(255, 255, 255, 0.7);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .dot.active {
+        background  : #007bff;
+        border-color: #007bff;
+    }
+
+    .banner-slider {
+        background: #111;
+    }
 }
