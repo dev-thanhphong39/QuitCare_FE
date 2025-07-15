@@ -3,12 +3,9 @@ import api from "../../configs/axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../footer/Footer";
 import Navbar from "../navbar/Navbar";
-import { Input, Radio, Modal, Button } from "antd";
-import { useSelector } from "react-redux";
+import { Input, Radio, Modal } from "antd";
 import "./Planning.css";
 import planningBanner from "../../assets/images/planning1.png";
-
-
 
 const initialState = {
   started_smoking_age: "",
@@ -214,14 +211,12 @@ const generateSuggestedPlan = (form) => {
 function PlanPage() {
   const [form, setForm] = useState(initialState);
   const [showChoice, setShowChoice] = useState(false);
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false); // Modal yêu cầu nâng cấp
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [addictionInfo, setAddictionInfo] = useState(null);
+  const [addictionInfo, setAddictionInfo] = useState(null); // Thêm state để lưu thông tin đánh giá
   const navigate = useNavigate();
 
   const accountId = localStorage.getItem("accountId");
-  const user = useSelector((state) => state.user); // Lấy thông tin user từ Redux
 
   useEffect(() => {
     if (!accountId) {
@@ -244,7 +239,7 @@ function PlanPage() {
         if (err?.response?.status === 404) {
           setLoading(false); // Cho phép hiển thị form khảo sát
         } else {
-          //setError("Bạn chưa điền thông tin. Vui lòng điền đầy đủ thông tin!");
+          setError("Bạn chưa điền thông tin. Vui lòng điền đầy đủ thông tin!");
           setLoading(false);
         }
       }
@@ -281,22 +276,10 @@ function PlanPage() {
       return;
     }
 
-    // Kiểm tra role của người dùng
-    if (user?.role === "GUEST") {
-      // Nếu là GUEST, hiện modal yêu cầu nâng cấp
-      setShowUpgradeModal(true);
-      return;
-    }
-
-    // Nếu là CUSTOMER, tiếp tục xử lý bình thường
+    // Đánh giá mức độ nghiện và lưu vào state
     const addiction = calcAddictionLevel(form);
     setAddictionInfo(addiction);
     setShowChoice(true);
-  };
-
-  const handleUpgrade = () => {
-    setShowUpgradeModal(false);
-    navigate("/"); // Chuyển đến trang mua gói
   };
 
   const handlePlanChoice = async (type) => {
@@ -703,63 +686,6 @@ function PlanPage() {
           </button>
           {error && <div className="planpage-error">{error}</div>}
         </form>
-
-        {/* Modal yêu cầu nâng cấp cho GUEST */}
-        <Modal
-          title="🎯 Nâng cấp tài khoản"
-          open={showUpgradeModal}
-          onCancel={() => setShowUpgradeModal(false)}
-          footer={null}
-          centered
-          width={500}
-        >
-          <div style={{ textAlign: "center", padding: "20px 0" }}>
-            <div
-              style={{
-                fontSize: "18px",
-                marginBottom: "16px",
-                color: "#1890ff",
-              }}
-            >
-              💡 Để sử dụng tính năng lập kế hoạch cai thuốc
-            </div>
-            <div
-              style={{
-                fontSize: "16px",
-                marginBottom: "24px",
-                color: "#666",
-              }}
-            >
-              Bạn cần nâng cấp lên tài khoản <b>CUSTOMER</b> để trải nghiệm đầy
-              đủ các tính năng của QuitCare.
-            </div>
-            <div
-              style={{
-                display: "flex",
-                gap: "12px",
-                justifyContent: "center",
-              }}
-            >
-              <Button size="large" onClick={() => setShowUpgradeModal(false)}>
-                Để sau
-              </Button>
-              <Button
-                type="primary"
-                size="large"
-                onClick={handleUpgrade}
-                style={{
-                  background:
-                    "linear-gradient(90deg, #52c41a 60%, #73d13d 100%)",
-                  border: "none",
-                }}
-              >
-                🚀 Nâng cấp ngay
-              </Button>
-            </div>
-          </div>
-        </Modal>
-
-        {/* Modal chọn phương án cho CUSTOMER */}
         {showChoice && (
           <div
             className="planpage-choice-modal"
