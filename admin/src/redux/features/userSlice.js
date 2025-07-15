@@ -1,24 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = null;
-
-export const userSlice = createSlice({
+const userSlice = createSlice({
   name: "user",
-  initialState,
+  initialState: null,
   reducers: {
-    login: (state, actions) => {
-      return actions.payload;
+    login: (state, action) => {
+      return action.payload;
     },
-
     logout: () => {
-      return initialState;
-    }
-
-
+      return null;
+    },
+    // ✅ Thêm action để cập nhật user
+    updateUser: (state, action) => {
+      return { ...state, ...action.payload };
+    },
+    // ✅ Thêm action để chỉ cập nhật role
+    updateUserRole: (state, action) => {
+      if (state) {
+        return { ...state, role: action.payload };
+      }
+      return state;
+    },
   },
 });
 
-// Action creators are generated for each case reducer function
-export const { login, logout } = userSlice.actions;
-
+export const { login, logout, updateUser, updateUserRole } = userSlice.actions;
 export default userSlice.reducer;

@@ -1131,7 +1131,6 @@ const TrackingPage = () => {
             </Button>
           </div>
         </div>
-        <Footer />
       </>
     );
   }

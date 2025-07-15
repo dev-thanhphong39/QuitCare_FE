@@ -452,7 +452,7 @@ function CreatePlanning() {
                             min={0}
                             max={100}
                             value={row.cigarettes}
-                            placeholder="0-100 điếu/ngày"
+                            placeholder="0-50 điếu/ngày"
                             onChange={(e) =>
                               handleChange(
                                 stageIdx,

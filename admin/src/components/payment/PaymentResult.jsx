@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { HomeOutlined, HistoryOutlined } from "@ant-design/icons";
 import useGetParams from "../../hook/useGetParam";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux"; // ✅ Thêm useDispatch
+import { updateUserRole } from "../../redux/features/userSlice"; // ✅ Import action
 import { Result, Button, Descriptions, Spin, Card } from "antd";
 import "./PaymentResult.css";
 import api from "../../configs/axios";
@@ -9,9 +11,11 @@ import api from "../../configs/axios";
 const PaymentResult = () => {
   const getParam = useGetParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // ✅ Khởi tạo dispatch
 
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("success");
+  const [countdown, setCountdown] = useState(20);
 
   const transactionStatus = getParam("vnp_TransactionStatus");
 
@@ -34,22 +38,45 @@ const PaymentResult = () => {
     return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
   };
 
+  // ✅ useEffect cho countdown và redirect
+  useEffect(() => {
+    if (status === "success" && !loading) {
+      const countdownInterval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdownInterval);
+            // ✅ Cập nhật Redux trước khi chuyển hướng
+            dispatch(updateUserRole("CUSTOMER"));
+            // Chuyển hướng về planning
+            navigate("/planning");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(countdownInterval);
+    }
+  }, [status, loading, dispatch, navigate]);
+
   useEffect(() => {
     const updatePaymentStatus = async () => {
       const paymentId = getParam("paymentID");
-          const packageID = getParam("packageID");
-          console.log("payment id la:", paymentId)
+      const packageID = getParam("packageID");
+      console.log("payment id la:", paymentId);
+
       if (transactionStatus === "00") {
         try {
-          
- 
           await api.post("/v1/payments", {
             paymentId: Number(paymentId),
-            membershipPlanId:packageID,
+            membershipPlanId: packageID,
             paymentStatus: "SUCCESS",
           });
-  
+
           setStatus("success");
+
+          // ✅ Cập nhật Redux ngay sau khi API thành công
+          dispatch(updateUserRole("CUSTOMER"));
         } catch (error) {
           console.error("Lỗi khi cập nhật trạng thái thanh toán:", error);
           setStatus("error");
@@ -58,25 +85,24 @@ const PaymentResult = () => {
         try {
           await api.post("/v1/payments", {
             paymentId: Number(paymentId),
-            membershipPlanId:packageID,
+            membershipPlanId: packageID,
             paymentStatus: "FAILED",
           });
-  
-         setStatus("error");
+
+          setStatus("error");
         } catch (error) {
           console.error("Lỗi khi cập nhật trạng thái thanh toán:", error);
           setStatus("error");
         }
-        setStatus("error");
       }
-  
+
       // Cho loading hiển thị ít nhất 500ms trước khi tắt
       const timer = setTimeout(() => setLoading(false), 800);
       return () => clearTimeout(timer);
     };
-  
+
     updatePaymentStatus();
-  }, [transactionStatus, getParam]);
+  }, [transactionStatus, getParam, dispatch]); // ✅ Thêm dispatch vào dependency
 
   if (loading) {
     return (
@@ -100,9 +126,21 @@ const PaymentResult = () => {
               : "Thanh toán thất bại!"
           }
           subTitle={
-            status === "success"
-              ? "Cảm ơn bạn đã thanh toán qua VNPay."
-              : "Có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại."
+            status === "success" ? (
+              <>
+                Cảm ơn bạn đã thanh toán qua VNPay.
+                <br />
+                <strong style={{ color: "#52c41a" }}>
+                  Tài khoản đã được nâng cấp thành CUSTOMER!
+                </strong>
+                <br />
+                <span style={{ color: "#666" }}>
+                  Tự động chuyển về trang lập kế hoạch sau {countdown} giây...
+                </span>
+              </>
+            ) : (
+              "Có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại."
+            )
           }
           extra={[
             <Button
@@ -122,6 +160,7 @@ const PaymentResult = () => {
             </Button>,
           ]}
         />
+
         {status === "success" && (
           <Card
             title="Chi tiết giao dịch"

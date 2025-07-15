@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../../configs/axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"; // ✅ Thêm useSelector
 import Footer from "../footer/Footer";
 import Navbar from "../navbar/Navbar";
 import { Input, Radio, Modal } from "antd";
@@ -213,16 +214,36 @@ function PlanPage() {
   const [showChoice, setShowChoice] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [addictionInfo, setAddictionInfo] = useState(null); // Thêm state để lưu thông tin đánh giá
+  const [addictionInfo, setAddictionInfo] = useState(null);
+
+  // ✅ Thêm modal cho GUEST
+  const [showGuestModal, setShowGuestModal] = useState(false);
+
   const navigate = useNavigate();
 
+  // ✅ Lấy thông tin user từ Redux
+  const user = useSelector((state) => state.user);
   const accountId = localStorage.getItem("accountId");
+
 
   useEffect(() => {
     if (!accountId) {
       navigate("/login");
       return;
     }
+
+    // ✅ Kiểm tra role khi component mount
+    if (
+      !user ||
+      (user.role !== "CUSTOMER" &&
+        user.role !== "GUEST" &&
+        user.role !== "STAFF")
+    ) {
+      setError("Bạn không có quyền truy cập trang này.");
+      setLoading(false);
+      return;
+    }
+
     async function checkPlan() {
       try {
         const res = await api.get(`/v1/customers/${accountId}/quit-plans`);
@@ -235,17 +256,15 @@ function PlanPage() {
           return;
         }
       } catch (err) {
-        // Nếu lỗi là 404 thì KHÔNG chuyển hướng, chỉ cho phép lập kế hoạch mới
         if (err?.response?.status === 404) {
-          setLoading(false); // Cho phép hiển thị form khảo sát
+          setLoading(false);
         } else {
-          setError("Bạn chưa điền thông tin. Vui lòng điền đầy đủ thông tin!");
           setLoading(false);
         }
       }
     }
     checkPlan();
-  }, [accountId, navigate]);
+  }, [accountId, navigate, user]);
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
@@ -271,6 +290,24 @@ function PlanPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // ✅ Kiểm tra phân quyền trước khi xử lý
+    if (!user) {
+      setError("Vui lòng đăng nhập để sử dụng chức năng này.");
+      return;
+    }
+
+    if (user.role === "GUEST") {
+      // ✅ GUEST chỉ được xem form, không được sử dụng
+      setShowGuestModal(true);
+      return;
+    }
+
+    if (user.role !== "CUSTOMER") {
+      setError("Chỉ khách hàng mới có thể sử dụng chức năng này.");
+      return;
+    }
+
     if (!isFilled()) {
       setError("Vui lòng nhập đầy đủ tất cả các thông tin!");
       return;
@@ -283,22 +320,24 @@ function PlanPage() {
   };
 
   const handlePlanChoice = async (type) => {
+    // ✅ Double check phân quyền
+    if (!user || user.role !== "CUSTOMER") {
+      setError("Chỉ khách hàng mới có thể tạo kế hoạch cai thuốc.");
+      setShowChoice(false);
+      return;
+    }
+
     try {
       setError("");
       setShowChoice(false);
       setLoading(true);
 
       if (type === "recommend") {
-        // Chỉ tính toán kế hoạch đề xuất, không gọi API
         const suggestedPlan = generateSuggestedPlan(form);
-
-        // Lưu thông tin khảo sát và kế hoạch đề xuất vào localStorage
         localStorage.setItem("planSurvey", JSON.stringify(form));
         localStorage.setItem("suggestedPlan", JSON.stringify(suggestedPlan));
-
         navigate("/suggest-planing");
       } else {
-        // Tự lập kế hoạch - gọi API như cũ
         const payload = {
           started_smoking_age: parseInt(form.started_smoking_age),
           cigarettes_per_day: parseInt(form.cigarettes_per_day),
@@ -332,11 +371,38 @@ function PlanPage() {
       } else if (err?.response?.status === 409) {
         setError("Bạn đã có kế hoạch. Không thể tạo thêm.");
       } else {
-        setError("Bạn chưa điền thông tin. Vui lòng điền đầy đủ thông tin!");
+        setError("Có lỗi xảy ra. Vui lòng thử lại!");
       }
     } finally {
       setLoading(false);
     }
+  };
+
+  // ✅ Hàm xử lý upgrade account
+  const handleUpgradeAccount = () => {
+    setShowGuestModal(false);
+    navigate("/");
+  };
+
+  // ✅ Tạo helper function
+  const isDisabled = () => {
+    if (!user) {
+      console.log("🔒 Disabled: No user");
+      return true;
+    }
+
+    if (user.role === "GUEST") {
+      console.log("🔒 Disabled: GUEST role");
+      return true;
+    }
+
+    if (user.role === "CUSTOMER") {
+      console.log("✅ Enabled: CUSTOMER role");
+      return false;
+    }
+
+    console.log("🔒 Disabled: Unknown role:", user.role);
+    return true;
   };
 
   if (loading) {
@@ -371,7 +437,31 @@ function PlanPage() {
       </div>
 
       <div className="planpage-container">
-        <h2 className="planpage-title">Thông tin khảo sát</h2>
+        {/* ✅ Hiển thị cảnh báo cho GUEST */}
+        {user && user.role === "GUEST" && (
+          <div
+            style={{
+              background: "linear-gradient(135deg, #fff3cd, #ffeaa7)",
+              border: "2px solid #ffc107",
+              borderRadius: "12px",
+              padding: "16px 20px",
+              margin: "20px auto 30px",
+              maxWidth: "800px",
+              textAlign: "center",
+              boxShadow: "0 4px 12px rgba(255, 193, 7, 0.2)",
+            }}
+          >
+            <h4 style={{ margin: "0 0 8px 0", color: "#856404" }}>
+              ⚠️ Tài khoản của bạn chưa nâng cấp
+            </h4>
+            <p style={{ margin: "0", color: "#856404", fontSize: "14px" }}>
+              Bạn chỉ xem form khảo sát nhưng cần nâng cấp tài khoản để sử dụng
+              đầy đủ chức năng lập kế hoạch cai thuốc.
+            </p>
+          </div>
+        )}
+
+        <h2 className="planpage-title">📋 Thông tin khảo sát cai thuốc lá</h2>
         <form className="planpage-form">
           <div className="planpage-grid">
             <div>
@@ -387,7 +477,9 @@ function PlanPage() {
                 onChange={handleChange}
                 className="planpage-input"
                 placeholder="Nhập tuổi"
+                disabled={isDisabled()} // ✅ Sử dụng function helper
               />
+
               <div className="planpage-question">
                 <b>[2]</b> Hiện tại hút bao nhiêu điếu/ngày?
               </div>
@@ -400,7 +492,9 @@ function PlanPage() {
                 onChange={handleChange}
                 className="planpage-input"
                 placeholder="Số điếu/ngày"
+                disabled={user && user.role === "GUEST"}
               />
+
               <div className="planpage-question">
                 <b>[3]</b> Một bao có bao nhiêu điếu?
               </div>
@@ -413,7 +507,9 @@ function PlanPage() {
                 onChange={handleChange}
                 className="planpage-input"
                 placeholder="Số điếu/bao"
+                disabled={user && user.role === "GUEST"}
               />
+
               <div className="planpage-question">
                 <b>[4]</b> Sau khi thức dậy bao lâu bạn hút điếu đầu?
               </div>
@@ -425,6 +521,7 @@ function PlanPage() {
                     value="≤5 phút"
                     checked={form.timeToFirstCigarette === "≤5 phút"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   ≤5 phút
                 </label>
@@ -435,6 +532,7 @@ function PlanPage() {
                     value="6–30 phút"
                     checked={form.timeToFirstCigarette === "6–30 phút"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   6–30 phút
                 </label>
@@ -445,6 +543,7 @@ function PlanPage() {
                     value="31–60 phút"
                     checked={form.timeToFirstCigarette === "31–60 phút"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   31–60 phút
                 </label>
@@ -455,10 +554,12 @@ function PlanPage() {
                     value=">60 phút"
                     checked={form.timeToFirstCigarette === ">60 phút"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   &gt;60 phút
                 </label>
               </div>
+
               <div className="planpage-question">
                 <b>[5]</b> Bạn đã từng cố gắng cai thuốc chưa? (Số lần)
               </div>
@@ -471,7 +572,9 @@ function PlanPage() {
                 onChange={handleChange}
                 className="planpage-input"
                 placeholder="Số lần"
+                disabled={user && user.role === "GUEST"}
               />
+
               <div className="planpage-question">
                 <b>[6]</b> Thời gian dài nhất từng không hút thuốc?
               </div>
@@ -483,6 +586,7 @@ function PlanPage() {
                     value="LESS_THAN_1_DAY"
                     checked={form.longestQuitDuration === "LESS_THAN_1_DAY"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   Ít hơn 1 ngày
                 </label>
@@ -495,6 +599,7 @@ function PlanPage() {
                       form.longestQuitDuration === "BETWEEN_1_AND_3_DAYS"
                     }
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   Giữa 1 và 3 ngày
                 </label>
@@ -505,6 +610,7 @@ function PlanPage() {
                     value="ONE_WEEK"
                     checked={form.longestQuitDuration === "ONE_WEEK"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   1 tuần
                 </label>
@@ -515,12 +621,14 @@ function PlanPage() {
                     value="MORE_THAN_ONE_WEEK"
                     checked={form.longestQuitDuration === "MORE_THAN_ONE_WEEK"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   Hơn 1 tuần
                 </label>
               </div>
+
               <div className="planpage-question">
-                <b>[7]</b> Bạn có cảm thấy khó chịu nếu không hút?
+                <b>[7]</b> Bạn có cảm thấy khó chịu nếi không hút?
               </div>
               <div className="planpage-options">
                 <label>
@@ -530,6 +638,7 @@ function PlanPage() {
                     value="true"
                     checked={form.cravingWithoutSmoking === "true"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   Có
                 </label>
@@ -540,10 +649,12 @@ function PlanPage() {
                     value="false"
                     checked={form.cravingWithoutSmoking === "false"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   Không
                 </label>
               </div>
+
               <div className="planpage-question">
                 <b>[8]</b> Bạn hút nhiều hơn khi nào?
               </div>
@@ -554,8 +665,10 @@ function PlanPage() {
                 onChange={handleChange}
                 className="planpage-input"
                 placeholder="Ví dụ: căng thẳng, sau bữa ăn..."
+                disabled={user && user.role === "GUEST"}
               />
             </div>
+
             <div>
               <div className="planpage-question">
                 <b>[9]</b> Ý định cai thuốc trong bao lâu tới?
@@ -568,6 +681,7 @@ function PlanPage() {
                     value="7 ngày"
                     checked={form.quitIntentionTimeline === "7 ngày"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   7 ngày
                 </label>
@@ -578,6 +692,7 @@ function PlanPage() {
                     value="1 tháng"
                     checked={form.quitIntentionTimeline === "1 tháng"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   1 tháng
                 </label>
@@ -588,6 +703,7 @@ function PlanPage() {
                     value="3 tháng"
                     checked={form.quitIntentionTimeline === "3 tháng"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   3 tháng
                 </label>
@@ -598,6 +714,7 @@ function PlanPage() {
                     value="5 tháng"
                     checked={form.quitIntentionTimeline === "5 tháng"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   5 tháng
                 </label>
@@ -608,10 +725,12 @@ function PlanPage() {
                     value="Chưa chắc"
                     checked={form.quitIntentionTimeline === "Chưa chắc"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   Chưa chắc
                 </label>
               </div>
+
               <div className="planpage-question">
                 <b>[10]</b> Mức độ sẵn sàng cai thuốc
               </div>
@@ -623,6 +742,7 @@ function PlanPage() {
                     value="Chưa sẵn sàng"
                     checked={form.readinessLevel === "Chưa sẵn sàng"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   Chưa sẵn sàng
                 </label>
@@ -633,6 +753,7 @@ function PlanPage() {
                     value="Đang cân nhắc"
                     checked={form.readinessLevel === "Đang cân nhắc"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   Đang cân nhắc
                 </label>
@@ -643,16 +764,20 @@ function PlanPage() {
                     value="Rất sẵn sàng"
                     checked={form.readinessLevel === "Rất sẵn sàng"}
                     onChange={handleChange}
+                    disabled={user && user.role === "GUEST"}
                   />
                   Rất sẵn sàng
                 </label>
               </div>
+
               <div className="planpage-question">
-                <b>[11]</b> Lý do chính muốn cai thuốc ?
+                <b>[11]</b> Lý do chính muốn cai thuốc?
               </div>
               <Radio.Group
                 name="quitReasons"
+                value={form.quitReasons}
                 onChange={handleChange}
+                disabled={user && user.role === "GUEST"} // ✅ Disable Ant Design component
                 options={[
                   { value: "Improving_health", label: "Cải thiện sức khỏe" },
                   {
@@ -682,11 +807,71 @@ function PlanPage() {
             className="planpage-submit"
             type="submit"
           >
-            Gửi thông tin
+            {user && user.role === "GUEST"
+              ? "🔒 Nâng cấp tài khoản để sử dụng"
+              : "📝 Gửi thông tin"}
           </button>
           {error && <div className="planpage-error">{error}</div>}
         </form>
-        {showChoice && (
+
+        {/* ✅ Modal cho GUEST khi nhấn submit */}
+        {showGuestModal && (
+          <div
+            className="planpage-choice-modal"
+            onClick={() => setShowGuestModal(false)}
+          >
+            <div
+              className="planpage-choice-box"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 style={{ color: "#856404", marginBottom: "20px" }}>
+                🔒 Nâng cấp tài khoản
+              </h3>
+              <div
+                style={{
+                  background: "#fff3cd",
+                  border: "1px solid #ffeeba",
+                  borderRadius: "8px",
+                  padding: "20px",
+                  marginBottom: "20px",
+                  textAlign: "left",
+                }}
+              >
+                <h4 style={{ margin: "0 0 12px 0", color: "#856404" }}>
+                  Tại sao cần nâng cấp?
+                </h4>
+                <ul
+                  style={{ margin: "0", paddingLeft: "20px", color: "#856404" }}
+                >
+                  <li>✅ Tạo kế hoạch cai thuốc cá nhân hóa</li>
+                  <li>✅ Theo dõi tiến trình cai thuốc</li>
+                  <li>✅ Nhận tư vấn từ chuyên gia</li>
+                  <li>✅ Truy cập đầy đủ tính năng</li>
+                </ul>
+              </div>
+
+              <div className="planpage-choice-btns">
+                <button
+                  className="planpage-choice-btn recommend"
+                  type="button"
+                  onClick={handleUpgradeAccount}
+                >
+                  🚀 Nâng cấp ngay
+                </button>
+                <button
+                  className="planpage-choice-btn self"
+                  type="button"
+                  onClick={() => setShowGuestModal(false)}
+                >
+                  Để sau
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ✅ Modal choice chỉ cho CUSTOMER */}
+        {showChoice && user && user.role === "CUSTOMER" && (
           <div
             className="planpage-choice-modal"
             onClick={() => setShowChoice(false)}
@@ -695,7 +880,6 @@ function PlanPage() {
               className="planpage-choice-box"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Hiển thị đánh giá mức độ nghiện */}
               {addictionInfo && (
                 <div
                   style={{
@@ -747,14 +931,14 @@ function PlanPage() {
                   type="button"
                   onClick={() => handlePlanChoice("recommend")}
                 >
-                  Đề xuất
+                  🎯 Đề xuất
                 </button>
                 <button
                   className="planpage-choice-btn self"
                   type="button"
                   onClick={() => handlePlanChoice("self")}
                 >
-                  Tự lập
+                  ✏️ Tự lập
                 </button>
               </div>
             </div>
@@ -767,3 +951,4 @@ function PlanPage() {
 }
 
 export default PlanPage;
+// Phân quyền Customer
