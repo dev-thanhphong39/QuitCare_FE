@@ -88,6 +88,7 @@ const TrackingPage = () => {
   const [isCompletionModalVisible, setIsCompletionModalVisible] =
     useState(false);
   const [completionData, setCompletionData] = useState(null);
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
 
   // Thêm test mode - chỉnh true/false tùy ý
   const isTestMode = true; // Đặt true khi muốn test, false khi production
@@ -520,6 +521,28 @@ const TrackingPage = () => {
     }
   };
 
+  // Hiển thị modal xác nhận trước khi lưu
+  const showConfirmModal = () => {
+    const currentStage = getCurrentStage(selectedDate);
+
+    if (!isDateInPlan(selectedDate)) {
+      message.error("Ngày này không thuộc kế hoạch cai thuốc.");
+      return;
+    }
+
+    if (!currentStage) {
+      message.error("Không tìm thấy giai đoạn phù hợp cho ngày này.");
+      return;
+    }
+
+    if (!todayData.cigarettes_smoked) {
+      message.error("Vui lòng nhập số điếu thuốc đã hút.");
+      return;
+    }
+
+    setIsConfirmModalVisible(true);
+  };
+
   // Sửa lại hàm handleSubmit để tránh double submit và double notification
   const handleSubmit = async () => {
     // Protection tránh double submit
@@ -615,6 +638,12 @@ const TrackingPage = () => {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  // Xử lý xác nhận lưu dữ liệu
+  const handleConfirmSubmit = () => {
+    setIsConfirmModalVisible(false);
+    handleSubmit();
   };
 
   // Thêm hàm kiểm tra ngày cuối cùng
@@ -868,20 +897,6 @@ const TrackingPage = () => {
               </div>
             </div>
           )}
-          {dayStatus.canEdit && (
-            <Button
-              type="primary"
-              onClick={() => {
-                setTodayData({
-                  cigarettes_smoked: selectedData.cigarettes_smoked.toString(),
-                  symptoms: selectedData.symptoms || [],
-                  notes: selectedData.notes || "",
-                });
-              }}
-            >
-              ✏️ Chỉnh sửa
-            </Button>
-          )}
         </div>
       );
     }
@@ -934,7 +949,7 @@ const TrackingPage = () => {
               type="primary"
               size="large"
               loading={submitting}
-              onClick={handleSubmit}
+              onClick={showConfirmModal}
               disabled={!todayData.cigarettes_smoked}
             >
               💾 Lưu dữ liệu
@@ -1236,6 +1251,80 @@ const TrackingPage = () => {
           centered
         >
           <div dangerouslySetInnerHTML={{ __html: popupContent }} />
+        </Modal>
+
+        {/* Modal xác nhận lưu dữ liệu */}
+        <Modal
+          title="🔒 Xác nhận lưu dữ liệu"
+          open={isConfirmModalVisible}
+          onCancel={() => setIsConfirmModalVisible(false)}
+          footer={[
+            <Button
+              key="cancel"
+              onClick={() => setIsConfirmModalVisible(false)}
+            >
+              ❌ Hủy
+            </Button>,
+            <Button
+              key="confirm"
+              type="primary"
+              loading={submitting}
+              onClick={handleConfirmSubmit}
+            >
+              ✅ Xác nhận lưu
+            </Button>,
+          ]}
+          width={500}
+          centered
+        >
+          <div className="quit-confirm-content">
+            <p>
+              <strong>📅 Ngày:</strong> {format(selectedDate, "dd/MM/yyyy")}
+            </p>
+            <p>
+              <strong>🚬 Số điếu đã hút:</strong> {todayData.cigarettes_smoked}
+            </p>
+            {(() => {
+              const currentStage = getCurrentStage(selectedDate);
+              return currentStage ? (
+                <p>
+                  <strong>🎯 Mục tiêu:</strong> {currentStage.targetCigarettes}{" "}
+                  điếu
+                </p>
+              ) : null;
+            })()}
+            {todayData.symptoms.length > 0 && (
+              <div>
+                <p>
+                  <strong>😷 Triệu chứng:</strong>
+                </p>
+                <div style={{ marginLeft: "20px" }}>
+                  {todayData.symptoms.map((symptom) => (
+                    <div key={symptom}>• {SYMPTOMS[symptom]}</div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {todayData.notes && (
+              <p>
+                <strong>📝 Ghi chú:</strong> {todayData.notes}
+              </p>
+            )}
+            <div
+              style={{
+                marginTop: "16px",
+                padding: "12px",
+                background: "#f6ffed",
+                border: "1px solid #b7eb8f",
+                borderRadius: "4px",
+              }}
+            >
+              <p>
+                <strong>⚠️ Lưu ý:</strong> Sau khi lưu, bạn sẽ không thể chỉnh
+                sửa dữ liệu này nữa.
+              </p>
+            </div>
+          </div>
         </Modal>
 
         {/* Modal hoàn thành khóa cai thuốc - CẬP NHẬT */}
