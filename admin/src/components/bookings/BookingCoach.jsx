@@ -206,7 +206,7 @@ const Booking = () => {
       toast.success(
         <div>
           <div> Đặt lịch thành công!</div>
-          <div> Để xem xhi tiết lịch hẹn. Hãy vào mục Lịch Tư vấn trong bên dưới Hồ Sơ. Hoặc xem tại đây:</div>
+          
           <button
             onClick={() => navigate("/viewadvise")}
             style={{

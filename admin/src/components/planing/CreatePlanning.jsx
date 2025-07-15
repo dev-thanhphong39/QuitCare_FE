@@ -6,23 +6,26 @@ import api from "../../configs/axios";
 import "./CreatePlanning.css";
 import create1 from "../../assets/images/create1.png";
 
+// ================ CONSTANTS ================
 const initialStage = () => ({
   weeks: [{ week: "", cigarettes: "" }],
 });
 
 const LOCAL_KEY = "quitcare_planning_draft";
 
+// ================ MAIN COMPONENT ================
 function CreatePlanning() {
+  // ================ STATE MANAGEMENT ================
   const [stages, setStages] = useState([initialStage()]);
   const [mode, setMode] = useState("create");
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({}); // ✅ Thêm state để lưu lỗi validation
+  const [errors, setErrors] = useState({});
 
   const accountId = localStorage.getItem("accountId");
   const quitPlanId = localStorage.getItem("quitPlanId");
 
-  // ✅ Thêm hàm validate khoảng thời gian
+  // ================ VALIDATION FUNCTIONS ================
   const validateWeekFormat = (weekValue) => {
     if (!weekValue || weekValue.trim() === "") {
       return "Vui lòng nhập khoảng thời gian";
@@ -63,7 +66,6 @@ function CreatePlanning() {
     return null; // Hợp lệ
   };
 
-  // ✅ Thêm hàm validate số điếu thuốc
   const validateCigarettes = (cigarettesValue) => {
     if (!cigarettesValue || cigarettesValue.trim() === "") {
       return "Vui lòng nhập số điếu thuốc";
@@ -85,7 +87,6 @@ function CreatePlanning() {
     return null; // Hợp lệ
   };
 
-  // ✅ Thêm hàm validate toàn bộ form
   const validateForm = () => {
     const newErrors = {};
     let hasError = false;
@@ -111,7 +112,7 @@ function CreatePlanning() {
     return !hasError;
   };
 
-  // ✅ Hàm handleChange đơn giản - không có real-time validation
+  // ================ EVENT HANDLERS ================
   const handleChange = (stageIdx, rowIdx, field, value) => {
     if (mode === "view") return;
 
@@ -120,7 +121,6 @@ function CreatePlanning() {
     setStages(newStages);
   };
 
-  // ✅ Sửa hàm handleConfirm để validate trước khi mở modal
   const handleConfirm = () => {
     if (!validateForm()) {
       message.error("Vui lòng sửa các lỗi trong form trước khi lưu!");
@@ -129,55 +129,6 @@ function CreatePlanning() {
     setModalOpen(true);
   };
 
-  // Load lại kế hoạch nếu đã có, nếu không thì lấy bản nháp localStorage
-  useEffect(() => {
-    async function fetchPlan() {
-      if (!accountId || !quitPlanId) {
-        const draft = localStorage.getItem(LOCAL_KEY);
-        if (draft) setStages(JSON.parse(draft));
-        return;
-      }
-      try {
-        setLoading(true);
-        const res = await api.get(
-          `/v1/customers/${accountId}/quit-plans/${quitPlanId}/stages`
-        );
-        if (res.data && res.data.length > 0) {
-          const stageMap = {};
-          res.data.forEach((item) => {
-            if (!stageMap[item.stageNumber]) stageMap[item.stageNumber] = [];
-            stageMap[item.stageNumber].push({
-              week: item.week_range,
-              cigarettes: item.targetCigarettes.toString(),
-              id: item.id,
-            });
-          });
-          setStages(
-            Object.keys(stageMap)
-              .sort()
-              .map((k) => ({ weeks: stageMap[k] }))
-          );
-          setMode("view");
-          localStorage.removeItem(LOCAL_KEY);
-        } else {
-          const draft = localStorage.getItem(LOCAL_KEY);
-          if (draft) setStages(JSON.parse(draft));
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchPlan();
-  }, [accountId, quitPlanId]);
-
-  // Lưu stages vào localStorage mỗi khi thay đổi (chỉ khi đang tạo hoặc sửa)
-  useEffect(() => {
-    if (mode === "create" || mode === "edit") {
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(stages));
-    }
-  }, [stages, mode]);
-
-  // Thêm/xóa dòng/giai đoạn
   const handleAddRow = (stageIdx) => {
     if (mode === "view") return;
     const newStages = [...stages];
@@ -206,11 +157,13 @@ function CreatePlanning() {
     setStages(newStages);
   };
 
-  // Xác nhận lưu kế hoạch (tạo mới hoặc cập nhật)
+  const handleEdit = () => setMode("edit");
+
+  // ================ API FUNCTIONS ================
   const handleModalOk = async () => {
     setLoading(true);
     try {
-      // Lấy danh sách stage cũ từ server để biết id
+      // Lấy danh sách stage cũ từ server
       const res = await api.get(
         `/v1/customers/${accountId}/quit-plans/${quitPlanId}/stages`
       );
@@ -239,6 +192,7 @@ function CreatePlanning() {
             week_range: week.week,
             targetCigarettes: Number(week.cigarettes),
           };
+
           if (week.id) {
             // PUT cập nhật
             await api.put(
@@ -259,29 +213,9 @@ function CreatePlanning() {
         }
       }
 
-      // Sau khi lưu thành công, gọi lại API để lấy dữ liệu mới nhất và đồng bộ localStorage
-      const reload = await api.get(
-        `/v1/customers/${accountId}/quit-plans/${quitPlanId}/stages`
-      );
-      if (reload.data && reload.data.length > 0) {
-        const stageMap = {};
-        reload.data.forEach((item) => {
-          if (!stageMap[item.stageNumber]) stageMap[item.stageNumber] = [];
-          stageMap[item.stageNumber].push({
-            week: item.week_range,
-            cigarettes: item.targetCigarettes.toString(),
-            id: item.id,
-          });
-        });
-        setStages(
-          Object.keys(stageMap)
-            .sort()
-            .map((k) => ({ weeks: stageMap[k] }))
-        );
-        setMode("view");
-        // XÓA bản nháp khi đã có dữ liệu trên server
-        localStorage.removeItem(LOCAL_KEY);
-      }
+      // Reload dữ liệu sau khi lưu
+      await reloadPlanFromServer();
+
       Modal.success({ content: "Lưu kế hoạch thành công!" });
     } catch (err) {
       Modal.error({ content: "Có lỗi khi lưu kế hoạch!" });
@@ -291,42 +225,294 @@ function CreatePlanning() {
     }
   };
 
-  // Chuyển sang chế độ chỉnh sửa
-  const handleEdit = () => setMode("edit");
-
-  // Hủy chỉnh sửa, reload lại kế hoạch từ server
   const handleCancelEdit = async () => {
     setLoading(true);
     try {
-      const res = await api.get(
-        `/v1/customers/${accountId}/quit-plans/${quitPlanId}/stages`
-      );
-      if (res.data && res.data.length > 0) {
-        const stageMap = {};
-        res.data.forEach((item) => {
-          if (!stageMap[item.stageNumber]) stageMap[item.stageNumber] = [];
-          stageMap[item.stageNumber].push({
-            week: item.week_range,
-            cigarettes: item.targetCigarettes.toString(),
-            id: item.id,
-          });
-        });
-        setStages(
-          Object.keys(stageMap)
-            .sort()
-            .map((k) => ({ weeks: stageMap[k] }))
-        );
-      }
+      await reloadPlanFromServer();
       setMode("view");
-      setErrors({}); // ✅ Reset errors khi cancel
+      setErrors({});
     } finally {
       setLoading(false);
     }
   };
 
+  const reloadPlanFromServer = async () => {
+    const res = await api.get(
+      `/v1/customers/${accountId}/quit-plans/${quitPlanId}/stages`
+    );
+
+    if (res.data && res.data.length > 0) {
+      const stageMap = {};
+      res.data.forEach((item) => {
+        if (!stageMap[item.stageNumber]) stageMap[item.stageNumber] = [];
+        stageMap[item.stageNumber].push({
+          week: item.week_range,
+          cigarettes: item.targetCigarettes.toString(),
+          id: item.id,
+        });
+      });
+
+      setStages(
+        Object.keys(stageMap)
+          .sort()
+          .map((k) => ({ weeks: stageMap[k] }))
+      );
+      setMode("view");
+      localStorage.removeItem(LOCAL_KEY);
+    }
+  };
+
+  // ================ EFFECTS ================
+  useEffect(() => {
+    async function fetchPlan() {
+      if (!accountId || !quitPlanId) {
+        const draft = localStorage.getItem(LOCAL_KEY);
+        if (draft) setStages(JSON.parse(draft));
+        return;
+      }
+
+      try {
+        setLoading(true);
+        await reloadPlanFromServer();
+      } catch (error) {
+        console.error("Error fetching plan:", error);
+        const draft = localStorage.getItem(LOCAL_KEY);
+        if (draft) setStages(JSON.parse(draft));
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPlan();
+  }, [accountId, quitPlanId]);
+
+  useEffect(() => {
+    if (mode === "create" || mode === "edit") {
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(stages));
+    }
+  }, [stages, mode]);
+
+  // ================ RENDER HELPERS ================
+  const renderStageTable = (stage, stageIdx) => {
+    const dataSource = stage.weeks.map((row, rowIdx) => {
+      const weekErrorKey = `${stageIdx}-${rowIdx}-week`;
+      const cigarettesErrorKey = `${stageIdx}-${rowIdx}-cigarettes`;
+
+      return {
+        key: rowIdx,
+        week:
+          mode === "view" ? (
+            <div className="qc-planning-cell-view-week">{row.week}</div>
+          ) : (
+            <div>
+              <Input
+                disabled={mode === "edit"} // Không cho edit tuần khi đã lưu
+                value={row.week}
+                placeholder="Ví dụ: Tuần 1 - 2, Tuần 3"
+                onChange={(e) =>
+                  handleChange(stageIdx, rowIdx, "week", e.target.value)
+                }
+                className={`qc-planning-input-week ${
+                  errors[weekErrorKey] ? "error" : ""
+                }`}
+                status={errors[weekErrorKey] ? "error" : ""}
+              />
+              {errors[weekErrorKey] && (
+                <div className="qc-planning-error-message">
+                  {errors[weekErrorKey]}
+                </div>
+              )}
+            </div>
+          ),
+        cigarettes:
+          mode === "view" ? (
+            <div className="qc-planning-cell-view-cigarettes">
+              {row.cigarettes} điếu/ngày
+            </div>
+          ) : (
+            <div>
+              <Input
+                disabled={mode === "view"}
+                type="number"
+                min={0}
+                max={100}
+                value={row.cigarettes}
+                placeholder="0-50 điếu/ngày"
+                onChange={(e) =>
+                  handleChange(stageIdx, rowIdx, "cigarettes", e.target.value)
+                }
+                className={`qc-planning-input-cigarettes ${
+                  errors[cigarettesErrorKey] ? "error" : ""
+                }`}
+                status={errors[cigarettesErrorKey] ? "error" : ""}
+              />
+              {errors[cigarettesErrorKey] && (
+                <div className="qc-planning-error-message">
+                  {errors[cigarettesErrorKey]}
+                </div>
+              )}
+            </div>
+          ),
+        action:
+          mode !== "view" && rowIdx !== 0 ? (
+            <Button
+              danger
+              size="small"
+              onClick={() => handleDeleteRow(stageIdx, rowIdx)}
+              className="qc-planning-btn-delete-row"
+            >
+              Xóa
+            </Button>
+          ) : null,
+      };
+    });
+
+    const columns = [
+      {
+        title: "Khoảng thời gian",
+        dataIndex: "week",
+        key: "week",
+        align: "center",
+      },
+      {
+        title: "Số điếu mỗi ngày trong khoảng này",
+        dataIndex: "cigarettes",
+        key: "cigarettes",
+        align: "center",
+      },
+      ...(mode !== "view"
+        ? [
+            {
+              title: "",
+              dataIndex: "action",
+              key: "action",
+              align: "center",
+              width: 80,
+            },
+          ]
+        : []),
+    ];
+
+    return (
+      <Table
+        className="qc-planning-stage-table"
+        dataSource={dataSource}
+        columns={columns}
+        pagination={false}
+        bordered
+      />
+    );
+  };
+
+  const renderGuideCard = () => {
+    if (mode === "view") return null;
+
+    return (
+      <div className="qc-planning-guide-card">
+        <h3 className="qc-planning-guide-title">
+          💡{" "}
+          {mode === "edit"
+            ? "Hướng dẫn chỉnh sửa kế hoạch:"
+            : "Hướng dẫn tạo kế hoạch linh hoạt:"}
+        </h3>
+        {mode === "edit" ? (
+          <ul className="qc-planning-guide-list">
+            <li>
+              ⚠️ <strong>Khoảng thời gian tuần không thể chỉnh sửa</strong> sau
+              khi đã lưu
+            </li>
+            <li>
+              ✅ Chỉ có thể thay đổi <strong>số điếu thuốc/ngày</strong>
+            </li>
+            <li>✅ Có thể thêm/xóa giai đoạn và khoảng thời gian mới</li>
+            <li>✅ Số điếu/ngày phải từ 1 đến 50</li>
+          </ul>
+        ) : (
+          <ul className="qc-planning-guide-list">
+            <li>
+              Bạn có thể tạo nhiều giai đoạn (ví dụ: Giai đoạn 1, 2, 3...)
+            </li>
+            <li>Mỗi giai đoạn có thể có nhiều khoảng thời gian khác nhau</li>
+            <li>
+              <strong>Định dạng khoảng thời gian hợp lệ:</strong>
+            </li>
+            <p style={{ marginLeft: "20px", color: "#52c41a" }}>
+              ✓ "Tuần 1 - 2", "Tuần 3-5", "Tuần 1"
+              <br />✓ "Tuần 1 đến 3", "Tuần 1 - Tuần 3"
+            </p>
+            <li>Số điếu/ngày phải từ 1 đến 50</li>
+          </ul>
+        )}
+      </div>
+    );
+  };
+
+  const renderControls = () => {
+    switch (mode) {
+      case "create":
+        return (
+          <>
+            <Button
+              type="default"
+              className="qc-planning-btn-add-stage"
+              onClick={handleAddStage}
+            >
+              Thêm giai đoạn
+            </Button>
+            <Button
+              type="primary"
+              className="qc-planning-btn-save"
+              onClick={handleConfirm}
+            >
+              Lưu kế hoạch
+            </Button>
+          </>
+        );
+      case "view":
+        return (
+          <Button
+            type="primary"
+            className="qc-planning-btn-edit"
+            onClick={handleEdit}
+          >
+            Chỉnh sửa
+          </Button>
+        );
+      case "edit":
+        return (
+          <>
+            <Button
+              onClick={handleCancelEdit}
+              className="qc-planning-btn-cancel"
+            >
+              Hủy
+            </Button>
+            <Button
+              type="default"
+              className="qc-planning-btn-add-stage"
+              onClick={handleAddStage}
+            >
+              Thêm giai đoạn
+            </Button>
+            <Button
+              type="primary"
+              className="qc-planning-btn-save-edit"
+              onClick={handleConfirm}
+            >
+              Lưu thay đổi
+            </Button>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  // ================ MAIN RENDER ================
   return (
     <>
       <Navbar />
+
+      {/* Banner */}
       <div className="qc-planning-banner-container">
         <img
           src={create1}
@@ -334,6 +520,8 @@ function CreatePlanning() {
           className="qc-planning-banner-image"
         />
       </div>
+
+      {/* Main Content */}
       <div className="qc-planning-main-container">
         <h2 className="qc-planning-main-title">
           {mode === "view"
@@ -341,32 +529,13 @@ function CreatePlanning() {
             : "Bảng Tự Lập Kế Hoạch"}
         </h2>
 
-        {mode !== "view" && (
-          <div className="qc-planning-guide-card">
-            <h3 className="qc-planning-guide-title">
-              💡 Hướng dẫn tạo kế hoạch linh hoạt:
-            </h3>
-            <ul className="qc-planning-guide-list">
-              <li>
-                Bạn có thể tạo nhiều giai đoạn (ví dụ: Giai đoạn 1, 2, 3...)
-              </li>
-              <li>
-                Mỗi giai đoạn có thể có nhiều khoảng thời gian khác nhau
-              </li>
-              <li>
-                <strong>Định dạng khoảng thời gian hợp lệ:</strong>
-              </li>
-              <p style={{ marginLeft: "20px", color: "#52c41a" }}>
-                ✓ "Tuần 1 - 2", "Tuần 3-5", "Tuần 1"
-                <br />✓ "Tuần 1 đến 3", "Tuần 1 - Tuần 3"
-              </p>
-              <li>Số điếu/ngày phải từ 1 đến 50</li>
-            </ul>
-          </div>
-        )}
+        {/* Guide Card */}
+        {renderGuideCard()}
 
+        {/* Loading */}
         {loading && <div className="qc-planning-loading">Đang tải...</div>}
 
+        {/* Stages */}
         {!loading &&
           stages.map((stage, stageIdx) => (
             <div key={stageIdx} className="qc-planning-stage-card">
@@ -399,181 +568,14 @@ function CreatePlanning() {
                   )}
                 </div>
               </div>
-              <Table
-                className="qc-planning-stage-table"
-                dataSource={stage.weeks.map((row, rowIdx) => {
-                  const weekErrorKey = `${stageIdx}-${rowIdx}-week`;
-                  const cigarettesErrorKey = `${stageIdx}-${rowIdx}-cigarettes`;
-
-                  return {
-                    key: rowIdx,
-                    week:
-                      mode === "view" ? (
-                        <div className="qc-planning-cell-view-week">
-                          {row.week}
-                        </div>
-                      ) : (
-                        <div>
-                          <Input
-                            disabled={mode === "view"}
-                            value={row.week}
-                            placeholder="Ví dụ: Tuần 1 - 2, Tuần 3"
-                            onChange={(e) =>
-                              handleChange(
-                                stageIdx,
-                                rowIdx,
-                                "week",
-                                e.target.value
-                              )
-                            }
-                            className={`qc-planning-input-week ${
-                              errors[weekErrorKey] ? "error" : ""
-                            }`}
-                            status={errors[weekErrorKey] ? "error" : ""}
-                          />
-                          {/* ✅ Hiển thị lỗi validation */}
-                          {errors[weekErrorKey] && (
-                            <div className="qc-planning-error-message">
-                              {errors[weekErrorKey]}
-                            </div>
-                          )}
-                        </div>
-                      ),
-                    cigarettes:
-                      mode === "view" ? (
-                        <div className="qc-planning-cell-view-cigarettes">
-                          {row.cigarettes} điếu/ngày
-                        </div>
-                      ) : (
-                        <div>
-                          <Input
-                            disabled={mode === "view"}
-                            type="number"
-                            min={0}
-                            max={100}
-                            value={row.cigarettes}
-                            placeholder="0-50 điếu/ngày"
-                            onChange={(e) =>
-                              handleChange(
-                                stageIdx,
-                                rowIdx,
-                                "cigarettes",
-                                e.target.value
-                              )
-                            }
-                            className={`qc-planning-input-cigarettes ${
-                              errors[cigarettesErrorKey] ? "error" : ""
-                            }`}
-                            status={errors[cigarettesErrorKey] ? "error" : ""}
-                          />
-                          {/* ✅ Hiển thị lỗi validation */}
-                          {errors[cigarettesErrorKey] && (
-                            <div className="qc-planning-error-message">
-                              {errors[cigarettesErrorKey]}
-                            </div>
-                          )}
-                        </div>
-                      ),
-                    action:
-                      mode !== "view" && rowIdx !== 0 ? (
-                        <Button
-                          danger
-                          size="small"
-                          onClick={() => handleDeleteRow(stageIdx, rowIdx)}
-                          className="qc-planning-btn-delete-row"
-                        >
-                          Xóa
-                        </Button>
-                      ) : null,
-                  };
-                })}
-                columns={[
-                  {
-                    title: "Khoảng thời gian",
-                    dataIndex: "week",
-                    key: "week",
-                    align: "center",
-                  },
-                  {
-                    title: "Số điếu mỗi ngày trong khoảng này",
-                    dataIndex: "cigarettes",
-                    key: "cigarettes",
-                    align: "center",
-                  },
-                  ...(mode !== "view"
-                    ? [
-                        {
-                          title: "",
-                          dataIndex: "action",
-                          key: "action",
-                          align: "center",
-                          width: 80,
-                        },
-                      ]
-                    : []),
-                ]}
-                pagination={false}
-                bordered
-              />
+              {renderStageTable(stage, stageIdx)}
             </div>
           ))}
 
-        {/* Nút điều khiển */}
-        <div className="qc-planning-controls">
-          {mode === "create" && (
-            <>
-              <Button
-                type="default"
-                className="qc-planning-btn-add-stage"
-                onClick={handleAddStage}
-              >
-                Thêm giai đoạn
-              </Button>
-              <Button
-                type="primary"
-                className="qc-planning-btn-save"
-                onClick={handleConfirm}
-              >
-                Lưu kế hoạch
-              </Button>
-            </>
-          )}
-          {mode === "view" && (
-            <Button
-              type="primary"
-              className="qc-planning-btn-edit"
-              onClick={handleEdit}
-            >
-              Chỉnh sửa
-            </Button>
-          )}
-          {mode === "edit" && (
-            <>
-              <Button
-                onClick={handleCancelEdit}
-                className="qc-planning-btn-cancel"
-              >
-                Hủy
-              </Button>
-              <Button
-                type="default"
-                className="qc-planning-btn-add-stage"
-                onClick={handleAddStage}
-              >
-                Thêm giai đoạn
-              </Button>
-              <Button
-                type="primary"
-                className="qc-planning-btn-save-edit"
-                onClick={handleConfirm}
-              >
-                Lưu thay đổi
-              </Button>
-            </>
-          )}
-        </div>
+        {/* Controls */}
+        <div className="qc-planning-controls">{renderControls()}</div>
 
-        {/* Modal xác nhận */}
+        {/* Confirmation Modal */}
         <Modal
           title={
             mode === "edit" ? "Xác nhận cập nhật kế hoạch" : "Xác nhận kế hoạch"
@@ -607,6 +609,7 @@ function CreatePlanning() {
           </p>
         </Modal>
       </div>
+
       <Footer />
     </>
   );

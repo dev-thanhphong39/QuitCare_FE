@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
   CalendarOutlined,
   ClockCircleOutlined,
+  UserOutlined,
+  DownOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
-import { Link, Outlet } from "react-router-dom";
+import {
+  Breadcrumb,
+  Layout,
+  Menu,
+  Dropdown,
+  Space,
+  theme,
+} from "antd";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux"; // nếu bạn dùng Redux
+import { logout } from "../../redux/features/userSlice";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -32,6 +39,26 @@ const CoachDashboard = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout()); // hoặc localStorage.clear() nếu bạn không dùng Redux
+    navigate("/login");
+  };
+
+  const dropdownMenu = (
+    <Menu
+      items={[
+        {
+          key: "logout",
+          icon: <LogoutOutlined />,
+          label: <span onClick={handleLogout}>Đăng xuất</span>,
+        },
+      ]}
+    />
+  );
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -65,11 +92,10 @@ const CoachDashboard = () => {
           defaultSelectedKeys={["calendar"]}
           mode="inline"
           items={items}
-          style={{
-            border: "none",
-          }}
+          style={{ border: "none" }}
         />
       </Sider>
+
       <Layout>
         <Header
           style={{
@@ -90,17 +116,18 @@ const CoachDashboard = () => {
           >
             Dashboard Coach
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 16,
-            }}
-          >
-            <UserOutlined style={{ fontSize: 18, color: "#666" }} />
-            <span style={{ color: "#666" }}>Coach Dashboard</span>
-          </div>
+
+          <Dropdown trigger={["click"]} overlay={dropdownMenu}>
+            <span style={{ cursor: "pointer" }}>
+              <Space>
+                <UserOutlined style={{ fontSize: 18, color: "#666" }} />
+                <span style={{ color: "#666" }}>Coach Dashboard</span>
+                <DownOutlined style={{ fontSize: 12, color: "#999" }} />
+              </Space>
+            </span>
+          </Dropdown>
         </Header>
+
         <Content style={{ margin: "0 16px" }}>
           <Breadcrumb
             style={{
@@ -109,7 +136,6 @@ const CoachDashboard = () => {
               background: "#fafafa",
               borderRadius: 6,
             }}
-            items={[{ title: "Dashboard" }, { title: "Coach" }]}
           />
           <div
             style={{
@@ -121,9 +147,9 @@ const CoachDashboard = () => {
             }}
           >
             <Outlet />
-            {/* Đây là nội dung chính */}
           </div>
         </Content>
+
         <Footer
           style={{
             textAlign: "center",
@@ -131,8 +157,7 @@ const CoachDashboard = () => {
             borderTop: "1px solid #d9d9d9",
           }}
         >
-          QuitCare Coach Dashboard ©{new Date().getFullYear()} - Hỗ trợ cai
-          thuốc lá
+          QuitCare Coach Dashboard ©{new Date().getFullYear()} - Hỗ trợ cai thuốc lá
         </Footer>
       </Layout>
     </Layout>

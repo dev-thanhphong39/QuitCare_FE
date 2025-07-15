@@ -385,25 +385,25 @@ function PlanPage() {
   };
 
   // ✅ Tạo helper function
-  const isDisabled = () => {
-    if (!user) {
-      console.log("🔒 Disabled: No user");
-      return true;
-    }
+  // const isDisabled = () => {
+  //   if (!user) {
+  //     console.log("🔒 Disabled: No user");
+  //     return true;
+  //   }
 
-    if (user.role === "GUEST") {
-      console.log("🔒 Disabled: GUEST role");
-      return true;
-    }
+  //   if (user.role === "GUEST") {
+  //     console.log("🔒 Disabled: GUEST role");
+  //     return true;
+  //   }
 
-    if (user.role === "CUSTOMER") {
-      console.log("✅ Enabled: CUSTOMER role");
-      return false;
-    }
+  //   if (user.role === "CUSTOMER") {
+  //     console.log("✅ Enabled: CUSTOMER role");
+  //     return false;
+  //   }
 
-    console.log("🔒 Disabled: Unknown role:", user.role);
-    return true;
-  };
+  //   console.log("🔒 Disabled: Unknown role:", user.role);
+  //   return true;
+  // };
 
   if (loading) {
     return (
@@ -477,7 +477,7 @@ function PlanPage() {
                 onChange={handleChange}
                 className="planpage-input"
                 placeholder="Nhập tuổi"
-                disabled={isDisabled()} // ✅ Sử dụng function helper
+                disabled={user && user.role === "GUEST"}
               />
 
               <div className="planpage-question">
