@@ -11,7 +11,9 @@ import "./NotificationPage.css";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import api from "../../configs/axios";
-
+import toast from "react-hot-toast";
+import dayjs from "dayjs";
+import { Toaster } from "react-hot-toast";
 function NotificationPage() {
   const accountId = localStorage.getItem("accountId");
   const [notifications, setNotifications] = useState([]);
@@ -161,7 +163,42 @@ function NotificationPage() {
       isLoadingRef.current = false;
     }
   }, [accountId]);
-
+  const checkUpcomingAppointments = async () => {
+    try {
+      const res = await api.get("/api/booking/customer"); // Lấy danh sách cuộc hẹn
+      const now = dayjs();
+      const notified = JSON.parse(localStorage.getItem("notifiedAppointments") || "{}");
+  
+      res.data.forEach((appointment) => {
+        const appointmentTime = dayjs(`${appointment.appointmentDate}T${appointment.startTime}`);
+        const diffMinutes = appointmentTime.diff(now, "minute");
+  
+        if (diffMinutes > 0 && diffMinutes <= 60 && !notified[appointment.id]) {
+          toast(
+            `🔔 Bạn có cuộc hẹn với ${appointment.coachName} vào lúc ${appointmentTime.format("HH:mm")} hôm nay – hãy chuẩn bị nhé!`,
+            {
+              duration: 15000,
+              icon: "📅",
+            }
+          );
+  
+          notified[appointment.id] = true;
+          localStorage.setItem("notifiedAppointments", JSON.stringify(notified));
+        }
+      });
+    } catch (err) {
+      console.error("❌ Lỗi kiểm tra lịch sắp tới:", err);
+    }
+  };
+  useEffect(() => {
+    checkUpcomingAppointments(); // Gọi ngay khi vào trang
+  
+    const interval = setInterval(() => {
+      checkUpcomingAppointments(); // Gọi mỗi 3 phút
+    }, 3 * 60 * 1000);
+  
+    return () => clearInterval(interval); // Cleanup khi rời trang
+  }, []);
   // Làm mới danh sách thông báo
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -265,6 +302,7 @@ function NotificationPage() {
 
   return (
     <>
+     <Toaster position="top-right" /> {/* ✨ Thêm dòng này vào bất kỳ đâu trong return */}
       <Navbar />
       <div className="notification-container">
         <div className="notification-header">

@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { DatePicker } from "antd";
 import { useSelector } from "react-redux";
 import "./BookingCoach.css";
+import { toast } from "react-toastify";
 
 const Booking = () => {
   const [currentMonth, setCurrentMonth] = useState(dayjs());
@@ -202,15 +203,32 @@ const Booking = () => {
           typeof date === "string" ? date : dayjs(date).format("YYYY-MM-DD"),
         start: slot,
       });
-
+      toast.success(
+        <div>
+          <div> Đặt lịch thành công!</div>
+          <div> Để xem xhi tiết lịch hẹn. Hãy vào mục Lịch Tư vấn trong bên dưới Hồ Sơ. Hoặc xem tại đây:</div>
+          <button
+            onClick={() => navigate("/viewadvise")}
+            style={{
+              marginTop: 8,
+              backgroundColor: "#1890ff",
+              color: "#fff",
+              border: "none",
+              padding: "5px 10px",
+              borderRadius: 4,
+              cursor: "pointer",
+            }}
+          >
+            Xem Lịch Tư Vấn
+          </button>
+        </div>,
+        {
+          duration:7000,
+        }
+      );
       console.log("Booking response:", res.data);
-      message.success(`✅ Đã đặt lịch thành công cho ${coachName}`);
-      notification.success({
-        message: "Đặt lịch thành công",
-        description: "Bạn có thể nhấn 'Xem Lịch Tư Vấn' để theo dõi các cuộc hẹn đã đặt.",
-        placement: "topRight",
-        duration: 5,
-      });
+     
+      console.log("✅ Hiển thị thông báo đặt lịch thành công");
       // Disable slot đã đặt - KHÔNG fetch lại slots
       const newDisabledSlots = {
         ...disabledSlots,
@@ -227,8 +245,8 @@ const Booking = () => {
         [coach.id]: "",
       }));
 
-      // Redirect after 1.5 seconds
-      setTimeout(() => navigate("/viewadvise"), 1500);
+      // // Redirect after 1.5 seconds
+      // setTimeout(() => navigate("/viewadvise"), 1500);
     } catch (err) {
       console.log(err.response?.data);
       console.error("Lỗi đặt lịch:", err);
