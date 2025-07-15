@@ -61,7 +61,7 @@ const WorkScheduleManagement = () => {
         new Set(workingDays.map(item => item.date))
       );
       setServerWorkingDays(workingDateStrings);
-      console.log("🌐 Working days từ server:", workingDateStrings);
+      // console.log("🌐 Working days từ server:", workingDateStrings);
       const daysInMonth = currentMonth.daysInMonth();
       const startDate = dayjs(startOfMonth);
 
@@ -168,17 +168,18 @@ const handleSubmitAll = async () => {
 
   
 
-  const getDateStatus = (record) => {
-    const isPast = dayjs(record.dateStr).isBefore(dayjs(), "day");
-    const isToday = dayjs(record.dateStr).isSame(dayjs(), "day");
-    const isWeekend = record.date.day() === 0 || record.date.day() === 6;
+const getDateStatus = (record) => {
+  const isPast = dayjs(record.dateStr).isBefore(dayjs(), "day");
+  const isToday = dayjs(record.dateStr).isSame(dayjs(), "day");
+  const isWeekend = record.date.day() === 0 || record.date.day() === 6;
 
-    if (isPast) return { status: "past", color: "#d9d9d9" };
-    if (isToday) return { status: "today", color: "#1890ff" };
-    if (isWeekend) return { status: "weekend", color: "#722ed1" };
-    if (record.isLeave) return { status: "leave", color: "#ff4d4f" };
-    return { status: "working", color: "#52c41a" };
-  };
+  if (isPast) return { status: "past", color: "#d9d9d9" };
+  if (record.isLeave) return { status: "leave", color: "#ff4d4f" };
+  if (isToday) return { status: "today", color: "#1890ff" };
+  if (isWeekend) return { status: "weekend", color: "#722ed1" };
+  return { status: "working", color: "#52c41a" };
+};
+
 
   const workingDays = data.filter((item) => !item.isLeave).length;
   const leaveDays = data.filter((item) => item.isLeave).length;
